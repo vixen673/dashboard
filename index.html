@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WALL MONITOR // 50:50 SPLIT & AUTO-ROLL SYSTEM</title>
+  <!-- Google Fonts & Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700;800&family=Outfit:wght@400;600;700;800&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* ==========================================================================
+       THEME PRESETS (厳選3テーマ)
+       ========================================================================== */
+    body[data-theme="cyber"] {
+      --bg-base: #060913;
+      --bg-pattern: linear-gradient(rgba(0, 243, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.04) 1px, transparent 1px);
+      --pattern-size: 32px 32px;
+      --panel-bg: rgba(9, 16, 30, 0.90);
+      --panel-border: rgba(0, 243, 255, 0.35);
+      --panel-radius: 4px;
+      --panel-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 0 16px rgba(0, 243, 255, 0.04);
+      --accent-main: #00f3ff;
+      --accent-sub: #0077fe;
+      --accent-warn: #ffaa00;
+      --accent-danger: #ff3366;
+      --accent-ok: #00ff88;
+      --text-head: #ffffff;
+      --text-body: #e2e8f0;
+      --text-muted: #64748b;
+      --header-bg: rgba(0, 243, 255, 0.08);
+      --card-item-bg: rgba(0, 243, 255, 0.05);
+      --sub-card-bg: rgba(0, 243, 255, 0.06);
+      --sub-card-border: rgba(0, 243, 255, 0.2);
+      --font-family-base: 'Zen Kaku Gothic New', sans-serif;
+      --font-family-clock: 'Chakra Petch', monospace;
+      --show-brackets: block;
+      --show-scanline: block;
+    }
+
+    body[data-theme="clean-white"] {
+      --bg-base: #eef2f6;
+      --bg-pattern: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+      --pattern-size: 24px 24px;
+      --panel-bg: rgba(255, 255, 255, 0.96);
+      --panel-border: rgba(203, 213, 225, 0.85);
+      --panel-radius: 12px;
+      --panel-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+      --accent-main: #2563eb;
+      --accent-sub: #0284c7;
+      --accent-warn: #d97706;
+      --accent-danger: #dc2626;
+      --accent-ok: #16a34a;
+      --text-head: #0f172a;
+      --text-body: #1e293b;
+      --text-muted: #64748b;
+      --header-bg: rgba(241, 245, 249, 0.95);
+      --card-item-bg: rgba(248, 250, 252, 0.95);
+      --sub-card-bg: rgba(241, 245, 249, 0.9);
+      --sub-card-border: rgba(203, 213, 225, 0.9);
+      --font-family-base: 'Outfit', 'Zen Kaku Gothic New', sans-serif;
+      --font-family-clock: 'Outfit', sans-serif;
+      --show-brackets: none;
+      --show-scanline: none;
+    }
+
+    body[data-theme="ultra-cool"] {
+      --bg-base: #030508;
+      --bg-pattern: none;
+      --panel-bg: rgba(13, 17, 23, 0.95);
+      --panel-border: rgba(255, 255, 255, 0.12);
+      --panel-radius: 2px;
+      --panel-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      --accent-main: #38bdf8;
+      --accent-sub: #94a3b8;
+      --accent-warn: #eab308;
+      --accent-danger: #f43f5e;
+      --accent-ok: #22c55e;
+      --text-head: #ffffff;
+      --text-body: #e2e8f0;
+      --text-muted: #64748b;
+      --header-bg: rgba(255, 255, 255, 0.04);
+      --card-item-bg: rgba(255, 255, 255, 0.04);
+      --sub-card-bg: rgba(255, 255, 255, 0.05);
+      --sub-card-border: rgba(255, 255, 255, 0.1);
+      --font-family-base: 'Outfit', 'Zen Kaku Gothic New', sans-serif;
+      --font-family-clock: 'Outfit', monospace;
+      --show-brackets: none;
+      --show-scanline: none;
+    }
+
+    /* BASE LAYOUT */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      background-image: var(--bg-pattern);
+      background-size: var(--pattern-size);
+      color: var(--text-body);
+      font-family: var(--font-family-base);
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .scanline {
+      display: var(--show-scanline);
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.28) 51%);
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: 99;
+      opacity: 0.5;
+    }
+
+    /* TOP BAR */
+    .top-statusbar {
+      position: relative;
+      z-index: 10;
+      height: 44px;
+      padding: 0 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--panel-border);
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--accent-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.05em;
+    }
+
+    .theme-selector-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,0,0,0.15);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--panel-border);
+    }
+
+    .theme-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .theme-btn:hover {
+      color: var(--text-head);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .theme-btn.active {
+      background: var(--accent-main);
+      color: #fff;
+      border-color: var(--accent-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    .fullscreen-btn {
+      background: transparent;
+      border: 1px solid var(--panel-border);
+      color: var(--text-body);
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.76rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .fullscreen-btn:hover {
+      background: var(--card-item-bg);
+      border-color: var(--accent-main);
+    }
+
+    /* 50:50 SPLIT GRID */
+    .dashboard-split-grid {
+      position: relative;
+      z-index: 10;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 12px;
+      height: calc(100vh - 44px);
+    }
+
+    .hud-panel {
+      position: relative;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--panel-radius);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--panel-shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .corner-bracket {
+      display: var(--show-brackets);
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-color: var(--accent-main);
+      pointer-events: none;
+      z-index: 5;
+    }
+    .cb-tl { top: 0; left: 0; border-top: 2px solid var(--accent-main); border-left: 2px solid var(--accent-main); }
+    .cb-br { bottom: 0; right: 0; border-bottom: 2px solid var(--accent-main); border-right: 2px solid var(--accent-main); }
+
+    .panel-header {
+      height: 42px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--panel-border);
+      background: var(--header-bg);
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      color: var(--accent-main);
+    }
+
+    .panel-body {
+      flex: 1;
+      padding: 12px 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* ==========================================================================
+       【左側全面】時間・日時 ＆ 気象情報（4分割ミニカード） ＆ 都市
+       ========================================================================== */
+    .left-full-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    /* 上段: 左(時間・日付) + 右(気象情報特大) */
+    .hero-top-row {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+      flex: 1.25; 
+    }
+
+    /* ーー左側：時計・日付ーー */
+    .clock-left-box {
+      flex: 1.35;
+      background: var(--card-item-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      text-align: left;
+      container-type: inline-size;
+    }
+
+    .clock-date-text {
+      font-size: 11cqw;
+      font-weight: 800;
+      color: var(--accent-main);
+      letter-spacing: 0.05em;
+      line-height: 1.1;
+    }
+
+    .clock-time-digits {
+      display: flex;
+      align-items: baseline;
+      font-family: var(--font-family-clock);
+      color: var(--text-head);
+      line-height: 0.9;
+      margin-top: 2cqw;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
+
+    .time-digits-main {
+      font-size: 32cqw; 
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .time-digits-sec {
+      font-size: 16cqw;
+      font-weight: 700;
+      color: var(--accent-main);
+      margin-left: 1.5cqw;
+    }
+
+    /* ーー右側：気象情報ーー */
+    .weather-right-box {
+      flex: 1;
+      background: var(--card-item-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      container-type: inline-size;
+    }
+
+    .weather-main-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 1.5cqw;
+    }
+
+    .current-temp-badge {
+      font-family: var(--font-family-clock);
+      font-size: 25cqw; 
+      font-weight: 800;
+      color: var(--text-head);
+      line-height: 1;
+    }
+
+    .current-cond-row {
+      display: flex;
+      align-items: center;
+      gap: 3cqw;
+    }
+
+    .current-cond-label {
+      font-size: 10cqw;
+      font-weight: 800;
+      color: var(--accent-main);
+    }
+
+    /* ★ 4分割均等グリッド（田の字型ミニカード） ★ */
+    .weather-4grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 6px;
+      padding-top: 8px;
+      border-top: 1px solid var(--panel-border);
+    }
+
+    .metric-mini-card {
+      background: var(--sub-card-bg);
+      border: 1px solid var(--sub-card-border);
+      border-radius: 4px;
+      padding: 5px 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .metric-mini-label {
+      font-size: 4.8cqw;
+      font-weight: 800;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .metric-mini-val {
+      font-family: var(--font-family-clock);
+      font-size: 6.8cqw;
+      font-weight: 800;
+      color: var(--text-head);
+      white-space: nowrap;
+      text-align: right;
+      line-height: 1.1;
+      margin-top: 2px;
+    }
+
+    /* ーー中段：都市選択バーーー */
+    .city-selection-bar {
+      background: var(--card-item-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .city-selection-label {
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: var(--text-head);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .city-buttons-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .city-pill {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .city-pill:hover {
+      color: var(--text-head);
+      border-color: var(--accent-main);
+    }
+
+    .city-pill.active {
+      background: var(--accent-main);
+      color: #fff;
+      border-color: var(--accent-main);
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* ーー下段：1週間展望予報マトリクスーー */
+    .weekly-matrix-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--card-item-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      justify-content: space-between;
+    }
+
+    .weekly-section-title {
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: var(--accent-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .weekly-cols-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .weekly-day-cell {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 8px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      text-align: center;
+    }
+
+    .weekly-day-cell.today {
+      border-color: var(--accent-main);
+      background: rgba(0, 243, 255, 0.12);
+    }
+
+    .day-cell-name {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--text-head);
+    }
+
+    .day-cell-icon {
+      margin: 4px 0;
+    }
+
+    .day-cell-temps {
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font-family-clock);
+      font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1.15;
+    }
+
+    .temp-high { color: #f87171; }
+    .temp-low { color: #60a5fa; }
+
+    .rain-chance-badge {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--accent-main);
+      font-family: var(--font-family-clock);
+    }
+
+    /* ==========================================================================
+       【右側全面】ページ切り替え ＆ タイマー選択 ＆ 上から下への回転スクロール
+       ========================================================================== */
+    .right-header-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .page-switch-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .switch-tab-btn {
+      background: transparent;
+      border: 1px solid var(--panel-border);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .switch-tab-btn:hover {
+      color: var(--text-head);
+    }
+
+    .switch-tab-btn.active {
+      background: var(--accent-main);
+      color: #fff;
+      border-color: var(--accent-main);
+    }
+
+    /* タイマー（回転サイクル）切り替えボタン */
+    .timer-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 2px;
+    }
+
+    .timer-set-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .timer-set-btn.active {
+      background: var(--accent-sub);
+      color: #fff;
+    }
+
+    .timer-progress-wrap {
+      width: 60px;
+      height: 6px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .timer-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent-main);
+      transition: width 0.1s linear;
+    }
+
+    .right-view-slot {
+      flex: 1;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .right-view-slot.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* 1. 日本雨量地図 差し込みスロット */
+    .radar-slot-fullscreen {
+      width: 100%;
+      height: 100%;
+      border: 2px dashed var(--panel-border);
+      border-radius: 8px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-item-bg);
+      overflow: hidden;
+    }
+
+    .radar-center-box {
+      text-align: center;
+      padding: 24px 36px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      box-shadow: var(--panel-shadow);
+      z-index: 5;
+      max-width: 80%;
+    }
+
+    /* 共通: 【上から下へ】ゆっくり降りてくる回転スクロールトラック */
+    .infinite-scroll-track-down {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: absolute;
+      width: 100%;
+      top: -100%; 
+      left: 0;
+      animation: smoothScrollDown 28s linear infinite;
+    }
+
+    .infinite-scroll-track-down:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes smoothScrollDown {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(50%); } 
+    }
+
+    /* 各種ロールカードデザイン */
+    .news-card-roll {
+      background: var(--card-item-bg);
+      border: 1px solid var(--panel-border);
+      border-left: 5px solid var(--accent-sub);
+      border-radius: 6px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .news-tag-badge {
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: var(--header-bg);
+      border: 1px solid var(--accent-sub);
+      color: var(--accent-sub);
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+    .news-body-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .news-title-multiline {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-head);
+      line-height: 1.45;
+    }
+    .news-time-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-family: var(--font-family-clock);
+    }
+
+    .alert-card-roll {
+      background: var(--card-item-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .alert-info-box {
+      flex: 1;
+    }
+    .alert-huge-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .alert-desc-large {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .transit-card-roll {
+      background: var(--card-item-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .transit-huge-name {
+      font-size: 1.22rem;
+      font-weight: 800;
+      color: var(--text-head);
+      margin-bottom: 4px;
+    }
+    .transit-section-large {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    .status-badge-large {
+      font-size: 0.92rem;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .badge-warn {
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid var(--accent-warn);
+      color: var(--accent-warn);
+    }
+    .badge-ok {
+      background: rgba(16, 185, 129, 0.18);
+      border: 1px solid var(--accent-ok);
+      color: var(--accent-ok);
+    }
+    .badge-danger {
+      background: rgba(239, 68, 68, 0.22);
+      border: 1px solid var(--accent-danger);
+      color: var(--accent-danger);
+    }
+  </style>
+</head>
+<body data-theme="cyber">
+
+  <div class="scanline"></div>
+
+  <!-- TOP BAR -->
+  <header class="top-statusbar">
+    <div class="brand-title">
+      <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i>
+      <span id="header-terminal-title">WALL MONITOR // DUAL SPLIT SYSTEM</span>
+    </div>
+
+    <!-- 3つのデザインテーマ -->
+    <div class="theme-selector-group">
+      <button class="theme-btn active" onclick="setTheme('cyber')">
+        <i data-lucide="cpu" style="width: 13px; height: 13px;"></i> 01 CYBER HUD
+      </button>
+      <button class="theme-btn" onclick="setTheme('clean-white')">
+        <i data-lucide="sun" style="width: 13px; height: 13px;"></i> 02 PURE WHITE
+      </button>
+      <button class="theme-btn" onclick="setTheme('ultra-cool')">
+        <i data-lucide="shield" style="width: 13px; height: 13px;"></i> 03 ULTRA COOL
+      </button>
+    </div>
+
+    <button class="fullscreen-btn" onclick="toggleFullScreen()">
+      <i data-lucide="maximize" style="width: 14px; height: 14px;"></i> FULLSCREEN
+    </button>
+  </header>
+
+  <!-- 50:50 SPLIT DASHBOARD -->
+  <main class="dashboard-split-grid">
+
+    <!-- ====================================================================
+         【左側全面】時間・日時 ＆ 4分割ミニカード気象情報
+         ==================================================================== -->
+    <section class="hud-panel">
+      <div class="corner-bracket cb-tl"></div>
+      <div class="corner-bracket cb-br"></div>
+      <div class="panel-header">
+        <span id="panel-location-header">01 // CHRONO & 7-DAY OUTLOOK [TOKYO KATSUSHIKA]</span>
+        <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+      </div>
+      <div class="panel-body">
+        <div class="left-full-container">
+          
+          <!-- 上段: 左(時間・日付) + 右(気象情報特大) -->
+          <div class="hero-top-row">
+            
+            <!-- 時計・日付 -->
+            <div class="clock-left-box">
+              <div id="date-text" class="clock-date-text">2026.09.22 TUE</div>
+              <div class="clock-time-digits">
+                <span id="time-main" class="time-digits-main">11:58</span>
+                <span id="time-sec" class="time-digits-sec">:16</span>
+              </div>
+            </div>
+
+            <!-- 気象情報 (4分割田の字型ミニカード) -->
+            <div class="weather-right-box">
+              <div class="weather-main-group">
+                <div class="current-temp-badge" id="current-temp-val">29.0°C</div>
+                <div class="current-cond-row">
+                  <span class="current-cond-label" id="current-condition-val">晴れ</span>
+                  <div id="current-weather-icon-box">
+                    <i data-lucide="sun" style="width: 14cqw; height: 14cqw; color: #f59e0b;"></i>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- ★ 4分割ミニカードグリッド ★ -->
+              <div class="weather-4grid-container">
+                <div class="metric-mini-card">
+                  <span class="metric-mini-label">湿度</span>
+                  <span class="metric-mini-val" id="current-humidity-val">48%</span>
+                </div>
+                <div class="metric-mini-card">
+                  <span class="metric-mini-label">気圧</span>
+                  <span class="metric-mini-val" id="current-pressure-val">1012hPa</span>
+                </div>
+                <div class="metric-mini-card">
+                  <span class="metric-mini-label">風速</span>
+                  <span class="metric-mini-val" id="current-wind-val">北西 4.0m/s</span>
+                </div>
+                <div class="metric-mini-card">
+                  <span class="metric-mini-label">降水確率</span>
+                  <span class="metric-mini-val" id="current-rain-val" style="color:var(--accent-main)">0%</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 中段: 都市選択バー -->
+          <div class="city-selection-bar">
+            <div class="city-selection-label">
+              <i data-lucide="map-pin" style="width: 14px; height: 14px; color: var(--accent-main);"></i>
+              <span id="current-location-text">東京都 葛飾区</span>
+            </div>
+            <div class="city-buttons-row">
+              <button class="city-pill active" onclick="selectCity('katsushika')">葛飾区</button>
+              <button class="city-pill" onclick="selectCity('omiya')">さいたま大宮</button>
+              <button class="city-pill" onclick="selectCity('chuo')">東京中央区</button>
+              <button class="city-pill" onclick="selectCity('niigata')">新潟中央区</button>
+              <button class="city-pill" onclick="selectCity('kanazawa')">金沢市</button>
+            </div>
+          </div>
+
+          <!-- 下段: 1週間展望予報 -->
+          <div class="weekly-matrix-section">
+            <div class="weekly-section-title">
+              <i data-lucide="sun-medium" style="width: 16px; height: 16px;"></i>
+              <span>7-DAY WEATHER MATRIX // 週間気象展望</span>
+            </div>
+            <div id="weekly-matrix-container" class="weekly-cols-grid">
+              <!-- JSで動的レンダリング -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         【右側全面】1/2/3分サイクル選択 ＆ 上から下への回転スクロール
+         ==================================================================== -->
+    <section class="hud-panel">
+      <div class="corner-bracket cb-tl"></div>
+      <div class="corner-bracket cb-br"></div>
+      <div class="panel-header">
+        <span id="right-panel-header-title">02 // JAPAN PRECIPITATION RADAR [SLOT]</span>
+        <div class="right-header-meta">
+          <div class="page-switch-tabs">
+            <button class="switch-tab-btn active" onclick="switchRightPage(0)">雨量地図</button>
+            <button class="switch-tab-btn" onclick="switchRightPage(1)">ニュース</button>
+            <button class="switch-tab-btn" onclick="switchRightPage(2)">気象警報</button>
+            <button class="switch-tab-btn" onclick="switchRightPage(3)">鉄道運行</button>
+          </div>
+          
+          <!-- 回転サイクル切り替えボタン -->
+          <div class="timer-controls-group">
+            <button class="timer-set-btn active" onclick="setTimerCycle(1)">1分</button>
+            <button class="timer-set-btn" onclick="setTimerCycle(2)">2分</button>
+            <button class="timer-set-btn" onclick="setTimerCycle(3)">3分</button>
+          </div>
+
+          <div class="timer-progress-wrap">
+            <div id="timer-bar-fill" class="timer-progress-fill"></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <!-- 1. 日本雨量地図 差し込みスロット -->
+        <div id="right-slot-map" class="right-view-slot active">
+          <div class="radar-slot-fullscreen">
+            <div class="radar-center-box">
+              <i data-lucide="satellite" style="width: 48px; height: 48px; color: var(--accent-main); margin-bottom: 12px;"></i>
+              <div style="font-size: 1.35rem; font-weight: 800; color: var(--accent-main); margin-bottom: 8px;">【日本雨量地図 差し込みスロット】</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-family-clock); line-height: 1.6;">
+                &lt;!-- 後から作成する日本雨量地図プログラム / iframe / Canvas コードをそのままこのコンテナ (id="right-slot-map") 内に挿入可能です --&gt;
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. ニュースヘッドライン (上から下へゆっくり回転スクロール) -->
+        <div id="right-slot-news" class="right-view-slot">
+          <div id="news-scroll-track" class="infinite-scroll-track-down"></div>
+        </div>
+
+        <!-- 3. 気象警報・災害情報 (上から下へゆっくり回転スクロール) -->
+        <div id="right-slot-alerts" class="right-view-slot">
+          <div id="alerts-scroll-track" class="infinite-scroll-track-down"></div>
+        </div>
+
+        <!-- 4. 首都圏 鉄道運行情報 (上から下へゆっくり回転スクロール) -->
+        <div id="right-slot-transit" class="right-view-slot">
+          <div id="transit-scroll-track" class="infinite-scroll-track-down"></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // -------------------------------------------------------------
+    // 1. 各都市データ ＆ 実勢最新データ
+    // -------------------------------------------------------------
+    const weatherDataByCity = {
+      katsushika: {
+        name: '東京都 葛飾区',
+        en: 'TOKYO KATSUSHIKA',
+        currentTemp: '29.0°C',
+        condition: '晴れ',
+        icon: 'sun',
+        humidity: '48%',
+        pressure: '1012hPa',
+        wind: '北西 4.0m/s',
+        rain: '0%',
+        weekly: [
+          { day: '今日(火)', icon: 'cloud-sun', high: 30, low: 23, rain: '10%' },
+          { day: '23日(水)', icon: 'cloud', high: 24, low: 20, rain: '30%' },
+          { day: '24日(木)', icon: 'cloud-sun', high: 28, low: 20, rain: '20%' },
+          { day: '25日(金)', icon: 'cloud', high: 25, low: 20, rain: '40%' },
+          { day: '26日(土)', icon: 'cloud-rain', high: 21, low: 18, rain: '80%' },
+          { day: '27日(日)', icon: 'cloud-rain', high: 22, low: 17, rain: '60%' },
+          { day: '28日(月)', icon: 'cloud-rain', high: 27, low: 19, rain: '60%' }
+        ]
+      },
+      omiya: {
+        name: '埼玉県 さいたま市大宮区',
+        en: 'SAITAMA OMIYA',
+        currentTemp: '28.5°C',
+        condition: '晴れ',
+        icon: 'sun',
+        humidity: '45%',
+        pressure: '1013hPa',
+        wind: '北西 3.8m/s',
+        rain: '0%',
+        weekly: [
+          { day: '今日(火)', icon: 'sun', high: 30, low: 22, rain: '0%' },
+          { day: '23日(水)', icon: 'cloud-sun', high: 25, low: 19, rain: '20%' },
+          { day: '24日(木)', icon: 'cloud-sun', high: 29, low: 20, rain: '10%' },
+          { day: '25日(金)', icon: 'cloud', high: 25, low: 19, rain: '50%' },
+          { day: '26日(土)', icon: 'cloud-rain', high: 22, low: 18, rain: '70%' },
+          { day: '27日(日)', icon: 'cloud-rain', high: 22, low: 17, rain: '50%' },
+          { day: '28日(月)', icon: 'cloud-rain', high: 26, low: 18, rain: '50%' }
+        ]
+      },
+      chuo: {
+        name: '東京都 中央区',
+        en: 'TOKYO CHUO-KU',
+        currentTemp: '29.5°C',
+        condition: '晴れ時々曇',
+        icon: 'cloud-sun',
+        humidity: '50%',
+        pressure: '1012hPa',
+        wind: '南東 4.5m/s',
+        rain: '0%',
+        weekly: [
+          { day: '今日(火)', icon: 'cloud-sun', high: 31, low: 24, rain: '10%' },
+          { day: '23日(水)', icon: 'cloud', high: 25, low: 21, rain: '30%' },
+          { day: '24日(木)', icon: 'cloud-sun', high: 28, low: 21, rain: '20%' },
+          { day: '25日(金)', icon: 'cloud', high: 26, low: 21, rain: '40%' },
+          { day: '26日(土)', icon: 'cloud-rain', high: 22, low: 19, rain: '80%' },
+          { day: '27日(日)', icon: 'cloud-rain', high: 23, low: 18, rain: '60%' },
+          { day: '28日(月)', icon: 'cloud-rain', high: 27, low: 20, rain: '50%' }
+        ]
+      },
+      niigata: {
+        name: '新潟県 新潟市中央区',
+        en: 'NIIGATA CHUO-KU',
+        currentTemp: '21.0°C',
+        condition: '曇り',
+        icon: 'cloud',
+        humidity: '76%',
+        pressure: '1016hPa',
+        wind: '北 4.5m/s',
+        rain: '30%',
+        weekly: [
+          { day: '今日(火)', icon: 'cloud', high: 23, low: 19, rain: '30%' },
+          { day: '23日(水)', icon: 'cloud-rain', high: 22, low: 17, rain: '60%' },
+          { day: '24日(木)', icon: 'cloud-rain', high: 23, low: 18, rain: '70%' },
+          { day: '25日(金)', icon: 'cloud', high: 24, low: 18, rain: '40%' },
+          { day: '26日(土)', icon: 'cloud-rain', high: 23, low: 18, rain: '50%' },
+          { day: '27日(日)', icon: 'cloud-sun', high: 24, low: 18, rain: '30%' },
+          { day: '28日(月)', icon: 'cloud', high: 24, low: 18, rain: '40%' }
+        ]
+      },
+      kanazawa: {
+        name: '石川県 金沢市',
+        en: 'ISHIKAWA KANAZAWA',
+        currentTemp: '22.5°C',
+        condition: '薄曇り',
+        icon: 'cloud',
+        humidity: '68%',
+        pressure: '1015hPa',
+        wind: '北東 2.2m/s',
+        rain: '10%',
+        weekly: [
+          { day: '今日(火)', icon: 'cloud-sun', high: 26, low: 20, rain: '10%' },
+          { day: '23日(水)', icon: 'cloud-rain', high: 24, low: 18, rain: '50%' },
+          { day: '24日(木)', icon: 'cloud-rain', high: 25, low: 19, rain: '60%' },
+          { day: '25日(金)', icon: 'cloud', high: 25, low: 19, rain: '30%' },
+          { day: '26日(土)', icon: 'cloud-rain', high: 24, low: 18, rain: '50%' },
+          { day: '27日(日)', icon: 'cloud-rain', high: 25, low: 18, rain: '60%' },
+          { day: '28日(月)', icon: 'cloud-rain', high: 25, low: 18, rain: '50%' }
+        ]
+      }
+    };
+
+    function selectCity(cityKey) {
+      const city = weatherDataByCity[cityKey];
+      if (!city) return;
+
+      document.querySelectorAll('.city-pill').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('onclick').includes(cityKey)) {
+          btn.classList.add('active');
+        }
+      });
+
+      document.getElementById('current-location-text').textContent = city.name;
+      document.getElementById('panel-location-header').textContent = `01 // CHRONO & 7-DAY OUTLOOK [${city.en}]`;
+      
+      document.getElementById('current-temp-val').textContent = city.currentTemp;
+      document.getElementById('current-condition-val').textContent = city.condition;
+      
+      const iconColor = city.icon === 'sun' ? '#f59e0b' : (city.icon === 'cloud-rain' ? '#38bdf8' : 'var(--accent-main)');
+      document.getElementById('current-weather-icon-box').innerHTML = `<i data-lucide="${city.icon}" style="width: 14cqw; height: 14cqw; color: ${iconColor};"></i>`;
+
+      document.getElementById('current-humidity-val').textContent = city.humidity;
+      document.getElementById('current-pressure-val').textContent = city.pressure;
+      document.getElementById('current-wind-val').textContent = city.wind;
+      document.getElementById('current-rain-val').textContent = city.rain;
+
+      const container = document.getElementById('weekly-matrix-container');
+      container.innerHTML = city.weekly.map((item, idx) => `
+        <div class="weekly-day-cell ${idx === 0 ? 'today' : ''}">
+          <div class="day-cell-name">${item.day}</div>
+          <div class="day-cell-icon">
+            <i data-lucide="${item.icon}" style="width: 28px; height: 28px; color: ${item.icon === 'sun' ? '#f59e0b' : (item.icon === 'cloud-rain' ? '#38bdf8' : 'var(--accent-main)')};"></i>
+          </div>
+          <div class="day-cell-temps">
+            <span class="temp-high">${item.high}°</span>
+            <span class="temp-low">${item.low}°</span>
+          </div>
+          <div class="rain-chance-badge">${item.rain}</div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    // -------------------------------------------------------------
+    // 2. 右側パネル（ニュース・警報・電車リスト ＆ 上から下への無限ロール）
+    // -------------------------------------------------------------
+    const newsList = [
+      { tag: '速報', text: '秋雨前線の活発化に伴う大雨警戒情報を気象庁が更新、急な強い雨や落雷に警戒を呼びかけ', time: '11:02' },
+      { tag: 'IT・科学', text: '次世代高精度気象レーダー網のデータリアルタイム公開が試験運用開始、解像度向上で豪雨予測を強化', time: '10:48' },
+      { tag: '地域交通', text: '中川・新金線周辺における次世代交通システムの実証実験が拡大、自動運行バスの接続テスト推進', time: '10:30' },
+      { tag: '経済', text: '日経平均株価は続伸、高配当銘柄およびインフラ関連株に買い先行の展開が続く', time: '10:15' },
+      { tag: '行政', text: '東京都、防災アプリの緊急通知システム強化と避難所リアルタイム混雑情報の連携開始を発表', time: '09:50' },
+      { tag: 'テクノロジー', text: 'オープンソースAIモデルの端末側軽量高速化技術が進展、端末単体での即時推論が一般化へ', time: '09:20' }
+    ];
+
+    const alertsList = [
+      { title: '雷・強風注意報', desc: '東京都葛飾区 / 東京地方（竜巻などの激しい突風・急な強い雨に注意）', status: '発表中', type: 'warn' },
+      { title: '大雨・洪水注意報', desc: '東京23区東部エリア（中川・荒川・江戸川流域）', status: '解除', type: 'ok' },
+      { title: '熱中症警戒アラート', desc: '東京都全域（暑さ指数 WBGT 基準未満）', status: '基準未満', type: 'ok' },
+      { title: '地震速報（震度3以上）', desc: '東京都23区内・直近24時間以内', status: '検知なし', type: 'ok' },
+      { title: '津波警報・注意報', desc: '日本沿岸全域', status: '発表なし', type: 'ok' },
+      { title: '高潮注意報', desc: '東京湾沿岸域', status: '注意報なし', type: 'ok' }
+    ];
+
+    const transitList = [
+      { name: 'JR 常磐線（各停・快速）', line: '綾瀬 〜 金町 〜 我孫子・取手', status: '平常運転', ok: true },
+      { name: '京成本線 / 金町線', line: '京成高砂・柴又・金町', status: '平常運転', ok: true },
+      { name: '東京メトロ 千代田線', line: '代々木上原 〜 北千住・綾瀬', status: '一部遅れ (約5分)', ok: false },
+      { name: 'JR 総武線（快速・各停）', line: '新小岩・市川・千葉 方面', status: '平常運転', ok: true },
+      { name: 'つくばエクスプレス', line: '秋葉原 〜 北千住 〜 つくば', status: '平常運転', ok: true },
+      { name: 'JR 山手線', line: '内回り・外回り 全線', status: '平常運転', ok: true },
+      { name: '都営 浅草線', line: '押上 〜 浅草 〜 西馬込', status: '平常運転', ok: true }
+    ];
+
+    function buildRollTracks() {
+      const newsTrack = document.getElementById('news-scroll-track');
+      const doubleNews = [...newsList, ...newsList];
+      newsTrack.innerHTML = doubleNews.map(item => `
+        <div class="news-card-roll">
+          <span class="news-tag-badge">${item.tag}</span>
+          <div class="news-body-content">
+            <div class="news-title-multiline">${item.text}</div>
+            <div class="news-time-sub">${item.time}</div>
+          </div>
+        </div>
+      `).join('');
+
+      const alertsTrack = document.getElementById('alerts-scroll-track');
+      const doubleAlerts = [...alertsList, ...alertsList];
+      alertsTrack.innerHTML = doubleAlerts.map(item => `
+        <div class="alert-card-roll">
+          <div class="alert-info-box">
+            <div class="alert-huge-title" style="color: ${item.type === 'warn' ? 'var(--accent-warn)' : 'var(--text-head)'};">${item.title}</div>
+            <div class="alert-desc-large">${item.desc}</div>
+          </div>
+          <span class="status-badge-large ${item.type === 'warn' ? 'badge-warn' : 'badge-ok'}">${item.status}</span>
+        </div>
+      `).join('');
+
+      const transitTrack = document.getElementById('transit-scroll-track');
+      const doubleTransit = [...transitList, ...transitList];
+      transitTrack.innerHTML = doubleTransit.map(item => `
+        <div class="transit-card-roll">
+          <div>
+            <div class="transit-huge-name">${item.name}</div>
+            <div class="transit-section-large">${item.line}</div>
+          </div>
+          <span class="status-badge-large ${item.ok ? 'badge-ok' : 'badge-danger'}">
+            <i data-lucide="${item.ok ? 'check' : 'alert-circle'}" style="width:16px;height:16px;"></i>
+            ${item.status}
+          </span>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    // -------------------------------------------------------------
+    // 3. 右側 タイマー選択（1分/2分/3分） ＆ 自動ページ切り替え
+    // -------------------------------------------------------------
+    const rightPages = [
+      { id: 'right-slot-map', title: '02 // JAPAN PRECIPITATION RADAR [SLOT]' },
+      { id: 'right-slot-news', title: '02 // NEWS HEADLINES [AUTO-ROLL]' },
+      { id: 'right-slot-alerts', title: '02 // DISASTER & WEATHER ALERTS [AUTO-ROLL]' },
+      { id: 'right-slot-transit', title: '02 // METROPOLITAN TRANSIT STATUS [AUTO-ROLL]' }
+    ];
+
+    let currentRightPageIndex = 0;
+    let rightTimer = 0;
+    let cycleDuration = 60000; // 初期値：60秒 (1分)
+
+    function switchRightPage(index) {
+      currentRightPageIndex = index;
+      rightTimer = 0;
+
+      document.querySelectorAll('.switch-tab-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === index);
+      });
+
+      rightPages.forEach((page, idx) => {
+        const el = document.getElementById(page.id);
+        if (el) {
+          el.classList.toggle('active', idx === index);
+        }
+      });
+
+      document.getElementById('right-panel-header-title').textContent = rightPages[index].title;
+    }
+
+    function setTimerCycle(minutes) {
+      cycleDuration = minutes * 60000;
+      rightTimer = 0;
+      
+      document.querySelectorAll('.timer-set-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent.includes(minutes + '分')) {
+          btn.classList.add('active');
+        }
+      });
+    }
+
+    setInterval(() => {
+      rightTimer += 100;
+      const progress = (rightTimer / cycleDuration) * 100;
+      document.getElementById('timer-bar-fill').style.width = `${progress}%`;
+
+      if (rightTimer >= cycleDuration) {
+        currentRightPageIndex = (currentRightPageIndex + 1) % rightPages.length;
+        switchRightPage(currentRightPageIndex);
+      }
+    }, 100);
+
+    // -------------------------------------------------------------
+    // 4. テーマ切り替え機能
+    // -------------------------------------------------------------
+    function setTheme(themeName) {
+      document.body.setAttribute('data-theme', themeName);
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('onclick').includes(themeName)) {
+          btn.classList.add('active');
+        }
+      });
+      lucide.createIcons();
+    }
+
+    // -------------------------------------------------------------
+    // 5. フルスクリーン機能
+    // -------------------------------------------------------------
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          alert(`全画面表示エラー: ${err.message}`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 6. 時計のリアルタイム更新
+    // -------------------------------------------------------------
+    function updateClock() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const date = String(now.getDate()).padStart(2, '0');
+      const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+      const dayName = days[now.getDay()];
+
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+
+      document.getElementById('date-text').textContent = `${year}.${month}.${date} ${dayName}`;
+      document.getElementById('time-main').textContent = `${hours}:${minutes}`;
+      document.getElementById('time-sec').textContent = `:${seconds}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // 初期化実行
+    selectCity('katsushika');
+    buildRollTracks();
+  </script>
+</body>
+</html>
