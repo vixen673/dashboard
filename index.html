@@ -16,7 +16,7 @@
   
   <style>
     /* ==========================================================================
-       THEME PRESETS (2テーマ厳選：01 PURE WHITE / 02 ULTRA COOL)
+       THEME PRESETS (01 PURE WHITE / 02 ULTRA COOL)
        ========================================================================== */
     body[data-theme="clean-white"] {
       --bg-base: #eef2f6;
@@ -40,7 +40,6 @@
       --sub-card-border: rgba(203, 213, 225, 0.9);
       --font-family-base: 'Outfit', 'Zen Kaku Gothic New', sans-serif;
       --font-family-clock: 'Outfit', sans-serif;
-      --show-brackets: none;
     }
 
     body[data-theme="ultra-cool"] {
@@ -64,7 +63,6 @@
       --sub-card-border: rgba(255, 255, 255, 0.1);
       --font-family-base: 'Outfit', 'Zen Kaku Gothic New', sans-serif;
       --font-family-clock: 'Outfit', monospace;
-      --show-brackets: none;
     }
 
     :root {
@@ -76,24 +74,142 @@
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease; }
     body { background-color: var(--bg-base); background-image: var(--bg-pattern); background-size: var(--pattern-size); color: var(--text-body); font-family: var(--font-family-base); width: 100vw; height: 100vh; overflow: hidden; display: flex; flex-direction: column; position: relative; }
 
-    /* TOP BAR */
-    .top-statusbar { position: relative; z-index: 10; height: 42px; padding: 0 1.2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--panel-border); background: var(--panel-bg); backdrop-filter: blur(12px); }
-    .brand-title { font-weight: 800; font-size: 0.92rem; color: var(--accent-main); display: flex; align-items: center; gap: 8px; letter-spacing: 0.05em; }
-    .theme-selector-group { display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.15); padding: 3px; border-radius: 8px; border: 1px solid var(--panel-border); }
-    .theme-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); font-family: inherit; font-size: 0.74rem; font-weight: 700; padding: 4px 12px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.15s ease; }
-    .theme-btn:hover { color: var(--text-head); background: rgba(255,255,255,0.06); }
-    .theme-btn.active { background: var(--accent-main); color: #fff; border-color: var(--accent-main); box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
-    .fullscreen-btn { background: transparent; border: 1px solid var(--panel-border); color: var(--text-body); padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; gap: 5px; }
-    .fullscreen-btn:hover { background: var(--card-item-bg); border-color: var(--accent-main); }
+    /* ==========================================================================
+       TOP STATUS BAR (タブ移設・ゆったりレイアウト)
+       ========================================================================== */
+    .top-statusbar {
+      position: relative;
+      z-index: 1000;
+      height: 44px;
+      padding: 0 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--panel-border);
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      gap: 12px;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: var(--accent-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    /* テーマ切り替えボタン */
+    .theme-selector-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(0,0,0,0.1);
+      padding: 3px;
+      border-radius: 6px;
+      border: 1px solid var(--panel-border);
+    }
+    .theme-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .theme-btn.active {
+      background: var(--accent-main);
+      color: #fff;
+      border-color: var(--accent-main);
+    }
+
+    /* トップバーへ移設したメインタブ群 */
+    .top-view-tabs {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .top-tab-btn {
+      background: var(--card-item-bg);
+      border: 1px solid var(--panel-border);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .top-tab-btn:hover { color: var(--text-head); border-color: var(--accent-main); }
+    .top-tab-btn.active { background: var(--accent-main); color: #fff; border-color: var(--accent-main); }
+
+    .fullscreen-btn {
+      background: transparent;
+      border: 1px solid var(--panel-border);
+      color: var(--text-body);
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.76rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
 
     /* 50:50 SPLIT GRID */
-    .dashboard-split-grid { position: relative; z-index: 10; flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; height: calc(100vh - 42px); }
-    .hud-panel { position: relative; background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: var(--panel-radius); backdrop-filter: blur(12px); box-shadow: var(--panel-shadow); display: flex; flex-direction: column; overflow: hidden; height: 100%; }
-    .panel-header { height: 38px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--panel-border); background: var(--header-bg); font-weight: 800; font-size: 0.82rem; letter-spacing: 0.05em; color: var(--accent-main); }
+    .dashboard-split-grid {
+      position: relative;
+      z-index: 10;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 10px;
+      height: calc(100vh - 44px);
+    }
+    .hud-panel {
+      position: relative;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--panel-radius);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--panel-shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      height: 100%;
+    }
+    .panel-header {
+      height: 38px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--panel-border);
+      background: var(--header-bg);
+      font-weight: 800;
+      font-size: 0.82rem;
+      letter-spacing: 0.05em;
+      color: var(--accent-main);
+    }
     .panel-body { flex: 1; padding: 10px 12px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
 
     /* ==========================================================================
-       【左側パネル】上段全幅時計 ＆ 中段気象（見切れ防止レスポンシブ） ＆ 最下段都市
+       【左側パネル】上段時計 ＆ 中段都市選択バー ＆ 下段気象実況
        ========================================================================== */
     .left-ultimate-container {
       display: flex;
@@ -148,7 +264,52 @@
       margin-left: 1.5cqw;
     }
 
-    /* 2. 中段：気象実況エリア（左44% : 右56% 比率配分） */
+    /* 2. 中段：都市選択バー（タッチ確実・直感的な一等地に配置） */
+    .city-selection-bar-middle {
+      background: var(--card-item-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .city-selection-label-middle {
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: var(--text-head);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .city-buttons-row-middle {
+      display: flex;
+      gap: 6px;
+      flex: 1;
+      overflow-x: auto;
+    }
+
+    .city-pill-middle {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .city-pill-middle:hover { color: var(--text-head); border-color: var(--accent-main); }
+    .city-pill-middle.active { background: var(--accent-main); color: #fff; border-color: var(--accent-main); font-weight: 800; }
+
+    /* 3. 下段：気象実況エリア（左44% : 右56% 比率配分） */
     .weather-telemetry-fullbox {
       flex: 1.4;
       background: var(--card-item-bg);
@@ -209,7 +370,7 @@
       white-space: nowrap;
     }
 
-    /* 右列：湿度 ＆ 風速（単位分離・見切れ防止） */
+    /* 右列：湿度 ＆ 風速（単位分離・見切れ完全解消） */
     .telemetry-right-col {
       display: flex;
       flex-direction: column;
@@ -237,7 +398,6 @@
       white-space: nowrap;
     }
 
-    /* 湿度：数字特大＋単位添え字 */
     .humidity-val-group {
       display: flex;
       align-items: baseline;
@@ -256,7 +416,6 @@
       margin-left: 2px;
     }
 
-    /* 風速：方角と数字＋単位を最適配置 */
     .wind-speed-group {
       display: flex;
       align-items: baseline;
@@ -275,96 +434,85 @@
       margin-left: 3px;
     }
 
-    /* 3. 最下段：都市選択バー（大宮・千代田区へ短縮表記） */
-    .city-selection-bar-bottom {
-      background: var(--card-item-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 6px;
-      padding: 6px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .city-selection-label-bottom {
-      font-size: 0.84rem;
-      font-weight: 800;
-      color: var(--text-head);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      white-space: nowrap;
-    }
-
-    .city-buttons-row-bottom {
-      display: flex;
-      gap: 6px;
-      flex: 1;
-      overflow-x: auto;
-    }
-
-    .city-pill-bottom {
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      color: var(--text-muted);
-      font-family: inherit;
-      font-size: 0.76rem;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.15s ease;
-    }
-
-    .city-pill-bottom:hover { color: var(--text-head); border-color: var(--accent-main); }
-    .city-pill-bottom.active { background: var(--accent-main); color: #fff; border-color: var(--accent-main); font-weight: 800; }
-
     /* ==========================================================================
-       【右側パネル】スリムタブ・文字切れ完全防止 ＆ 各種スロット
+       【右側パネル】右ヘッダー余裕配置（SYNC・タイマーデフォルト3分）
        ========================================================================== */
-    .right-header-meta { display: flex; align-items: center; gap: 10px; }
+    .right-header-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
     .sync-timestamp-badge {
       font-family: var(--font-family-clock);
-      font-size: 0.72rem;
+      font-size: 0.76rem;
       font-weight: 800;
       color: var(--accent-ok);
       background: rgba(16, 185, 129, 0.12);
       border: 1px solid var(--accent-ok);
-      padding: 2px 6px;
-      border-radius: 3px;
+      padding: 3px 8px;
+      border-radius: 4px;
       white-space: nowrap;
     }
 
-    /* 改行を絶対に防ぎ、均等に並べるタブグループ */
-    .page-switch-tabs { display: flex; gap: 5px; flex-shrink: 0; }
-    .switch-tab-btn {
-      background: transparent;
+    .timer-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0,0,0,0.12);
       border: 1px solid var(--panel-border);
+      border-radius: 5px;
+      padding: 2px;
+    }
+    .timer-set-btn {
+      background: transparent;
+      border: none;
       color: var(--text-muted);
-      font-family: inherit;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 800;
       padding: 4px 10px;
       border-radius: 4px;
       cursor: pointer;
-      white-space: nowrap; /* 縦並び・改行を完全阻止 */
-      transition: all 0.15s ease;
     }
-    .switch-tab-btn:hover { color: var(--text-head); }
-    .switch-tab-btn.active { background: var(--accent-main); color: #fff; border-color: var(--accent-main); }
-    
-    .timer-controls-group { display: flex; align-items: center; gap: 3px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 2px; }
-    .timer-set-btn { background: transparent; border: none; color: var(--text-muted); font-size: 0.7rem; font-weight: 800; padding: 3px 6px; border-radius: 3px; cursor: pointer; }
-    .timer-set-btn.active { background: var(--accent-sub); color: #fff; }
-    .timer-progress-wrap { width: 45px; height: 6px; background: rgba(0,0,0,0.25); border-radius: 3px; overflow: hidden; }
-    .timer-progress-fill { height: 100%; width: 0%; background: var(--accent-main); transition: width 0.1s linear; }
+    .timer-set-btn.active {
+      background: var(--accent-main);
+      color: #fff;
+    }
+    .timer-progress-wrap {
+      width: 60px;
+      height: 7px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .timer-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent-main);
+      transition: width 0.1s linear;
+    }
 
-    .right-view-slot { flex: 1; height: 100%; display: none; flex-direction: column; position: relative; overflow: hidden; opacity: 0; transition: opacity 0.3s ease; }
+    .right-view-slot {
+      flex: 1;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
     .right-view-slot.active { display: flex; opacity: 1; }
 
     /* 1. レーダーマップ用 */
-    .radar-slot-fullscreen { width: 100%; height: 100%; border: 1px solid var(--panel-border); border-radius: 8px; position: relative; overflow: hidden; background: #121212; }
+    .radar-slot-fullscreen {
+      width: 100%;
+      height: 100%;
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      background: #121212;
+    }
     #map-japan { width: 100%; height: 100%; z-index: 1; }
 
     /* 2. ニュース：固定8本枠 ＆ 右から左へ流れる横ティッカー（減速32s・極太3.2rem） */
@@ -546,7 +694,7 @@
     .infinite-scroll-track-down:hover { animation-play-state: paused; }
     @keyframes smoothScrollDown { 0% { transform: translateY(0); } 100% { transform: translateY(50%); } }
 
-    /* ALL CLEAR表示（2倍特大） */
+    /* ALL CLEAR表示 */
     .all-clear-hud-box {
       flex: 1;
       display: flex;
@@ -612,7 +760,7 @@
       color: var(--accent-ok);
     }
 
-    /* [警報コンボ・下半分] 向こう3日間の天気予報（リアルタイム連動） */
+    /* [警報コンボ・下半分] 向こう3日間の天気予報 */
     .combo-bottom-forecast {
       flex: 1.15;
       display: flex;
@@ -744,16 +892,27 @@
 </head>
 <body data-theme="clean-white">
 
-  <!-- TOP BAR (2テーマ構成：01 PURE WHITE / 02 ULTRA COOL) -->
+  <!-- ==========================================================================
+       TOP STATUS BAR (タブ移設・ゆったりレイアウト)
+       ========================================================================== -->
   <header class="top-statusbar">
     <div class="brand-title">
       <i data-lucide="layout-dashboard" style="width: 17px; height: 17px;"></i>
-      <span id="header-terminal-title">WALL MONITOR // DUAL SPLIT SYSTEM</span>
+      <span>WALL MONITOR</span>
     </div>
 
+    <!-- 2テーマ切り替え (01 PURE WHITE / 02 ULTRA COOL) -->
     <div class="theme-selector-group">
       <button class="theme-btn active" onclick="setTheme('clean-white')"><i data-lucide="sun" style="width: 13px; height: 13px;"></i> 01 PURE WHITE</button>
       <button class="theme-btn" onclick="setTheme('ultra-cool')"><i data-lucide="shield" style="width: 13px; height: 13px;"></i> 02 ULTRA COOL</button>
+    </div>
+
+    <!-- トップバーへ移設したメインタブ群 -->
+    <div class="top-view-tabs">
+      <button class="top-tab-btn active" onclick="switchRightPage(0)">雨量</button>
+      <button class="top-tab-btn" onclick="switchRightPage(1)">ニュース</button>
+      <button class="top-tab-btn" onclick="switchRightPage(2)">警報・天気</button>
+      <button class="top-tab-btn" onclick="switchRightPage(3)">鉄道</button>
     </div>
 
     <button class="fullscreen-btn" onclick="toggleFullScreen()"><i data-lucide="maximize" style="width: 14px; height: 14px;"></i> FULLSCREEN</button>
@@ -763,7 +922,7 @@
   <main class="dashboard-split-grid">
 
     <!-- ====================================================================
-         【左側全面】上段全幅時計 ＆ 中段気象特大（見切れ解消） ＆ 最下段都市選択
+         【左側全面】上段時計 ＆ 中段都市選択バー ＆ 下段気象実況
          ==================================================================== -->
     <section class="hud-panel">
       <div class="panel-header">
@@ -777,12 +936,27 @@
           <div class="clock-fullwidth-box">
             <div id="date-text" class="clock-date-fullwidth">2026.09.23 WED</div>
             <div class="clock-digits-fullwidth">
-              <span id="time-main" class="digits-main-fullwidth">11:28</span>
-              <span id="time-sec" class="digits-sec-fullwidth">:35</span>
+              <span id="time-main" class="digits-main-fullwidth">11:37</span>
+              <span id="time-sec" class="digits-sec-fullwidth">:19</span>
             </div>
           </div>
 
-          <!-- 2. 中段：気象実況エリア（左44% : 右56%・単位分離設計） -->
+          <!-- 2. 中段：都市選択バー（一等地へ移動・タッチ確実） -->
+          <div class="city-selection-bar-middle">
+            <div class="city-selection-label-middle">
+              <i data-lucide="map-pin" style="width: 14px; height: 14px; color: var(--accent-main);"></i>
+              <span id="current-location-text">東京都 葛飾区</span>
+            </div>
+            <div class="city-buttons-row-middle">
+              <button class="city-pill-middle active" onclick="selectCity('katsushika')">葛飾区</button>
+              <button class="city-pill-middle" onclick="selectCity('omiya')">大宮</button>
+              <button class="city-pill-middle" onclick="selectCity('chiyoda')">千代田区</button>
+              <button class="city-pill-middle" onclick="selectCity('niigata')">新潟中央区</button>
+              <button class="city-pill-middle" onclick="selectCity('kanazawa')">金沢市</button>
+            </div>
+          </div>
+
+          <!-- 3. 下段：気象実況エリア（左44% : 右56%・見切れ防止） -->
           <div class="weather-telemetry-fullbox">
             
             <!-- 左列：気温 ＆ 天気＋降水確率 -->
@@ -798,7 +972,7 @@
               </div>
             </div>
 
-            <!-- 右列：湿度 ＆ 風速（見切れ防止レスポンシブ） -->
+            <!-- 右列：湿度 ＆ 風速（単位分離・見切れ防止） -->
             <div class="telemetry-right-col">
               
               <!-- 湿度（数字特大＋単位分離） -->
@@ -826,46 +1000,24 @@
 
           </div>
 
-          <!-- 3. 最下段：都市選択バー（大宮・千代田区へ短縮表記） -->
-          <div class="city-selection-bar-bottom">
-            <div class="city-selection-label-bottom">
-              <i data-lucide="map-pin" style="width: 14px; height: 14px; color: var(--accent-main);"></i>
-              <span id="current-location-text">東京都 葛飾区</span>
-            </div>
-            <div class="city-buttons-row-bottom">
-              <button class="city-pill-bottom active" onclick="selectCity('katsushika')">葛飾区</button>
-              <button class="city-pill-bottom" onclick="selectCity('omiya')">大宮</button>
-              <button class="city-pill-bottom" onclick="selectCity('chiyoda')">千代田区</button>
-              <button class="city-pill-bottom" onclick="selectCity('niigata')">新潟中央区</button>
-              <button class="city-pill-bottom" onclick="selectCity('kanazawa')">金沢市</button>
-            </div>
-          </div>
-
         </div>
       </div>
     </section>
 
     <!-- ====================================================================
-         【右側全面】改行阻止スリムタブ ＆ 警報/3日間天気コンボ ＆ レーダー
+         【右側全面】余裕のヘッダー（SYNC・3分タイマー） ＆ スロット表示
          ==================================================================== -->
     <section class="hud-panel">
       <div class="panel-header">
         <span id="right-panel-header-title">02 // JAPAN PRECIPITATION RADAR [LIVE]</span>
         <div class="right-header-meta">
-          <span id="sync-timestamp" class="sync-timestamp-badge">SYNC: 11:28 [5m]</span>
+          <span id="sync-timestamp" class="sync-timestamp-badge">SYNC: 11:37 [5m]</span>
 
-          <!-- 改行・文字切れを完全に防止したタブボタン群 -->
-          <div class="page-switch-tabs">
-            <button class="switch-tab-btn active" onclick="switchRightPage(0)">雨量</button>
-            <button class="switch-tab-btn" onclick="switchRightPage(1)">ニュース</button>
-            <button class="switch-tab-btn" onclick="switchRightPage(2)">警報・天気</button>
-            <button class="switch-tab-btn" onclick="switchRightPage(3)">鉄道</button>
-          </div>
-          
+          <!-- タイマー切り替え（デフォルト3分） -->
           <div class="timer-controls-group">
-            <button class="timer-set-btn active" onclick="setTimerCycle(1)">1分</button>
+            <button class="timer-set-btn" onclick="setTimerCycle(1)">1分</button>
             <button class="timer-set-btn" onclick="setTimerCycle(2)">2分</button>
-            <button class="timer-set-btn" onclick="setTimerCycle(3)">3分</button>
+            <button class="timer-set-btn active" onclick="setTimerCycle(3)">3分</button>
           </div>
 
           <div class="timer-progress-wrap">
@@ -875,7 +1027,7 @@
       </div>
       <div class="panel-body" style="padding: 0;">
 
-        <!-- 1. 日本全国 広域レーダー（ズーム8.0・新潟中心固定） -->
+        <!-- 1. 日本全国 広域レーダー（写真の縮尺7.3・新潟中心固定） -->
         <div id="right-slot-map" class="right-view-slot active" style="padding: 10px;">
           <div class="radar-slot-fullscreen">
             <div id="map-japan"></div>
@@ -933,14 +1085,15 @@
     document.addEventListener('visibilitychange', () => { if (wakeLock !== null && document.visibilityState === 'visible') requestWakeLock(); });
 
     // ==========================================
-    // 1. レーダーマップ（ズーム8.0・新潟中心に固定）
+    // 1. レーダーマップ（画像29の写真の縮尺7.3・新潟/関東中心に完全固定）
     // ==========================================
     let mapJapan;
     let radarLayerJapan = null;
     const emptyTile = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
     
     function initMap() {
-      mapJapan = L.map('map-japan', { zoomControl: true, attributionControl: false }).setView([37.2, 139.0], 8.0);
+      // 緯度36.6, 経度138.6, ズーム7.3で写真と同一の黄金比率に固定
+      mapJapan = L.map('map-japan', { zoomControl: true, attributionControl: false, zoomSnap: 0.1 }).setView([36.6, 138.6], 7.3);
       L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', { maxZoom: 18, opacity: 0.85 }).addTo(mapJapan);
       updateRadarMap();
       setInterval(updateRadarMap, 5 * 60 * 1000);
@@ -1186,7 +1339,7 @@
       const city = CITIES[cityKey];
       if (!city) return;
 
-      document.querySelectorAll('.city-pill-bottom').forEach(btn => {
+      document.querySelectorAll('.city-pill-middle').forEach(btn => {
         btn.classList.remove('active');
         if (btn.getAttribute('onclick').includes(cityKey)) btn.classList.add('active');
       });
@@ -1258,7 +1411,7 @@
     }
 
     // ==========================================
-    // 右側：ページ切り替え ＆ タイマー選択
+    // 右側：ページ切り替え ＆ タイマー選択（デフォルト3分）
     // ==========================================
     const rightPages = [
       { id: 'right-slot-map', title: '02 // JAPAN PRECIPITATION RADAR [LIVE]' },
@@ -1269,12 +1422,12 @@
 
     let currentRightPageIndex = 0;
     let rightTimer = 0;
-    let cycleDuration = 60000;
+    let cycleDuration = 3 * 60000; // ★デフォルト3分
 
     function switchRightPage(index) {
       currentRightPageIndex = index;
       rightTimer = 0;
-      document.querySelectorAll('.switch-tab-btn').forEach((btn, idx) => { btn.classList.toggle('active', idx === index); });
+      document.querySelectorAll('.top-tab-btn').forEach((btn, idx) => { btn.classList.toggle('active', idx === index); });
       rightPages.forEach((page, idx) => {
         const el = document.getElementById(page.id);
         if (el) el.classList.toggle('active', idx === index);
