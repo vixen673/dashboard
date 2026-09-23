@@ -5,19 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>WALL MONITOR // 50:50 SPLIT & JMA WEATHER SYSTEM</title>
   
-  <!-- Google Fonts & Lucide Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700;800&family=Outfit:wght@400;600;700;800&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   
   <style>
-    /* ==========================================================================
-       THEME PRESETS
-       ========================================================================== */
     body[data-theme="clean-white"] {
       --bg-base: #eef2f6;
       --bg-pattern: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
@@ -70,9 +65,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease; }
     body { background-color: var(--bg-base); background-image: var(--bg-pattern); background-size: var(--pattern-size); color: var(--text-body); font-family: var(--font-family-base); width: 100vw; height: 100vh; overflow: hidden; display: flex; flex-direction: column; position: relative; }
 
-    /* ==========================================================================
-       TOP STATUS BAR
-       ========================================================================== */
     .top-statusbar { position: relative; z-index: 1000; height: 44px; padding: 0 1.2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--panel-border); background: var(--panel-bg); backdrop-filter: blur(12px); gap: 12px; }
     .brand-title { font-weight: 800; font-size: 0.92rem; color: var(--accent-main); display: flex; align-items: center; gap: 8px; letter-spacing: 0.05em; white-space: nowrap; }
 
@@ -87,15 +79,11 @@
 
     .fullscreen-btn { background: transparent; border: 1px solid var(--panel-border); color: var(--text-body); padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
 
-    /* 50:50 SPLIT GRID */
     .dashboard-split-grid { position: relative; z-index: 10; flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; height: calc(100vh - 44px); }
     .hud-panel { position: relative; background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: var(--panel-radius); backdrop-filter: blur(12px); box-shadow: var(--panel-shadow); display: flex; flex-direction: column; overflow: hidden; height: 100%; }
     .panel-header { height: 38px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--panel-border); background: var(--header-bg); font-weight: 800; font-size: 0.82rem; letter-spacing: 0.05em; color: var(--accent-main); }
     .panel-body { flex: 1; padding: 10px 12px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
 
-    /* ==========================================================================
-       【左側パネル】
-       ========================================================================== */
     .left-ultimate-container { display: flex; flex-direction: column; height: 100%; justify-content: space-between; gap: 10px; }
 
     .clock-fullwidth-box { flex: 1.1; background: var(--card-item-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px 18px; display: flex; flex-direction: column; justify-content: center; gap: 6px; container-type: inline-size; }
@@ -111,16 +99,86 @@
     .city-pill-middle:hover { color: var(--text-head); border-color: var(--accent-main); }
     .city-pill-middle.active { background: var(--accent-main); color: #fff; border-color: var(--accent-main); font-weight: 800; }
 
-    .weather-telemetry-fullbox { flex: 1.4; background: var(--card-item-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px 14px; display: grid; grid-template-columns: 46% 54%; gap: 12px; container-type: inline-size; }
-    
-    .telemetry-left-col { display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--panel-border); padding-right: 10px; container-type: inline-size; }
-    .temp-huge-display { font-family: var(--font-family-clock); font-size: 32cqw; font-weight: 900; color: var(--text-head); line-height: 0.95; }
-    .weather-desc-block { display: flex; align-items: center; gap: 14px; margin-top: auto; padding-bottom: 5px; }
-    .cond-label-huge { font-size: 11.5cqw; font-weight: 800; color: var(--text-head); line-height: 1.25; }
-    .rain-val-huge { font-family: var(--font-family-clock); font-size: 11cqw; font-weight: 800; color: var(--accent-main); line-height: 1; margin-top: 6px; }
+    /* ==========================================================================
+       計測エリア：2×2（4つの均等カード）
+       ========================================================================== */
+    .weather-telemetry-fullbox { 
+      flex: 1.4; 
+      background: var(--card-item-bg); 
+      border: 1px solid var(--panel-border); 
+      border-radius: 8px; 
+      padding: 8px; 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      grid-template-rows: 1fr 1fr; 
+      gap: 8px; 
+    }
 
-    .telemetry-right-col { display: flex; flex-direction: column; justify-content: space-between; gap: 8px; container-type: inline-size; }
-    .sensor-responsive-card { background: var(--sub-card-bg); border: 1px solid var(--sub-card-border); border-radius: 6px; padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; flex: 1; overflow: hidden; }
+    .telemetry-cell-card {
+      background: var(--sub-card-bg);
+      border: 1px solid var(--sub-card-border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+      container-type: inline-size;
+    }
+
+    /* 左上：気温（枠内最大化） */
+    .cell-temp {
+      justify-content: center;
+      padding: 0 4px;
+    }
+    .temp-pure-digits {
+      font-family: var(--font-family-clock);
+      font-size: 27cqw;
+      font-weight: 900;
+      color: var(--text-head);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    /* 左下：天気・降水（左1/3特大アイコン＋右2/3折り返しテキスト） */
+    .cell-weather {
+      justify-content: flex-start;
+      gap: 12px;
+      padding: 6px 10px;
+    }
+    .weather-fixed-icon {
+      width: 72px;
+      height: 72px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .weather-dynamic-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+    }
+    .weather-text-adaptive {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-head);
+      line-height: 1.25;
+      word-break: break-all;
+    }
+    .rain-badge-adaptive {
+      font-family: var(--font-family-clock);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--accent-main);
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    /* 右上：湿度 & 右下：風速 */
     .sensor-label-responsive { font-size: 8.5cqw; font-weight: 800; color: var(--text-muted); white-space: nowrap; }
     .humidity-val-group { display: flex; align-items: baseline; font-family: var(--font-family-clock); line-height: 1; }
     .humidity-digits { font-size: 26cqw; font-weight: 900; color: var(--text-head); }
@@ -130,7 +188,7 @@
     .wind-speed-unit { font-size: 10cqw; font-weight: 800; color: var(--text-muted); margin-left: 3px; }
 
     /* ==========================================================================
-       【右側パネル】
+       右側パネルスタイル
        ========================================================================== */
     .right-header-meta { display: flex; align-items: center; gap: 12px; }
     .sync-timestamp-badge { font-family: var(--font-family-clock); font-size: 0.76rem; font-weight: 800; color: var(--accent-ok); background: rgba(16, 185, 129, 0.12); border: 1px solid var(--accent-ok); padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
@@ -205,9 +263,6 @@
 </head>
 <body data-theme="clean-white">
 
-  <!-- ==========================================================================
-       TOP STATUS BAR
-       ========================================================================== -->
   <header class="top-statusbar">
     <div class="brand-title">
       <i data-lucide="layout-dashboard" style="width: 17px; height: 17px;"></i>
@@ -228,9 +283,7 @@
 
   <main class="dashboard-split-grid">
 
-    <!-- ====================================================================
-         【左側全面】
-         ==================================================================== -->
+    <!-- 左側パネル -->
     <section class="hud-panel">
       <div class="panel-header">
         <span id="panel-location-header">01 // CHRONO & JMA SENSORS [TOKYO KATSUSHIKA]</span>
@@ -260,50 +313,53 @@
             </div>
           </div>
 
+          <!-- 計測エリア：2×2（4つの独立カード） -->
           <div class="weather-telemetry-fullbox">
-            <div class="telemetry-left-col">
-              <div class="temp-huge-display" id="current-temp-val">--.-°C</div>
-              
-              <div class="weather-desc-block">
-                <div id="current-weather-icon-box">
-                  <i data-lucide="loader" style="width: 64px; height: 64px; color: var(--accent-main);"></i>
-                </div>
-                <div style="display:flex; flex-direction:column; justify-content:center;">
-                  <div class="cond-label-huge" id="current-condition-val">取得中</div>
-                  <div class="rain-val-huge">降水 <span id="current-rain-val">--%</span></div>
-                </div>
+            
+            <!-- 【左上】気温（枠内最大化） -->
+            <div class="telemetry-cell-card cell-temp">
+              <div class="temp-pure-digits" id="current-temp-val">--.-°C</div>
+            </div>
+
+            <!-- 【右上】湿度 -->
+            <div class="telemetry-cell-card">
+              <span class="sensor-label-responsive">湿度</span>
+              <div class="humidity-val-group">
+                <span class="humidity-digits" id="current-humidity-digits">--</span>
+                <span class="humidity-unit">%</span>
               </div>
             </div>
 
-            <div class="telemetry-right-col">
-              <div class="sensor-responsive-card">
-                <span class="sensor-label-responsive">湿度</span>
-                <div class="humidity-val-group">
-                  <span class="humidity-digits" id="current-humidity-digits">--</span>
-                  <span class="humidity-unit">%</span>
-                </div>
+            <!-- 【左下】天気・降水（左1/3特大アイコン＋右2/3折り返しテキスト） -->
+            <div class="telemetry-cell-card cell-weather">
+              <div class="weather-fixed-icon" id="current-weather-icon-box">
+                <i data-lucide="loader" style="width: 68px; height: 68px; color: var(--accent-main);"></i>
               </div>
-
-              <div class="sensor-responsive-card">
-                <div style="display:flex; flex-direction:column; justify-content:center; gap:2px;">
-                  <span class="sensor-label-responsive">風速</span>
-                  <span style="font-size: 11cqw; font-weight: 900; color: var(--accent-main); line-height: 1;" id="current-wind-dir">--</span>
-                </div>
-                <div class="wind-speed-group">
-                  <span class="wind-speed-digits" id="current-wind-speed-digits">--.-</span>
-                  <span class="wind-speed-unit">m/s</span>
-                </div>
+              <div class="weather-dynamic-info">
+                <div class="weather-text-adaptive" id="current-condition-val">取得中</div>
+                <div class="rain-badge-adaptive">降水 <span id="current-rain-val">--%</span></div>
               </div>
             </div>
+
+            <!-- 【右下】風速 -->
+            <div class="telemetry-cell-card">
+              <div style="display:flex; flex-direction:column; justify-content:center; gap:2px;">
+                <span class="sensor-label-responsive">風速</span>
+                <span style="font-size: 11cqw; font-weight: 900; color: var(--accent-main); line-height: 1;" id="current-wind-dir">--</span>
+              </div>
+              <div class="wind-speed-group">
+                <span class="wind-speed-digits" id="current-wind-speed-digits">--.-</span>
+                <span class="wind-speed-unit">m/s</span>
+              </div>
+            </div>
+
           </div>
 
         </div>
       </div>
     </section>
 
-    <!-- ====================================================================
-         【右側全面】
-         ==================================================================== -->
+    <!-- 右側パネル -->
     <section class="hud-panel">
       <div class="panel-header">
         <span id="right-panel-header-title">02 // JAPAN PRECIPITATION RADAR [LIVE]</span>
@@ -356,18 +412,12 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    // ==========================================
-    // 0. WakeLock
-    // ==========================================
     let wakeLock = null;
     async function requestWakeLock() {
       try { if ('wakeLock' in navigator) { wakeLock = await navigator.wakeLock.request('screen'); } } catch (err) {}
     }
     document.addEventListener('visibilitychange', () => { if (wakeLock !== null && document.visibilityState === 'visible') requestWakeLock(); });
 
-    // ==========================================
-    // 1. レーダーマップ
-    // ==========================================
     let mapJapan;
     let radarLayerJapan = null;
     const emptyTile = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
@@ -402,9 +452,6 @@
       if (el) el.textContent = `SYNC: ${h}:${m} [5m]`;
     }
 
-    // ==========================================
-    // 2. 気象庁 警報モニター
-    // ==========================================
     const CODE_MASTER = {
       "33": { name: "大雨特別警報", level: 5 }, "39": { name: "土砂災害特別警報", level: 5 },
       "36": { name: "暴風雪特別警報", level: 5 }, "37": { name: "大雪特別警報", level: 5 },
@@ -478,9 +525,6 @@
       } catch (err) {}
     }
 
-    // ==========================================
-    // 3. ★気象庁公式API連動（B案・巻バックアップ統合）★
-    // ==========================================
     const JMA_CITIES = {
       katsushika: { 
         name: '東京都 葛飾区', en: 'TOKYO KATSUSHIKA', office: '130000', area10: '130010', stationCode: '44132',
@@ -495,7 +539,7 @@
       niigata: { 
         name: '新潟県 新潟市中央区', en: 'NIIGATA CHUO-KU', office: '150000', area10: '150010', stationCode: '54252',
         amedasTempWind: ['54252', '54232', '54261'], 
-        amedasHumid: ['54252', '54201', '54261'] // 巻(54201)を湿度バックアップに追加
+        amedasHumid: ['54252', '54201', '54261']
       },
       kanazawa: { 
         name: '石川県 金沢市', en: 'ISHIKAWA KANAZAWA', office: '170000', area10: '170010', stationCode: '56227',
@@ -528,7 +572,6 @@
       if (!city) return;
 
       try {
-        // [A] アメダス実況データの取得
         const timeRes = await fetch(`https://www.jma.go.jp/bosai/amedas/data/latest_time.txt?_=${new Date().getTime()}`);
         const timeText = await timeRes.text();
         const dDate = new Date(timeText);
@@ -542,13 +585,9 @@
         const amedasRes = await fetch(`https://www.jma.go.jp/bosai/amedas/data/map/${amedasTimeStr}.json`);
         const amedasData = await amedasRes.json();
 
-        // [B] 天気予報データ（短期・週間）の取得
         const forecastRes = await fetch(`https://www.jma.go.jp/bosai/forecast/data/forecast/${city.office}.json?_=${new Date().getTime()}`);
         const forecastData = await forecastRes.json();
 
-        // --------------------------------------------------
-        // 実況値の描画 (フォールバック処理)
-        // --------------------------------------------------
         let tempVal = "--.-", windDirText = "--", windSpeedVal = "--.-", humidVal = "--";
 
         for (const code of city.amedasTempWind) {
@@ -574,9 +613,6 @@
         document.getElementById('current-wind-speed-digits').textContent = windSpeedVal;
         document.getElementById('current-humidity-digits').textContent = humidVal;
 
-        // --------------------------------------------------
-        // 予報データの完全整合パース（短期＋週間＋B案実測補完）
-        // --------------------------------------------------
         const now = new Date();
         const day0 = formatDateYMD(now);
         const day1 = formatDateYMD(new Date(now.getTime() + 86400000));
@@ -590,7 +626,6 @@
 
         const shortTerm = forecastData[0];
         
-        // 1. 天気・アイコン
         const stWeaArea = shortTerm.timeSeries[0].areas.find(a => a.area.code === city.area10);
         if (stWeaArea) {
           shortTerm.timeSeries[0].timeDefines.forEach((t, idx) => {
@@ -602,7 +637,6 @@
           });
         }
 
-        // 2. 降水確率
         const stPopArea = shortTerm.timeSeries[1].areas.find(a => a.area.code === city.area10);
         if (stPopArea) {
           let dayPopsMap = {};
@@ -619,7 +653,6 @@
           });
         }
 
-        // 3. 気温（短期予報 ＋ B案アメダス補完）
         const stTempSeries = shortTerm.timeSeries[2];
         const stTempArea = stTempSeries.areas.find(a => a.area.code === city.stationCode) || stTempSeries.areas[0];
         
@@ -634,18 +667,15 @@
             }
           });
 
-          // 今日の気温（最高気温）
           if (dayTempsMap[day0] && dayTempsMap[day0].length > 0) {
             dailyForecast[day0].max = Math.round(Math.max(...dayTempsMap[day0]));
           } else if (tempVal !== "--.-") {
             dailyForecast[day0].max = Math.round(parseFloat(tempVal));
           }
 
-          // 今日の最低気温【B案：当日アメダス最低実測値で補完】
           if (dayTempsMap[day0] && dayTempsMap[day0].length > 1) {
             dailyForecast[day0].min = Math.round(Math.min(...dayTempsMap[day0]));
           } else {
-            // アメダス履歴から本日の最低実測値を抽出
             let observedMin = null;
             const primaryStation = amedasData[city.stationCode];
             if (primaryStation && primaryStation.temp) {
@@ -658,7 +688,6 @@
             }
           }
 
-          // 明日の気温（大小比較で最高・最低に確定振り分け）
           if (dayTempsMap[day1] && dayTempsMap[day1].length > 0) {
             dailyForecast[day1].max = Math.round(Math.max(...dayTempsMap[day1]));
             if (dayTempsMap[day1].length > 1) {
@@ -667,7 +696,6 @@
           }
         }
 
-        // 4. 週間予報から明後日の気温・降水確率を抽出
         if (forecastData.length > 1) {
           const weekly = forecastData[1];
           const wkPopArea = weekly.timeSeries[0].areas.find(a => a.area.code === city.area10) || weekly.timeSeries[0].areas[0];
@@ -700,17 +728,28 @@
           }
         }
 
-        // --------------------------------------------------
-        // 画面描画
-        // --------------------------------------------------
-        let currentWeaText = dailyForecast[day0].wea || "取得中";
-        currentWeaText = currentWeaText.replace(/ /g, '<br>');
-        document.getElementById('current-condition-val').innerHTML = currentWeaText;
+        // 左下：左1/3特大アイコン（約68px）＋右2/3自然折り返しテキスト
+        let rawWeatherText = dailyForecast[day0].wea || "取得中";
+        const cleanLen = rawWeatherText.replace(/[  ]/g, '').length;
+        const weatherDescEl = document.getElementById('current-condition-val');
         
+        if (cleanLen <= 6) {
+          weatherDescEl.style.fontSize = "1.15rem";
+          weatherDescEl.style.lineHeight = "1.3";
+        } else if (cleanLen <= 11) {
+          weatherDescEl.style.fontSize = "1.02rem";
+          weatherDescEl.style.lineHeight = "1.25";
+        } else {
+          weatherDescEl.style.fontSize = "0.92rem";
+          weatherDescEl.style.lineHeight = "1.2";
+        }
+        weatherDescEl.innerHTML = rawWeatherText.replace(/ /g, '<br>');
+
         const currentIconData = getJmaWeatherIcon(dailyForecast[day0].iconCode);
-        document.getElementById('current-weather-icon-box').innerHTML = `<i data-lucide="${currentIconData.icon}" style="width: 64px; height: 64px; color: ${currentIconData.color};"></i>`;
+        document.getElementById('current-weather-icon-box').innerHTML = `<i data-lucide="${currentIconData.icon}" style="width: 68px; height: 68px; color: ${currentIconData.color};"></i>`;
         document.getElementById('current-rain-val').textContent = (dailyForecast[day0].pop !== '--') ? `${dailyForecast[day0].pop}%` : '--%';
 
+        // 右下：3日間予報
         let forecastHtml = '';
         const targetDays = [day0, day1, day2];
         
@@ -761,9 +800,6 @@
       fetchJmaOfficialData(cityKey);
     }
 
-    // ==========================================
-    // 右側：ニュース・鉄道ロール
-    // ==========================================
     const newsList8 = [
       { tag: '速報', text: '秋雨前線の活発化に伴う大雨警戒情報を気象庁が更新、急な強い雨や落雷に警戒を呼びかけ (ダミー)' },
       { tag: 'IT・科学', text: '次世代高精度気象レーダー網のデータリアルタイム公開が試験運用開始、豪雨予測を大幅に強化 (ダミー)' },
@@ -796,9 +832,6 @@
       lucide.createIcons();
     }
 
-    // ==========================================
-    // 右側：ページ切り替え ＆ タイマー選択
-    // ==========================================
     const rightPages = [
       { id: 'right-slot-map', title: '02 // JAPAN PRECIPITATION RADAR [LIVE]' },
       { id: 'right-slot-news', title: '02 // TOP 8 HEADLINES [HORIZONTAL TICKER]' },
@@ -841,9 +874,6 @@
       }
     }, 100);
 
-    // ==========================================
-    // その他ユーティリティ
-    // ==========================================
     function setTheme(themeName) {
       document.body.setAttribute('data-theme', themeName);
       document.querySelectorAll('.theme-btn').forEach(btn => {
