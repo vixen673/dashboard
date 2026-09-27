@@ -100,7 +100,7 @@
     .city-pill-middle.active { background: var(--accent-main); color: #fff; border-color: var(--accent-main); font-weight: 800; }
 
     /* ==========================================================================
-       計測エリア：2×2（内部独立子カード）
+       計測エリア：2×2（内部独立子カード配置）
        ========================================================================== */
     .weather-telemetry-fullbox { 
       flex: 1.4; 
@@ -302,8 +302,8 @@
       <span>WALL MONITOR</span>
     </div>
     <div class="theme-selector-group">
-      <button class="theme-btn active" onclick="setTheme('clean-white')"><i data-lucide="sun" style="width: 13px; height: 13px;"></i> 01 PURE WHITE</button>
-      <button class="theme-btn" onclick="setTheme('ultra-cool')"><i data-lucide="shield" style="width: 13px; height: 13px;"></i> 02 ULTRA COOL</button>
+      <button id="btn-theme-white" class="theme-btn active" onclick="setUserTheme('clean-white')"><i data-lucide="sun" style="width: 13px; height: 13px;"></i> 01 PURE WHITE</button>
+      <button id="btn-theme-cool" class="theme-btn" onclick="setUserTheme('ultra-cool')"><i data-lucide="shield" style="width: 13px; height: 13px;"></i> 02 ULTRA COOL</button>
     </div>
     <div class="top-view-tabs">
       <button class="top-tab-btn active" onclick="switchRightPage(0)">雨量</button>
@@ -458,6 +458,96 @@
     }
     document.addEventListener('visibilitychange', () => { if (wakeLock !== null && document.visibilityState === 'visible') requestWakeLock(); });
 
+    // ==========================================
+    // 0. 天文計算：日の出・日の入り自動調光
+    // ==========================================
+    let isUserThemeManual = false;
+
+    function calculateSunTimes(lat, lng, date = new Date()) {
+      const rad = Math.PI / 180;
+      const deg = 180 / Math.PI;
+      const startOfYear = new Date(date.getFullYear(), 0, 0);
+      const diff = date - startOfYear;
+      const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      const lngHour = lng / 15;
+      const tRise = dayOfYear + ((6 - lngHour) / 24);
+      const tSet = dayOfYear + ((18 - lngHour) / 24);
+
+      function calcSun(t, isSunrise) {
+        const M = (0.9856 * t) - 3.289;
+        let L = M + (1.916 * Math.sin(M * rad)) + (0.020 * Math.sin(2 * M * rad)) + 282.634;
+        L = (L % 360 + 360) % 360;
+
+        let RA = deg * Math.atan(0.91764 * Math.tan(L * rad));
+        RA = (RA % 360 + 360) % 360;
+        const Lquadrant = Math.floor(L / 90) * 90;
+        const RAquadrant = Math.floor(RA / 90) * 90;
+        RA = (RA + (Lquadrant - RAquadrant)) / 15;
+
+        const sinDec = 0.39782 * Math.sin(L * rad);
+        const cosDec = Math.cos(Math.asin(sinDec));
+        const cosH = (Math.cos(90.833 * rad) - (sinDec * Math.sin(lat * rad))) / (cosDec * Math.cos(lat * rad));
+
+        if (cosH > 1 || cosH < -1) return null;
+
+        let H = isSunrise ? (360 - deg * Math.acos(cosH)) : (deg * Math.acos(cosH));
+        H = H / 15;
+
+        const T = H + RA - (0.06571 * t) - 6.622;
+        let UT = (T - lngHour) % 24;
+        if (UT < 0) UT += 24;
+
+        let localT = UT + 9; // JST
+        if (localT >= 24) localT -= 24;
+
+        const hours = Math.floor(localT);
+        const minutes = Math.floor((localT - hours) * 60);
+        return { hours, minutes, totalMinutes: hours * 60 + minutes };
+      }
+
+      return {
+        sunrise: calcSun(tRise, true),
+        sunset: calcSun(tSet, false)
+      };
+    }
+
+    function checkDayNightTheme() {
+      if (isUserThemeManual) return;
+      const city = JMA_CITIES[currentSelectedCityKey];
+      if (!city) return;
+
+      const now = new Date();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      const sun = calculateSunTimes(city.lat, city.lng, now);
+
+      if (sun.sunrise && sun.sunset) {
+        if (currentMinutes >= sun.sunrise.totalMinutes && currentMinutes < sun.sunset.totalMinutes) {
+          applyTheme('clean-white');
+        } else {
+          applyTheme('ultra-cool');
+        }
+      }
+    }
+
+    function applyTheme(themeName) {
+      document.body.setAttribute('data-theme', themeName);
+      const isWhite = (themeName === 'clean-white');
+      const btnWhite = document.getElementById('btn-theme-white');
+      const btnCool = document.getElementById('btn-theme-cool');
+      if (btnWhite) btnWhite.classList.toggle('active', isWhite);
+      if (btnCool) btnCool.classList.toggle('active', !isWhite);
+      lucide.createIcons();
+    }
+
+    function setUserTheme(themeName) {
+      isUserThemeManual = true;
+      applyTheme(themeName);
+    }
+
+    // ==========================================
+    // 1. レーダーマップ
+    // ==========================================
     let mapJapan;
     let radarLayerJapan = null;
     const emptyTile = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
@@ -492,6 +582,9 @@
       if (el) el.textContent = `SYNC: ${h}:${m} [5m]`;
     }
 
+    // ==========================================
+    // 2. 気象警報
+    // ==========================================
     const CODE_MASTER = {
       "33": { name: "大雨特別警報", level: 5 }, "39": { name: "土砂災害特別警報", level: 5 },
       "36": { name: "暴風雪特別警報", level: 5 }, "37": { name: "大雪特別警報", level: 5 },
@@ -566,26 +659,30 @@
     }
 
     // ==========================================
-    // 3. JMA 公式データ連動（新潟54232 & 最低気温当日実測フォールバック）
+    // 3. JMA 公式データ1本化（アメダス3時間ブロックから当日の最低気温実測値を直接算出）
     // ==========================================
     const JMA_CITIES = {
       katsushika: { 
         name: '東京都 葛飾区', en: 'TOKYO KATSUSHIKA', office: '130000', area10: '130010', stationCode: '44132',
+        lat: 35.744, lng: 139.847,
         amedasTempWind: ['44132', '44172', '44166'], 
         amedasHumid: ['44132', '44166']
       },
       omiya: { 
         name: '埼玉県 大宮', en: 'SAITAMA OMIYA', office: '110000', area10: '110010', stationCode: '43241',
+        lat: 35.906, lng: 139.629,
         amedasTempWind: ['43241', '43256', '43211'], 
         amedasHumid: ['43056', '44132']
       },
       niigata: { 
         name: '新潟県 新潟市中央区', en: 'NIIGATA CHUO-KU', office: '150000', area10: '150010', stationCode: '54232',
+        lat: 37.916, lng: 139.036,
         amedasTempWind: ['54232', '54261', '54206'], 
-        amedasHumid: ['54232', '54261', '54206'] // 新潟地方気象台(54232)を最優先設定
+        amedasHumid: ['54232', '54261', '54206']
       },
       kanazawa: { 
         name: '石川県 金沢市', en: 'ISHIKAWA KANAZAWA', office: '170000', area10: '170010', stationCode: '56227',
+        lat: 36.561, lng: 136.656,
         amedasTempWind: ['56227', '56122', '56263'], 
         amedasHumid: ['56227', '56263']
       }
@@ -609,6 +706,38 @@
       return `${y}-${m}-${d}`;
     }
 
+    // 気象庁アメダス地点別3時間ブロックJSON (00, 03, 06時) から当日の最低実測気温を直接抽出
+    async function fetchJmaAmedasTodayMinTemp(stationCode, yyyymmdd) {
+      const blocks = ['00', '03', '06'];
+      let observedTemps = [];
+
+      const promises = blocks.map(hh => {
+        const url = `https://www.jma.go.jp/bosai/amedas/data/point/${stationCode}/${yyyymmdd}_${hh}.json?_=${new Date().getTime()}`;
+        return fetch(url).then(r => r.ok ? r.json() : null).catch(() => null);
+      });
+
+      const results = await Promise.all(promises);
+      results.forEach(blockData => {
+        if (!blockData) return;
+        for (const timeKey in blockData) {
+          const entry = blockData[timeKey];
+          if (entry) {
+            if (entry.temp && entry.temp[0] != null && !isNaN(entry.temp[0])) {
+              observedTemps.push(entry.temp[0]);
+            }
+            if (entry.minTemp && entry.minTemp[0] != null && !isNaN(entry.minTemp[0])) {
+              observedTemps.push(entry.minTemp[0]);
+            }
+          }
+        }
+      });
+
+      if (observedTemps.length > 0) {
+        return Math.round(Math.min(...observedTemps));
+      }
+      return null;
+    }
+
     async function fetchJmaOfficialData(cityKey) {
       const city = JMA_CITIES[cityKey];
       if (!city) return;
@@ -622,7 +751,8 @@
         const dd = String(dDate.getDate()).padStart(2, '0');
         const hh = String(dDate.getHours()).padStart(2, '0');
         const min = String(dDate.getMinutes()).padStart(2, '0');
-        const amedasTimeStr = `${yyyy}${mm}${dd}${hh}${min}00`;
+        const yyyymmdd = `${yyyy}${mm}${dd}`;
+        const amedasTimeStr = `${yyyymmdd}${hh}${min}00`;
 
         const amedasRes = await fetch(`https://www.jma.go.jp/bosai/amedas/data/map/${amedasTimeStr}.json`);
         const amedasData = await amedasRes.json();
@@ -698,7 +828,7 @@
           });
         }
 
-        // 3. 気温（今日の最低気温フォールバック厳密化）
+        // 3. 気温（今日の最高気温は短期予報から、今日の最低気温はアメダス3時間ブロックから直接取得）
         const stTempSeries = shortTerm.timeSeries[2];
         const stTempArea = stTempSeries.areas.find(a => a.area.code === city.stationCode) || stTempSeries.areas[0];
         
@@ -720,27 +850,15 @@
             dailyForecast[day0].max = Math.round(parseFloat(tempVal));
           }
 
-          // 【今日の最低気温：11時更新による配列1個時の救済】
-          if (dayTempsMap[day0] && dayTempsMap[day0].length > 1) {
-            // 朝5時台：予報に2つ以上値が存在する場合は小さい方を採用
-            dailyForecast[day0].min = Math.round(Math.min(...dayTempsMap[day0]));
+          // 【今日の最低気温：短期予報の重複配列(["27","27"])は無視し、気象庁アメダス地点別データから取得】
+          const amedasMorningMin = await fetchJmaAmedasTodayMinTemp(city.stationCode, yyyymmdd);
+          if (amedasMorningMin != null && !isNaN(amedasMorningMin)) {
+            dailyForecast[day0].min = amedasMorningMin;
           } else {
-            // 11時以降：最高気温の数値を流用せず、アメダスの当日日界最低観測値(minTemp)で補完
-            let observedMin = null;
-            const primaryStation = amedasData[city.stationCode];
-            if (primaryStation) {
-              if (primaryStation.minTemp && primaryStation.minTemp[0] != null) {
-                observedMin = primaryStation.minTemp[0];
-              } else if (primaryStation.temp && primaryStation.temp[0] != null) {
-                observedMin = primaryStation.temp[0];
-              }
-            }
-            if (observedMin != null) {
-              dailyForecast[day0].min = Math.round(observedMin);
-            }
+            dailyForecast[day0].min = '--';
           }
 
-          // 【明日の気温】(既存ロジックを完全維持)
+          // 【明日の気温】
           if (dayTempsMap[day1] && dayTempsMap[day1].length > 0) {
             dailyForecast[day1].max = Math.round(Math.max(...dayTempsMap[day1]));
             if (dayTempsMap[day1].length > 1) {
@@ -749,7 +867,7 @@
           }
         }
 
-        // 4. 週間予報から明後日の気温・降水確率を抽出 (既存ロジックを完全維持)
+        // 4. 週間予報から明後日の気温・降水確率を抽出
         if (forecastData.length > 1) {
           const weekly = forecastData[1];
           const wkPopArea = weekly.timeSeries[0].areas.find(a => a.area.code === city.area10) || weekly.timeSeries[0].areas[0];
@@ -770,7 +888,7 @@
           if (wkTempArea && wkTempArea.tempsMin) {
             weekly.timeSeries[1].timeDefines.forEach((t, idx) => {
               const dStr = t.split('T')[0];
-              if (dailyForecast[dStr]) {
+              if (dStr !== day0 && dailyForecast[dStr]) {
                 if (dailyForecast[dStr].min === '--' && wkTempArea.tempsMin[idx] !== "") {
                   dailyForecast[dStr].min = Math.round(parseFloat(wkTempArea.tempsMin[idx]));
                 }
@@ -835,9 +953,13 @@
       document.getElementById('current-location-text').textContent = city.name;
       document.getElementById('panel-location-header').textContent = `01 // CHRONO & JMA SENSORS [${city.en}]`;
       
+      checkDayNightTheme();
       fetchJmaOfficialData(cityKey);
     }
 
+    // ==========================================
+    // 右側：ニュース・鉄道・タイマー
+    // ==========================================
     const newsList8 = [
       { tag: '速報', text: '秋雨前線の活発化に伴う大雨警戒情報を気象庁が更新、急な強い雨や落雷に警戒を呼びかけ (ダミー)' },
       { tag: 'IT・科学', text: '次世代高精度気象レーダー網のデータリアルタイム公開が試験運用開始、豪雨予測を大幅に強化 (ダミー)' },
@@ -912,15 +1034,6 @@
       }
     }, 100);
 
-    function setTheme(themeName) {
-      document.body.setAttribute('data-theme', themeName);
-      document.querySelectorAll('.theme-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('onclick').includes(themeName)) btn.classList.add('active');
-      });
-      lucide.createIcons();
-    }
-
     function toggleFullScreen() {
       if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(err => {}); } 
       else { if (document.exitFullscreen) document.exitFullscreen(); }
@@ -934,11 +1047,17 @@
       document.getElementById('date-text').textContent = `${year}.${month}.${date} ${dayName}`;
       document.getElementById('time-main').textContent = `${hours}:${minutes}`;
       document.getElementById('time-sec').textContent = `:${seconds}`;
+
+      // 毎分0秒に日の出・日の入りの自動切り替えをチェック
+      if (seconds === '00') {
+        checkDayNightTheme();
+      }
     }
     setInterval(updateClock, 1000); updateClock();
 
     window.addEventListener('DOMContentLoaded', () => {
       requestWakeLock();
+      checkDayNightTheme();
       selectCity('katsushika');
       initMap();
       fetchWarnings();
