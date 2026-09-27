@@ -81,6 +81,9 @@
     .top-tab-btn:hover { color: var(--text-head); border-color: var(--accent-main); }
     .top-tab-btn.active { background: var(--accent-main); color: #fff; border-color: var(--accent-main); }
 
+    .top-action-group { display: flex; align-items: center; gap: 8px; }
+    .config-btn { background: var(--card-item-bg); border: 1px solid var(--panel-border); color: var(--text-body); padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+    .config-btn:hover { border-color: var(--accent-main); color: var(--accent-main); }
     .fullscreen-btn { background: transparent; border: 1px solid var(--panel-border); color: var(--text-body); padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
 
     .dashboard-split-grid { position: relative; z-index: 10; flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; height: calc(100vh - 44px); }
@@ -103,56 +106,29 @@
     .city-pill-middle:hover { color: var(--text-head); border-color: var(--accent-main); }
     .city-pill-middle.active { background: var(--accent-main); color: #fff; border-color: var(--accent-main); font-weight: 800; }
 
-    /* 計測エリア：2×2（内部独立子カード配置） */
-    .weather-telemetry-fullbox { 
-      flex: 1.4; 
-      background: var(--card-item-bg); 
-      border: 1px solid var(--panel-border); 
-      border-radius: 8px; 
-      padding: 8px; 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      grid-template-rows: 1fr 1fr; 
-      gap: 8px; 
-    }
-
-    .field-card {
-      background: var(--sub-card-bg);
-      border: 1px solid var(--sub-card-border);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      height: 100%;
-      position: relative;
-    }
-
+    /* 計測エリア：2×2 */
+    .weather-telemetry-fullbox { flex: 1.4; background: var(--card-item-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 8px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8px; }
+    .field-card { background: var(--sub-card-bg); border: 1px solid var(--sub-card-border); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; height: 100%; position: relative; }
     .field-card-temp-full { width: 100%; container-type: inline-size; }
     .temp-pure-digits { font-family: var(--font-family-clock); font-size: 27cqw; font-weight: 900; color: var(--text-head); line-height: 1; letter-spacing: -0.02em; }
-
     .dual-card-container { display: grid; grid-template-columns: 38% 1fr; gap: 8px; height: 100%; width: 100%; }
     .label-pure-text { font-size: 1.65rem; font-weight: 900; color: var(--text-head); letter-spacing: 0.05em; white-space: nowrap; }
     .weather-icon-card { display: flex; align-items: center; justify-content: center; }
-
     .rain-digits-card { display: flex; align-items: baseline; justify-content: center; font-family: var(--font-family-clock); color: var(--accent-main); line-height: 1; }
     .rain-num { font-size: 2.8rem; font-weight: 900; letter-spacing: -0.02em; }
     .rain-unit { font-size: 1.5rem; font-weight: 800; margin-left: 2px; }
-
     .humidity-val-card { display: flex; align-items: baseline; justify-content: center; font-family: var(--font-family-clock); color: var(--text-head); line-height: 1; }
     .humidity-digits { font-size: 2.8rem; font-weight: 900; letter-spacing: -0.02em; }
     .humidity-unit { font-size: 1.4rem; font-weight: 800; color: var(--text-muted); margin-left: 2px; }
-
     .wind-speed-card { display: flex; align-items: baseline; justify-content: center; font-family: var(--font-family-clock); color: var(--text-head); line-height: 1; }
     .wind-speed-digits { font-size: 2.45rem; font-weight: 900; letter-spacing: -0.02em; }
     .wind-speed-unit { font-size: 1.15rem; font-weight: 800; color: var(--text-muted); margin-left: 3px; }
 
-    /* 右側パネルヘッダースタイル */
+    /* 右側パネルヘッダー */
     .right-header-left-group { display: flex; align-items: center; gap: 8px; overflow: hidden; }
     .news-extra-badges { display: none; align-items: center; gap: 6px; }
     .news-badge-unimpl { font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; background: rgba(239, 68, 68, 0.14); border: 1px solid var(--accent-danger); color: var(--accent-danger); white-space: nowrap; }
     .news-badge-cycle20 { font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; background: rgba(37, 99, 235, 0.14); border: 1px solid var(--accent-main); color: var(--accent-main); white-space: nowrap; }
-
     .right-header-meta { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .sync-timestamp-badge { font-family: var(--font-family-clock); font-size: 0.76rem; font-weight: 800; color: var(--accent-ok); background: rgba(16, 185, 129, 0.12); border: 1px solid var(--accent-ok); padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
     .timer-controls-group { display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,0.12); border: 1px solid var(--panel-border); border-radius: 5px; padding: 2px; }
@@ -168,7 +144,7 @@
     #map-japan { width: 100%; height: 100%; z-index: 1; }
 
     /* ==========================================================================
-       統合：Yahoo! ニュース パタパタ電光掲示板（右側ステータス削除・横幅100%）
+       ニュース：最上段トグルバー ＆ 1画面4本特大文字＋スムーズ無限ティッカー
        ========================================================================== */
     .news-board-wrapper {
       display: flex;
@@ -176,84 +152,12 @@
       height: 100%;
       padding: 8px 10px;
       gap: 8px;
-      justify-content: space-between;
+      justify-content: flex-start;
       overflow: hidden;
     }
 
-    #news-container-flip {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 5px;
-      perspective: 1200px;
-      width: 100%;
-      min-height: 0;
-    }
-
-    .news-row-flip {
-      background: var(--news-flip-bg);
-      border: 1px solid var(--news-flip-border);
-      border-left: 6px solid #005eb8;
-      border-radius: 5px;
-      padding: 0 14px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex: 1;
-      min-height: 0;
-      transform-origin: 50% 0%;
-      transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.38s;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.12);
-      overflow: hidden;
-    }
-
-    .news-row-flip.flipping {
-      transform: rotateX(90deg);
-      opacity: 0;
-    }
-
-    .news-flip-index {
-      font-size: 1.35rem;
-      font-weight: 900;
-      color: var(--text-muted);
-      font-family: var(--font-family-clock);
-      min-width: 28px;
-    }
-
-    .news-flip-tag {
-      background: #005eb8;
-      color: #fff;
-      font-size: 0.88rem;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-
-    .news-flip-title {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--text-head);
-      margin: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex: 1;
-      letter-spacing: 0.02em;
-    }
-
-    .news-flip-time {
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      font-weight: 700;
-      font-family: var(--font-family-clock);
-      white-space: nowrap;
-    }
-
-    /* 下部：8カテゴリ選択ボタン（トグル式） */
-    .news-bottom-bar {
-      height: 46px;
+    .news-top-bar {
+      height: 44px;
       background: var(--card-item-bg);
       border: 1px solid var(--panel-border);
       border-radius: 6px;
@@ -272,7 +176,7 @@
       color: var(--text-muted);
       border: 1px solid var(--panel-border);
       border-radius: 4px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 800;
       cursor: pointer;
       transition: all 0.18s ease;
@@ -281,12 +185,7 @@
       justify-content: center;
       white-space: nowrap;
     }
-
-    .cat-btn:hover {
-      color: var(--text-head);
-      border-color: var(--accent-main);
-    }
-
+    .cat-btn:hover { color: var(--text-head); border-color: var(--accent-main); }
     .cat-btn.active {
       background-color: #005eb8;
       color: #fff;
@@ -294,11 +193,114 @@
       box-shadow: 0 0 10px rgba(0, 140, 255, 0.45);
     }
 
-    /* ==========================================================================
-       警報・3日間予報 / 鉄道
-       ========================================================================== */
-    .mock-tag-pill-ticker { font-size: 0.72rem; font-weight: 800; padding: 2px 6px; border-radius: 3px; background: rgba(239, 68, 68, 0.15); border: 1px solid var(--accent-danger); color: var(--accent-danger); white-space: nowrap; }
+    #news-container-flip {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+      perspective: 1200px;
+      width: 100%;
+      min-height: 0;
+    }
 
+    .news-row-flip {
+      background: var(--news-flip-bg);
+      border: 1px solid var(--news-flip-border);
+      border-left: 7px solid #005eb8;
+      border-radius: 6px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+      min-height: 0;
+      transform-origin: 50% 0%;
+      transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.38s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .news-row-flip.flipping {
+      transform: rotateX(90deg);
+      opacity: 0;
+    }
+
+    .news-left-fixed-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      z-index: 5;
+    }
+
+    .news-flip-index {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--text-muted);
+      font-family: var(--font-family-clock);
+      min-width: 44px;
+      line-height: 1;
+    }
+
+    .news-flip-tag {
+      background: #005eb8;
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    /* 中央電光掲示板ビューポート */
+    .news-marquee-viewport {
+      flex: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      mask-image: linear-gradient(to right, transparent, black 15px, black calc(100% - 15px), transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 15px, black calc(100% - 15px), transparent);
+    }
+
+    /* 2倍特大文字 */
+    .news-marquee-track {
+      display: inline-flex;
+      white-space: nowrap;
+      font-size: 3.1rem;
+      font-weight: 900;
+      color: var(--text-head);
+      line-height: 1;
+      letter-spacing: 0.02em;
+      will-change: transform;
+    }
+
+    /* 8秒〜10秒の心地よいスピードで無限ティッカーループ */
+    .news-marquee-track.animating {
+      animation: continuousTicker linear infinite;
+    }
+
+    @keyframes continuousTicker {
+      0% { transform: translate3d(0, 0, 0); }
+      12% { transform: translate3d(0, 0, 0); } /* 先頭で約1.2秒静止してからスタート */
+      100% { transform: translate3d(-50%, 0, 0); }
+    }
+
+    .news-flip-time {
+      color: var(--text-muted);
+      font-size: 1.35rem;
+      font-weight: 800;
+      font-family: var(--font-family-clock);
+      white-space: nowrap;
+      flex-shrink: 0;
+      z-index: 5;
+    }
+
+    /* 警報・3日間天気 */
     .alerts-combo-container { display: flex; flex-direction: column; height: 100%; padding: 8px 10px; gap: 8px; overflow: hidden; }
     .combo-top-warning { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; border-bottom: 2px solid var(--panel-border); padding-bottom: 6px; }
     .warning-top-banner { font-family: var(--font-family-clock); font-size: 1.05rem; font-weight: 800; color: var(--level4); background: rgba(239, 68, 68, 0.12); border: 1px solid var(--level4); border-radius: 6px; padding: 6px 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
@@ -338,32 +340,62 @@
     .square-temp-low-combo { font-size: 2.2rem; font-weight: 800; color: #60a5fa; }
     .square-rain-badge-combo { font-family: var(--font-family-clock); font-size: 1.35rem; font-weight: 800; color: var(--accent-main); background: rgba(0, 243, 255, 0.08); border: 1px solid var(--panel-border); border-radius: 5px; padding: 3px 12px; }
 
+    /* 鉄道 */
     .transit-card-roll { background: var(--card-item-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 22px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); }
     .transit-huge-name { font-size: 1.85rem; font-weight: 900; color: var(--text-head); margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
     .transit-section-large { font-size: 1.15rem; color: var(--text-muted); font-weight: 600; }
     .status-badge-large { font-size: 1.35rem; font-weight: 900; padding: 8px 18px; border-radius: 6px; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
     .badge-ok { background: rgba(16, 185, 129, 0.18); border: 1px solid var(--accent-ok); color: var(--accent-ok); }
     .badge-danger { background: rgba(239, 68, 68, 0.22); border: 1px solid var(--accent-danger); color: var(--accent-danger); }
+
+    /* 第5スロット：日照・気温推移画面 */
+    .solar-temp-container { display: flex; flex-direction: column; height: 100%; padding: 8px 10px; gap: 8px; overflow: hidden; }
+    .solar-temp-subbox { flex: 1; background: var(--card-item-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 8px 12px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+    .subbox-header { font-size: 0.82rem; font-weight: 800; color: var(--accent-main); display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; flex-shrink: 0; }
+    .canvas-wrap-fill { flex: 1; width: 100%; height: 100%; position: relative; min-height: 0; }
+    #temp-24h-canvas, #solar-arc-canvas { width: 100%; height: 100%; display: block; }
+
+    .solar-meta-footer-huge { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; flex-shrink: 0; }
+    .sun-time-block { background: var(--sub-card-bg); border: 1px solid var(--sub-card-border); border-radius: 6px; padding: 6px 14px; display: flex; align-items: baseline; justify-content: space-between; }
+    .sun-label-huge { font-size: 1.15rem; font-weight: 900; color: var(--text-head); display: flex; align-items: center; gap: 6px; }
+    .sun-digits-huge { font-family: var(--font-family-clock); font-size: 2.5rem; font-weight: 900; color: var(--text-head); letter-spacing: -0.02em; line-height: 1; }
+
+    /* 巡回設定モーダル */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.25s ease; }
+    .modal-overlay.open { display: flex; opacity: 1; }
+    .modal-window { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; width: 480px; max-width: 90vw; padding: 24px; box-shadow: var(--panel-shadow); display: flex; flex-direction: column; gap: 18px; }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--panel-border); padding-bottom: 10px; }
+    .modal-title { font-size: 1.15rem; font-weight: 900; color: var(--accent-main); display: flex; align-items: center; gap: 8px; }
+    .modal-close-x { background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; }
+    .modal-close-x:hover { color: var(--text-head); }
+    .cycle-options-list { display: flex; flex-direction: column; gap: 10px; }
+    .cycle-option-row { display: flex; align-items: center; justify-content: space-between; background: var(--card-item-bg); border: 1px solid var(--panel-border); padding: 12px 16px; border-radius: 6px; cursor: pointer; transition: all 0.15s ease; }
+    .cycle-option-row:hover { border-color: var(--accent-main); }
+    .cycle-option-label { font-size: 0.95rem; font-weight: 800; color: var(--text-head); display: flex; align-items: center; gap: 10px; }
+    .cycle-check { width: 20px; height: 20px; accent-color: var(--accent-main); cursor: pointer; }
+    .modal-save-btn { background: var(--accent-main); color: #fff; border: none; border-radius: 6px; padding: 12px; font-size: 0.95rem; font-weight: 800; cursor: pointer; text-align: center; }
   </style>
 </head>
 <body data-theme="clean-white">
 
+  <!-- 最上部ステータスバー -->
   <header class="top-statusbar">
     <div class="brand-title">
       <i data-lucide="layout-dashboard" style="width: 17px; height: 17px;"></i>
       <span>WALL MONITOR</span>
     </div>
+
     <div class="theme-selector-group">
       <button id="btn-theme-white" class="theme-btn active" onclick="setUserTheme('clean-white')"><i data-lucide="sun" style="width: 13px; height: 13px;"></i> 01 PURE WHITE</button>
       <button id="btn-theme-cool" class="theme-btn" onclick="setUserTheme('ultra-cool')"><i data-lucide="shield" style="width: 13px; height: 13px;"></i> 02 ULTRA COOL</button>
     </div>
-    <div class="top-view-tabs">
-      <button class="top-tab-btn active" onclick="switchRightPage(0)">雨量</button>
-      <button class="top-tab-btn" onclick="switchRightPage(1)">ニュース</button>
-      <button class="top-tab-btn" onclick="switchRightPage(2)">警報・天気</button>
-      <button class="top-tab-btn" onclick="switchRightPage(3)">鉄道</button>
+
+    <div id="dynamic-top-tabs" class="top-view-tabs"></div>
+
+    <div class="top-action-group">
+      <button class="config-btn" onclick="openConfigModal()"><i data-lucide="settings" style="width: 14px; height: 14px;"></i> 巡回設定</button>
+      <button class="fullscreen-btn" onclick="toggleFullScreen()"><i data-lucide="maximize" style="width: 14px; height: 14px;"></i> FULLSCREEN</button>
     </div>
-    <button class="fullscreen-btn" onclick="toggleFullScreen()"><i data-lucide="maximize" style="width: 14px; height: 14px;"></i> FULLSCREEN</button>
   </header>
 
   <main class="dashboard-split-grid">
@@ -398,19 +430,12 @@
             </div>
           </div>
 
-          <!-- 計測エリア：独立子カード配置（2×2グリッド） -->
           <div class="weather-telemetry-fullbox">
-            
-            <!-- 【左上】：単独気温カード -->
             <div class="field-card field-card-temp-full">
               <div class="temp-pure-digits" id="current-temp-val">--.-°C</div>
             </div>
-
-            <!-- 【右上】：2分割（湿度ラベルカード ＋ 湿度数値カード） -->
             <div class="dual-card-container">
-              <div class="field-card">
-                <span class="label-pure-text">湿度</span>
-              </div>
+              <div class="field-card"><span class="label-pure-text">湿度</span></div>
               <div class="field-card">
                 <div class="humidity-val-card">
                   <span class="humidity-digits" id="current-humidity-digits">--</span>
@@ -418,8 +443,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- 【左下】：2分割（特大天気マークカード ＋ 降水確率数値カード） -->
             <div class="dual-card-container">
               <div class="field-card weather-icon-card" id="current-weather-icon-box">
                 <i data-lucide="loader" style="width: 58px; height: 58px; color: var(--accent-main);"></i>
@@ -431,12 +454,8 @@
                 </div>
               </div>
             </div>
-
-            <!-- 【右下】：2分割（風速ラベルカード ＋ 風速数値カード） -->
             <div class="dual-card-container">
-              <div class="field-card">
-                <span class="label-pure-text">風速</span>
-              </div>
+              <div class="field-card"><span class="label-pure-text">風速</span></div>
               <div class="field-card">
                 <div class="wind-speed-card">
                   <span class="wind-speed-digits" id="current-wind-speed-digits">--.-</span>
@@ -444,7 +463,6 @@
                 </div>
               </div>
             </div>
-
           </div>
 
         </div>
@@ -456,10 +474,9 @@
       <div class="panel-header">
         <div class="right-header-left-group">
           <span id="right-panel-header-title" style="white-space: nowrap;">02 // JAPAN PRECIPITATION RADAR [LIVE]</span>
-          <!-- ニュースタブ選択時のみ表示される2つのバッジ -->
           <div id="news-extra-badges" class="news-extra-badges">
             <span class="news-badge-unimpl">※速報ロジック：未実装 (待機中)</span>
-            <span class="news-badge-cycle20">※20秒固定巡回中</span>
+            <span class="news-badge-cycle20">※15秒固定巡回中</span>
           </div>
         </div>
 
@@ -476,18 +493,18 @@
           </div>
         </div>
       </div>
+      
       <div class="panel-body" style="padding: 0;">
 
-        <!-- 0: 雨量レーダー -->
+        <!-- スロット0: 雨量レーダー -->
         <div id="right-slot-map" class="right-view-slot active" style="padding: 10px;">
           <div class="radar-slot-fullscreen"><div id="map-japan"></div></div>
         </div>
 
-        <!-- 1: ニュース（Cloudflare Workers パタパタ電光掲示板・横幅100%・下部トグル） -->
+        <!-- スロット1: ニュース -->
         <div id="right-slot-news" class="right-view-slot">
           <div class="news-board-wrapper">
-            <div id="news-container-flip"></div>
-            <div class="news-bottom-bar">
+            <div class="news-top-bar">
               <button class="cat-btn active" data-key="top">主要</button>
               <button class="cat-btn active" data-key="domestic">国内</button>
               <button class="cat-btn" data-key="world">国際</button>
@@ -497,10 +514,11 @@
               <button class="cat-btn" data-key="it">IT・科学</button>
               <button class="cat-btn" data-key="local">地域</button>
             </div>
+            <div id="news-container-flip"></div>
           </div>
         </div>
 
-        <!-- 2: 警報・3日間天気 -->
+        <!-- スロット2: 警報・3日間天気 -->
         <div id="right-slot-alerts" class="right-view-slot">
           <div class="alerts-combo-container">
             <div class="combo-top-warning">
@@ -516,15 +534,93 @@
           </div>
         </div>
 
-        <!-- 3: 鉄道 -->
+        <!-- スロット3: 鉄道 -->
         <div id="right-slot-transit" class="right-view-slot" style="padding: 12px;">
           <div id="transit-scroll-track" class="infinite-scroll-track-down"></div>
+        </div>
+
+        <!-- スロット4: 日照・気温推移 -->
+        <div id="right-slot-solar" class="right-view-slot">
+          <div class="solar-temp-container">
+            
+            <div class="solar-temp-subbox">
+              <div class="subbox-header">
+                <span style="display:flex; align-items:center; gap:6px;">
+                  <i data-lucide="trending-up" style="width:14px;height:14px;"></i>
+                  <span>24-HOUR TEMPERATURE PROFILE // 本日の気温推移 (00:00 - 24:00)</span>
+                </span>
+              </div>
+              <div class="canvas-wrap-fill">
+                <canvas id="temp-24h-canvas"></canvas>
+              </div>
+            </div>
+
+            <div class="solar-temp-subbox">
+              <div class="subbox-header">
+                <span style="display:flex; align-items:center; gap:6px;">
+                  <i data-lucide="sun-medium" style="width:14px;height:14px;"></i>
+                  <span>SOLAR DIAL & TWILIGHT ARC // 太陽軌道・日照サイクル (NOAA ALGORITHM)</span>
+                </span>
+                <span id="solar-until-text" style="font-family:var(--font-family-clock); font-size:1.05rem; font-weight:900; color:var(--accent-warn);">日没まで --時間--分</span>
+              </div>
+              <div class="canvas-wrap-fill">
+                <canvas id="solar-arc-canvas"></canvas>
+              </div>
+              <div class="solar-meta-footer-huge">
+                <div class="sun-time-block">
+                  <span class="sun-label-huge">🌅 日の出</span>
+                  <span id="solar-rise-time-huge" class="sun-digits-huge">--:--</span>
+                </div>
+                <div class="sun-time-block">
+                  <span class="sun-label-huge">🌇 日の入り</span>
+                  <span id="solar-set-time-huge" class="sun-digits-huge">--:--</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
 
       </div>
     </section>
 
   </main>
+
+  <!-- 巡回設定ポップアップモーダル -->
+  <div id="config-modal" class="modal-overlay">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i data-lucide="sliders" style="width: 20px; height: 20px;"></i>
+          <span>右パネル 巡回スロット設定</span>
+        </div>
+        <button class="modal-close-x" onclick="closeConfigModal()"><i data-lucide="x" style="width: 20px; height: 20px;"></i></button>
+      </div>
+      <div class="cycle-options-list">
+        <label class="cycle-option-row">
+          <span class="cycle-option-label"><i data-lucide="cloud-rain" style="width:18px;height:18px;color:var(--accent-main);"></i> 雨量レーダー</span>
+          <input type="checkbox" class="cycle-check" data-slot="0">
+        </label>
+        <label class="cycle-option-row">
+          <span class="cycle-option-label"><i data-lucide="newspaper" style="width:18px;height:18px;color:var(--accent-main);"></i> ニュース (4本特大無限ティッカー)</span>
+          <input type="checkbox" class="cycle-check" data-slot="1">
+        </label>
+        <label class="cycle-option-row">
+          <span class="cycle-option-label"><i data-lucide="alert-triangle" style="width:18px;height:18px;color:var(--accent-warn);"></i> 警報・3日間天気</span>
+          <input type="checkbox" class="cycle-check" data-slot="2">
+        </label>
+        <label class="cycle-option-row">
+          <span class="cycle-option-label"><i data-lucide="train" style="width:18px;height:18px;color:var(--accent-ok);"></i> 鉄道運行情報</span>
+          <input type="checkbox" class="cycle-check" data-slot="3">
+        </label>
+        <label class="cycle-option-row">
+          <span class="cycle-option-label"><i data-lucide="sun" style="width:18px;height:18px;color:#f59e0b;"></i> 日照・気温推移 (ソーラー)</span>
+          <input type="checkbox" class="cycle-check" data-slot="4">
+        </label>
+      </div>
+      <button class="modal-save-btn" onclick="saveConfigAndApply()">設定を完了して巡回開始</button>
+    </div>
+  </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
@@ -538,6 +634,7 @@
     // 0. 天文計算：日の出・日の入り自動調光
     // ==========================================
     let isUserThemeManual = false;
+    let currentSolarData = null;
 
     function calculateSunTimes(lat, lng, date = new Date()) {
       const rad = Math.PI / 180;
@@ -582,10 +679,7 @@
         return { hours, minutes, totalMinutes: hours * 60 + minutes };
       }
 
-      return {
-        sunrise: calcSun(tRise, true),
-        sunset: calcSun(tSet, false)
-      };
+      return { sunrise: calcSun(tRise, true), sunset: calcSun(tSet, false) };
     }
 
     function checkDayNightTheme() {
@@ -596,6 +690,7 @@
       const now = new Date();
       const currentMinutes = now.getHours() * 60 + now.getMinutes();
       const sun = calculateSunTimes(city.lat, city.lng, now);
+      currentSolarData = sun;
 
       if (sun.sunrise && sun.sunset) {
         if (currentMinutes >= sun.sunrise.totalMinutes && currentMinutes < sun.sunset.totalMinutes) {
@@ -604,6 +699,7 @@
           applyTheme('ultra-cool');
         }
       }
+      renderSolarArcCanvas();
     }
 
     function applyTheme(themeName) {
@@ -614,6 +710,8 @@
       if (btnWhite) btnWhite.classList.toggle('active', isWhite);
       if (btnCool) btnCool.classList.toggle('active', !isWhite);
       lucide.createIcons();
+      renderTemp24hCanvas();
+      renderSolarArcCanvas();
     }
 
     function setUserTheme(themeName) {
@@ -735,7 +833,7 @@
     }
 
     // ==========================================
-    // 3. JMA 公式データ1本化（アメダス3時間ブロックから当日の最低気温実測値を直接算出）
+    // 3. JMA 公式データ（当日の最低実測気温 ＆ 24時間気温推移）
     // ==========================================
     const JMA_CITIES = {
       katsushika: { 
@@ -765,7 +863,8 @@
     };
 
     let currentSelectedCityKey = 'katsushika';
-    
+    let todayObservedHourlyTemps = [];
+
     function getJmaWeatherIcon(codeStr) {
       const code = parseInt(codeStr, 10);
       if (code >= 100 && code < 200) return { icon: 'sun', color: '#f59e0b' };
@@ -782,12 +881,11 @@
       return `${y}-${m}-${d}`;
     }
 
-    // 気象庁アメダス地点別3時間ブロックJSON (00, 03, 06時) から当日の最低実測気温を直接抽出
-    async function fetchJmaAmedasTodayMinTemp(stationCode, yyyymmdd) {
-      const blocks = ['00', '03', '06'];
-      let observedTemps = [];
+    async function fetchJmaAmedasTodayFullTemps(stationCode, yyyymmdd) {
+      const allBlocks = ['00', '03', '06', '09', '12', '15', '18', '21'];
+      let timeMap = {};
 
-      const promises = blocks.map(hh => {
+      const promises = allBlocks.map(hh => {
         const url = `https://www.jma.go.jp/bosai/amedas/data/point/${stationCode}/${yyyymmdd}_${hh}.json?_=${new Date().getTime()}`;
         return fetch(url).then(r => r.ok ? r.json() : null).catch(() => null);
       });
@@ -797,21 +895,14 @@
         if (!blockData) return;
         for (const timeKey in blockData) {
           const entry = blockData[timeKey];
-          if (entry) {
-            if (entry.temp && entry.temp[0] != null && !isNaN(entry.temp[0])) {
-              observedTemps.push(entry.temp[0]);
-            }
-            if (entry.minTemp && entry.minTemp[0] != null && !isNaN(entry.minTemp[0])) {
-              observedTemps.push(entry.minTemp[0]);
-            }
+          if (entry && entry.temp && entry.temp[0] != null && !isNaN(entry.temp[0])) {
+            const h = parseInt(timeKey.substring(8, 10), 10);
+            const m = parseInt(timeKey.substring(10, 12), 10);
+            timeMap[`${h}:${m}`] = { hour: h, min: m, temp: entry.temp[0] };
           }
         }
       });
-
-      if (observedTemps.length > 0) {
-        return Math.round(Math.min(...observedTemps));
-      }
-      return null;
+      return timeMap;
     }
 
     async function fetchJmaOfficialData(cityKey) {
@@ -901,7 +992,7 @@
           });
         }
 
-        // 3. 気温
+        // 3. 気温 ＆ 24時間データ構築（夕方急上昇バグ解消ロジック）
         const stTempSeries = shortTerm.timeSeries[2];
         const stTempArea = stTempSeries.areas.find(a => a.area.code === city.stationCode) || stTempSeries.areas[0];
         
@@ -916,22 +1007,46 @@
             }
           });
 
-          // 【今日の最高気温】
           if (dayTempsMap[day0] && dayTempsMap[day0].length > 0) {
             dailyForecast[day0].max = Math.round(Math.max(...dayTempsMap[day0]));
           } else if (tempVal !== "--.-") {
             dailyForecast[day0].max = Math.round(parseFloat(tempVal));
           }
 
-          // 【今日の最低気温：短期予報の重複配列は無視し、気象庁アメダス地点別データから取得】
-          const amedasMorningMin = await fetchJmaAmedasTodayMinTemp(city.stationCode, yyyymmdd);
-          if (amedasMorningMin != null && !isNaN(amedasMorningMin)) {
-            dailyForecast[day0].min = amedasMorningMin;
+          const amedasFullMap = await fetchJmaAmedasTodayFullTemps(city.stationCode, yyyymmdd);
+          const allObsTemps = Object.values(amedasFullMap).map(o => o.temp);
+          
+          if (allObsTemps.length > 0) {
+            dailyForecast[day0].min = Math.round(Math.min(...allObsTemps));
           } else {
             dailyForecast[day0].min = '--';
           }
 
-          // 【明日の気温】
+          todayObservedHourlyTemps = [];
+          const curH = now.getHours();
+          const curT = (tempVal !== "--.-") ? parseFloat(tempVal) : 22;
+          const nightTargetT = (dailyForecast[day0].min !== '--') ? dailyForecast[day0].min : (curT - 4);
+
+          for (let h = 0; h <= 24; h++) {
+            const match = amedasFullMap[`${h}:00`] || amedasFullMap[`${h}:10`] || amedasFullMap[`${h}:30`];
+            if (h < curH) {
+              if (match) todayObservedHourlyTemps.push({ hour: h, temp: match.temp });
+              else {
+                const prev = todayObservedHourlyTemps[todayObservedHourlyTemps.length - 1];
+                todayObservedHourlyTemps.push({ hour: h, temp: prev ? prev.temp : curT });
+              }
+            } else if (h === curH) {
+              todayObservedHourlyTemps.push({ hour: h, temp: curT });
+            } else {
+              const remainingHours = 24 - curH;
+              const passedFromNow = h - curH;
+              const decayRatio = Math.sin((passedFromNow / remainingHours) * (Math.PI / 2));
+              const estTemp = curT - (curT - nightTargetT) * decayRatio;
+              todayObservedHourlyTemps.push({ hour: h, temp: estTemp });
+            }
+          }
+          renderTemp24hCanvas();
+
           if (dayTempsMap[day1] && dayTempsMap[day1].length > 0) {
             dailyForecast[day1].max = Math.round(Math.max(...dayTempsMap[day1]));
             if (dayTempsMap[day1].length > 1) {
@@ -940,7 +1055,7 @@
           }
         }
 
-        // 4. 週間予報から明後日の気温・降水確率を抽出
+        // 4. 週間予報
         if (forecastData.length > 1) {
           const weekly = forecastData[1];
           const wkPopArea = weekly.timeSeries[0].areas.find(a => a.area.code === city.area10) || weekly.timeSeries[0].areas[0];
@@ -1029,37 +1144,41 @@
     }
 
     // ==========================================
-    // 4. 右側：Yahoo! ニュース パタパタ電光掲示板（Cloudflare Workers連動・20秒固定）
+    // 4. ニュース：1画面4本特大無限ティッカー（速度8〜10秒・3文字余白スペーサー・滞在15秒）
     // ==========================================
     const WORKER_URL = "https://lively-snow-947d.utugi1978.workers.dev";
-    let activeCategories = ["top", "domestic"]; // 初期選択：主要・国内
+    let activeCategories = ["top", "domestic"];
     let currentNewsCatIndex = 0;
-    const newsIntervalSec = 20; // 20秒固定巡回
+    let currentNewsPage = 0;
+    let cachedCategoryItems = [];
+    const newsPageDurationSec = 15; // 滞在時間15秒
     let newsCycleTimerId = null;
 
     function initNewsFlipBoard() {
       const container = document.getElementById('news-container-flip');
       container.innerHTML = "";
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 4; i++) {
         const row = document.createElement('div');
         row.className = 'news-row-flip';
         row.id = `news-row-${i}`;
         row.innerHTML = `
-          <span class="news-flip-index">${(i + 1).toString().padStart(2, '0')}</span>
-          <span class="news-flip-tag" id="tag-${i}">---</span>
-          <p class="news-flip-title" id="title-${i}">読み込み中...</p>
-          <span class="news-flip-time" id="time-${i}">--:--</span>
+          <div class="news-left-fixed-group">
+            <span class="news-flip-index" id="flip-idx-${i}">0${i + 1}</span>
+            <span class="news-flip-tag" id="flip-tag-${i}">---</span>
+          </div>
+          <div class="news-marquee-viewport" id="marquee-viewport-${i}">
+            <div class="news-marquee-track" id="marquee-track-${i}">読み込み中...</div>
+          </div>
+          <span class="news-flip-time" id="flip-time-${i}">--:--</span>
         `;
         container.appendChild(row);
       }
 
-      // 下部カテゴリトグルボタンのクリック設定
-      document.querySelectorAll('.cat-btn').forEach(btn => {
+      document.querySelectorAll('.news-top-bar .cat-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const key = btn.dataset.key;
-
           if (btn.classList.contains('active')) {
-            if (activeCategories.length <= 1) return; // 最低1つは残す
+            if (activeCategories.length <= 1) return;
             btn.classList.remove('active');
             activeCategories = activeCategories.filter(k => k !== key);
           } else {
@@ -1069,12 +1188,12 @@
 
           currentNewsCatIndex = activeCategories.indexOf(key);
           if (currentNewsCatIndex === -1) currentNewsCatIndex = 0;
+          currentNewsPage = 0;
           loadCategoryNews(activeCategories[currentNewsCatIndex]);
           resetNewsCycleTimer();
         });
       });
 
-      // 初回読み込み＆20秒タイマー開始
       loadCategoryNews(activeCategories[currentNewsCatIndex]);
       resetNewsCycleTimer();
     }
@@ -1084,46 +1203,76 @@
       try {
         const res = await fetch(`${WORKER_URL}?category=${catKey}`);
         const data = await res.json();
-
         if (data.success && data.items) {
-          data.items.forEach((item, index) => {
-            const row = document.getElementById(`news-row-${index}`);
-            if (!row) return;
-
-            setTimeout(() => {
-              row.classList.add('flipping');
-
-              setTimeout(() => {
-                const dateObj = new Date(item.pubDate);
-                const timeStr = isNaN(dateObj) ? "" : `${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
-
-                document.getElementById(`tag-${index}`).textContent = item.category;
-                document.getElementById(`title-${index}`).textContent = item.title;
-                document.getElementById(`time-${index}`).textContent = timeStr;
-
-                row.classList.remove('flipping');
-              }, 200);
-            }, index * 60);
-          });
+          cachedCategoryItems = data.items;
+          renderNews4Items();
         }
       } catch (err) {
         console.error("News fetch failed:", err);
       }
     }
 
-    function nextNewsCategory() {
+    function renderNews4Items() {
+      const startIndex = currentNewsPage * 4;
+      const pageItems = cachedCategoryItems.slice(startIndex, startIndex + 4);
+
+      for (let i = 0; i < 4; i++) {
+        const row = document.getElementById(`news-row-${i}`);
+        if (!row) continue;
+        const item = pageItems[i];
+
+        setTimeout(() => {
+          row.classList.add('flipping');
+          setTimeout(() => {
+            if (item) {
+              const dateObj = new Date(item.pubDate);
+              const timeStr = isNaN(dateObj) ? "" : `${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
+              document.getElementById(`flip-idx-${i}`).textContent = (startIndex + i + 1).toString().padStart(2, '0');
+              document.getElementById(`flip-tag-${i}`).textContent = item.category;
+              document.getElementById(`flip-time-${i}`).textContent = timeStr;
+
+              // 文末と先頭の間に「全角3文字分」の明確な余白を配置
+              const track = document.getElementById(`marquee-track-${i}`);
+              const spacer = "   ";
+              track.textContent = `${item.title}${spacer}${item.title}${spacer}`;
+              
+              track.classList.remove('animating');
+              void track.offsetWidth;
+              
+              // スピードを8秒〜10秒に加速
+              const animDuration = Math.max(8, Math.min(10.5, item.title.length * 0.42));
+              track.style.animationDuration = `${animDuration}s`;
+              track.classList.add('animating');
+
+              row.style.visibility = 'visible';
+            } else {
+              row.style.visibility = 'hidden';
+            }
+            row.classList.remove('flipping');
+          }, 200);
+        }, i * 60);
+      }
+    }
+
+    function nextNewsStep() {
       if (activeCategories.length === 0) return;
-      currentNewsCatIndex = (currentNewsCatIndex + 1) % activeCategories.length;
-      loadCategoryNews(activeCategories[currentNewsCatIndex]);
+      if (currentNewsPage === 0 && cachedCategoryItems.length > 4) {
+        currentNewsPage = 1;
+        renderNews4Items();
+      } else {
+        currentNewsPage = 0;
+        currentNewsCatIndex = (currentNewsCatIndex + 1) % activeCategories.length;
+        loadCategoryNews(activeCategories[currentNewsCatIndex]);
+      }
     }
 
     function resetNewsCycleTimer() {
       if (newsCycleTimerId) clearInterval(newsCycleTimerId);
-      newsCycleTimerId = setInterval(nextNewsCategory, newsIntervalSec * 1000);
+      newsCycleTimerId = setInterval(nextNewsStep, newsPageDurationSec * 1000);
     }
 
     // ==========================================
-    // 5. 鉄道・全体タブ巡回タイマー
+    // 5. 鉄道データ
     // ==========================================
     const transitList = [
       { name: 'JR 常磐線 (ダミー)', line: '綾瀬 〜 金町 〜 我孫子・取手', status: '平常運転 (ダミー)', ok: true },
@@ -1141,34 +1290,317 @@
       lucide.createIcons();
     }
 
-    const rightPages = [
-      { id: 'right-slot-map', title: '02 // JAPAN PRECIPITATION RADAR [LIVE]' },
-      { id: 'right-slot-news', title: '02 // HEADLINE MONITOR' },
-      { id: 'right-slot-alerts', title: '02 // WEATHER ALERTS & 3-DAY OUTLOOK' },
-      { id: 'right-slot-transit', title: '02 // METROPOLITAN TRANSIT [DUMMY DATA]' }
+    // ==========================================
+    // 6. 第5スロット：Canvas 描画
+    // ==========================================
+    const SHARED_PAD_L = 58;
+    const SHARED_PAD_R = 24;
+
+    function renderTemp24hCanvas() {
+      const canvas = document.getElementById('temp-24h-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+      const w = rect.width, h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+      if (todayObservedHourlyTemps.length === 0) return;
+
+      const padL = SHARED_PAD_L, padR = SHARED_PAD_R, padT = 20, padB = 24;
+      const chartW = w - padL - padR;
+      const chartH = h - padT - padB;
+
+      const temps = todayObservedHourlyTemps.map(d => d.temp);
+      let minT = Math.floor(Math.min(...temps)) - 2;
+      let maxT = Math.ceil(Math.max(...temps)) + 2;
+      if (maxT - minT < 6) { maxT += 2; minT -= 2; }
+
+      const isWhite = document.body.getAttribute('data-theme') === 'clean-white';
+      const gridColor = isWhite ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.08)';
+      const textColor = isWhite ? '#1e293b' : '#f1f5f9';
+      const lineColor = '#38bdf8';
+
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.font = '900 1.95rem Outfit, sans-serif';
+      ctx.fillStyle = textColor;
+
+      const step = Math.ceil((maxT - minT) / 3);
+      for (let t = minT; t <= maxT; t += step) {
+        const y = padT + chartH - ((t - minT) / (maxT - minT)) * chartH;
+        ctx.strokeStyle = gridColor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padL, y);
+        ctx.lineTo(w - padR, y);
+        ctx.stroke();
+        ctx.fillText(`${t}°`, padL - 10, y);
+      }
+
+      ctx.font = '700 0.85rem Outfit, sans-serif';
+      ctx.fillStyle = isWhite ? '#64748b' : '#94a3b8';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      [0, 6, 12, 18, 24].forEach(hr => {
+        const x = padL + (hr / 24) * chartW;
+        ctx.fillText(`${String(hr).padStart(2, '0')}:00`, x, h - padB + 6);
+      });
+
+      const pts = todayObservedHourlyTemps.map(d => {
+        const x = padL + (d.hour / 24) * chartW;
+        const y = padT + chartH - ((d.temp - minT) / (maxT - minT)) * chartH;
+        return { x, y };
+      });
+
+      const grad = ctx.createLinearGradient(0, padT, 0, padT + chartH);
+      grad.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
+      grad.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
+
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.lineTo(pts[pts.length - 1].x, padT + chartH);
+      ctx.lineTo(pts[0].x, padT + chartH);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.strokeStyle = lineColor;
+      ctx.lineWidth = 3;
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.stroke();
+
+      const now = new Date();
+      const curM = now.getHours() * 60 + now.getMinutes();
+      const nowX = padL + (curM / 1440) * chartW;
+
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(nowX, padT);
+      ctx.lineTo(nowX, padT + chartH);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      const curTempStr = document.getElementById('current-temp-val').textContent.replace('°C', '');
+      const curT = parseFloat(curTempStr);
+      if (!isNaN(curT)) {
+        const nowY = padT + chartH - ((curT - minT) / (maxT - minT)) * chartH;
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 12;
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(nowX, nowY, 5.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    function renderSolarArcCanvas() {
+      const canvas = document.getElementById('solar-arc-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+      const w = rect.width, h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const city = JMA_CITIES[currentSelectedCityKey];
+      if (!city) return;
+      const sun = currentSolarData || calculateSunTimes(city.lat, city.lng);
+      if (!sun.sunrise || !sun.sunset) return;
+
+      const riseM = sun.sunrise.totalMinutes;
+      const setM = sun.sunset.totalMinutes;
+      const horizonY = h * 0.58;
+
+      const padL = SHARED_PAD_L, padR = SHARED_PAD_R;
+      const chartW = w - padL - padR;
+
+      const now = new Date();
+      const curM = now.getHours() * 60 + now.getMinutes();
+      const isDayTime = (curM >= riseM && curM < setM);
+      const isSunsetNear = Math.abs(curM - setM) <= 45;
+
+      const isWhite = document.body.getAttribute('data-theme') === 'clean-white';
+
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, horizonY);
+      if (isDayTime) {
+        if (isSunsetNear) {
+          skyGrad.addColorStop(0, '#c2410c');
+          skyGrad.addColorStop(1, '#f97316');
+        } else {
+          skyGrad.addColorStop(0, isWhite ? '#7dd3fc' : '#0369a1');
+          skyGrad.addColorStop(1, isWhite ? '#e0f2fe' : '#0284c7');
+        }
+      } else {
+        skyGrad.addColorStop(0, '#020617');
+        skyGrad.addColorStop(1, '#0f172a');
+      }
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(padL, 0, chartW, horizonY);
+
+      if (!isDayTime) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        [0.15, 0.35, 0.65, 0.85].forEach((rx, idx) => {
+          ctx.beginPath();
+          ctx.arc(padL + chartW * rx, 14 + (idx % 2) * 12, 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      const groundGrad = ctx.createLinearGradient(0, horizonY, 0, h);
+      groundGrad.addColorStop(0, isWhite ? '#cbd5e1' : '#090d16');
+      groundGrad.addColorStop(1, isWhite ? '#94a3b8' : '#000000');
+      ctx.fillStyle = groundGrad;
+      ctx.fillRect(padL, horizonY, chartW, h - horizonY);
+
+      ctx.strokeStyle = isWhite ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.3)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(padL, horizonY);
+      ctx.lineTo(padL + chartW, horizonY);
+      ctx.stroke();
+
+      const amp = h * 0.36;
+      ctx.beginPath();
+      for (let px = 0; px <= chartW; px++) {
+        const m = (px / chartW) * 1440;
+        let y;
+        if (m >= riseM && m <= setM) {
+          const progress = (m - riseM) / (setM - riseM);
+          y = horizonY - Math.sin(progress * Math.PI) * amp;
+        } else {
+          let nightProgress = (m < riseM) ? (1440 - setM + m) / (1440 - setM + riseM) : (m - setM) / (1440 - setM + riseM);
+          y = horizonY + Math.sin(nightProgress * Math.PI) * (amp * 0.6);
+        }
+        if (px === 0) ctx.moveTo(padL + px, y);
+        else ctx.lineTo(padL + px, y);
+      }
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      const nowX = padL + (curM / 1440) * chartW;
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(nowX, 0);
+      ctx.lineTo(nowX, h);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      let curY;
+      if (isDayTime) {
+        const progress = (curM - riseM) / (setM - riseM);
+        curY = horizonY - Math.sin(progress * Math.PI) * amp;
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 20;
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(nowX, curY, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      } else {
+        let nightProgress = (curM < riseM) ? (1440 - setM + curM) / (1440 - setM + riseM) : (curM - setM) / (1440 - setM + riseM);
+        curY = horizonY + Math.sin(nightProgress * Math.PI) * (amp * 0.6);
+        ctx.save();
+        ctx.translate(nowX, curY);
+        ctx.fillStyle = '#fef08a';
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.arc(0, 0, 7, -Math.PI / 2, Math.PI / 2, false);
+        ctx.arc(3, 0, 5.5, Math.PI / 2, -Math.PI / 2, true);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      const rH = String(sun.sunrise.hours).padStart(2, '0');
+      const rM = String(sun.sunrise.minutes).padStart(2, '0');
+      const sH = String(sun.sunset.hours).padStart(2, '0');
+      const sM = String(sun.sunset.minutes).padStart(2, '0');
+
+      document.getElementById('solar-rise-time-huge').textContent = `${rH}:${rM}`;
+      document.getElementById('solar-set-time-huge').textContent = `${sH}:${sM}`;
+
+      const untilEl = document.getElementById('solar-until-text');
+      if (isDayTime) {
+        const diff = setM - curM;
+        untilEl.textContent = `日没まで あと${Math.floor(diff/60)}時間${diff%60}分`;
+      } else {
+        const diff = (curM < riseM) ? (riseM - curM) : (1440 - curM + riseM);
+        untilEl.textContent = `日の出まで あと${Math.floor(diff/60)}時間${diff%60}分`;
+      }
+    }
+
+    // ==========================================
+    // 7. 巡回設定＆タブ管理エンジン
+    // ==========================================
+    const allSlotMaster = [
+      { id: 'right-slot-map', name: '雨量', title: '02 // JAPAN PRECIPITATION RADAR [LIVE]' },
+      { id: 'right-slot-news', name: 'ニュース', title: '02 // HEADLINE MONITOR' },
+      { id: 'right-slot-alerts', name: '警報・天気', title: '02 // WEATHER ALERTS & 3-DAY OUTLOOK' },
+      { id: 'right-slot-transit', name: '鉄道', title: '02 // METROPOLITAN TRANSIT [DUMMY DATA]' },
+      { id: 'right-slot-solar', name: '日照・気温', title: '02 // 24H TEMP & SOLAR CYCLE' }
     ];
 
-    let currentRightPageIndex = 0;
+    let enabledSlots = JSON.parse(localStorage.getItem('wall_monitor_slots')) || [0, 1, 2];
+    let currentSlotLoopIndex = 0;
     let rightTimer = 0;
     let cycleDuration = 3 * 60000;
 
-    function switchRightPage(index) {
-      currentRightPageIndex = index;
-      rightTimer = 0;
-      document.querySelectorAll('.top-tab-btn').forEach((btn, idx) => { btn.classList.toggle('active', idx === index); });
-      rightPages.forEach((page, idx) => {
-        const el = document.getElementById(page.id);
-        if (el) el.classList.toggle('active', idx === index);
-      });
-      document.getElementById('right-panel-header-title').textContent = rightPages[index].title;
+    function renderDynamicTopTabs() {
+      const container = document.getElementById('dynamic-top-tabs');
+      container.innerHTML = "";
 
-      // ニュースタブ選択時のみ「※速報ロジック：未実装」「※20秒固定巡回中」を表示
+      enabledSlots.forEach((slotIdx) => {
+        const slot = allSlotMaster[slotIdx];
+        const btn = document.createElement('button');
+        btn.className = `top-tab-btn ${enabledSlots[currentSlotLoopIndex] === slotIdx ? 'active' : ''}`;
+        btn.textContent = slot.name;
+        btn.onclick = () => {
+          currentSlotLoopIndex = enabledSlots.indexOf(slotIdx);
+          switchRightPage(slotIdx);
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function switchRightPage(targetSlotIdx) {
+      rightTimer = 0;
+      allSlotMaster.forEach((slot, idx) => {
+        const el = document.getElementById(slot.id);
+        if (el) el.classList.toggle('active', idx === targetSlotIdx);
+      });
+
+      document.getElementById('right-panel-header-title').textContent = allSlotMaster[targetSlotIdx].title;
+
       const extraBadges = document.getElementById('news-extra-badges');
       if (extraBadges) {
-        extraBadges.style.display = (index === 1) ? 'flex' : 'none';
+        extraBadges.style.display = (targetSlotIdx === 1) ? 'flex' : 'none';
       }
 
-      if (index === 0 && mapJapan) setTimeout(() => { mapJapan.invalidateSize(); }, 100);
+      renderDynamicTopTabs();
+
+      if (targetSlotIdx === 0 && mapJapan) setTimeout(() => { mapJapan.invalidateSize(); }, 100);
+      if (targetSlotIdx === 4) {
+        setTimeout(() => {
+          renderTemp24hCanvas();
+          renderSolarArcCanvas();
+        }, 100);
+      }
     }
 
     function setTimerCycle(minutes) {
@@ -1185,10 +1617,43 @@
       const progress = (rightTimer / cycleDuration) * 100;
       document.getElementById('timer-bar-fill').style.width = `${progress}%`;
       if (rightTimer >= cycleDuration) {
-        currentRightPageIndex = (currentRightPageIndex + 1) % rightPages.length;
-        switchRightPage(currentRightPageIndex);
+        if (enabledSlots.length > 0) {
+          currentSlotLoopIndex = (currentSlotLoopIndex + 1) % enabledSlots.length;
+          switchRightPage(enabledSlots[currentSlotLoopIndex]);
+        }
       }
     }, 100);
+
+    function openConfigModal() {
+      const modal = document.getElementById('config-modal');
+      modal.classList.add('open');
+      document.querySelectorAll('.cycle-check').forEach(chk => {
+        const slot = parseInt(chk.dataset.slot, 10);
+        chk.checked = enabledSlots.includes(slot);
+      });
+    }
+
+    function closeConfigModal() {
+      document.getElementById('config-modal').classList.remove('open');
+    }
+
+    function saveConfigAndApply() {
+      const checkedSlots = [];
+      document.querySelectorAll('.cycle-check:checked').forEach(chk => {
+        checkedSlots.push(parseInt(chk.dataset.slot, 10));
+      });
+
+      if (checkedSlots.length === 0) {
+        alert('最低1つのスロットを選択してください');
+        return;
+      }
+
+      enabledSlots = checkedSlots;
+      localStorage.setItem('wall_monitor_slots', JSON.stringify(enabledSlots));
+      currentSlotLoopIndex = 0;
+      closeConfigModal();
+      switchRightPage(enabledSlots[0]);
+    }
 
     function toggleFullScreen() {
       if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(err => {}); } 
@@ -1210,6 +1675,11 @@
     }
     setInterval(updateClock, 1000); updateClock();
 
+    window.addEventListener('resize', () => {
+      renderTemp24hCanvas();
+      renderSolarArcCanvas();
+    });
+
     window.addEventListener('DOMContentLoaded', () => {
       requestWakeLock();
       checkDayNightTheme();
@@ -1218,6 +1688,10 @@
       fetchWarnings();
       initNewsFlipBoard();
       buildTransitTrack();
+
+      renderDynamicTopTabs();
+      switchRightPage(enabledSlots[0]);
+
       setInterval(fetchWarnings, 5 * 60 * 1000);
       setInterval(() => { fetchJmaOfficialData(currentSelectedCityKey); }, 10 * 60 * 1000);
     });
