@@ -33,6 +33,8 @@
       --card-item-bg: rgba(248, 250, 252, 0.95);
       --sub-card-bg: rgba(241, 245, 249, 0.9);
       --sub-card-border: rgba(203, 213, 225, 0.9);
+      --news-flip-bg: #ffffff;
+      --news-flip-border: #cbd5e1;
       --font-family-base: 'Outfit', 'Zen Kaku Gothic New', sans-serif;
       --font-family-clock: 'Outfit', sans-serif;
     }
@@ -56,6 +58,8 @@
       --card-item-bg: rgba(255, 255, 255, 0.04);
       --sub-card-bg: rgba(255, 255, 255, 0.05);
       --sub-card-border: rgba(255, 255, 255, 0.1);
+      --news-flip-bg: #16181f;
+      --news-flip-border: #232733;
       --font-family-base: 'Outfit', 'Zen Kaku Gothic New', sans-serif;
       --font-family-clock: 'Outfit', monospace;
     }
@@ -81,7 +85,7 @@
 
     .dashboard-split-grid { position: relative; z-index: 10; flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; height: calc(100vh - 44px); }
     .hud-panel { position: relative; background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: var(--panel-radius); backdrop-filter: blur(12px); box-shadow: var(--panel-shadow); display: flex; flex-direction: column; overflow: hidden; height: 100%; }
-    .panel-header { height: 38px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--panel-border); background: var(--header-bg); font-weight: 800; font-size: 0.82rem; letter-spacing: 0.05em; color: var(--accent-main); }
+    .panel-header { height: 38px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--panel-border); background: var(--header-bg); font-weight: 800; font-size: 0.82rem; letter-spacing: 0.05em; color: var(--accent-main); gap: 8px; }
     .panel-body { flex: 1; padding: 10px 12px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
 
     .left-ultimate-container { display: flex; flex-direction: column; height: 100%; justify-content: space-between; gap: 10px; }
@@ -99,9 +103,7 @@
     .city-pill-middle:hover { color: var(--text-head); border-color: var(--accent-main); }
     .city-pill-middle.active { background: var(--accent-main); color: #fff; border-color: var(--accent-main); font-weight: 800; }
 
-    /* ==========================================================================
-       計測エリア：2×2（内部独立子カード配置）
-       ========================================================================== */
+    /* 計測エリア：2×2（内部独立子カード配置） */
     .weather-telemetry-fullbox { 
       flex: 1.4; 
       background: var(--card-item-bg); 
@@ -126,104 +128,32 @@
       position: relative;
     }
 
-    .field-card-temp-full {
-      width: 100%;
-      container-type: inline-size;
-    }
-    .temp-pure-digits {
-      font-family: var(--font-family-clock);
-      font-size: 27cqw;
-      font-weight: 900;
-      color: var(--text-head);
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
+    .field-card-temp-full { width: 100%; container-type: inline-size; }
+    .temp-pure-digits { font-family: var(--font-family-clock); font-size: 27cqw; font-weight: 900; color: var(--text-head); line-height: 1; letter-spacing: -0.02em; }
 
-    .dual-card-container {
-      display: grid;
-      grid-template-columns: 38% 1fr;
-      gap: 8px;
-      height: 100%;
-      width: 100%;
-    }
+    .dual-card-container { display: grid; grid-template-columns: 38% 1fr; gap: 8px; height: 100%; width: 100%; }
+    .label-pure-text { font-size: 1.65rem; font-weight: 900; color: var(--text-head); letter-spacing: 0.05em; white-space: nowrap; }
+    .weather-icon-card { display: flex; align-items: center; justify-content: center; }
 
-    .label-pure-text {
-      font-size: 1.65rem;
-      font-weight: 900;
-      color: var(--text-head);
-      letter-spacing: 0.05em;
-      white-space: nowrap;
-    }
+    .rain-digits-card { display: flex; align-items: baseline; justify-content: center; font-family: var(--font-family-clock); color: var(--accent-main); line-height: 1; }
+    .rain-num { font-size: 2.8rem; font-weight: 900; letter-spacing: -0.02em; }
+    .rain-unit { font-size: 1.5rem; font-weight: 800; margin-left: 2px; }
 
-    .weather-icon-card {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .humidity-val-card { display: flex; align-items: baseline; justify-content: center; font-family: var(--font-family-clock); color: var(--text-head); line-height: 1; }
+    .humidity-digits { font-size: 2.8rem; font-weight: 900; letter-spacing: -0.02em; }
+    .humidity-unit { font-size: 1.4rem; font-weight: 800; color: var(--text-muted); margin-left: 2px; }
 
-    .rain-digits-card {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      font-family: var(--font-family-clock);
-      color: var(--accent-main);
-      line-height: 1;
-    }
-    .rain-num {
-      font-size: 2.8rem;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-    }
-    .rain-unit {
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-left: 2px;
-    }
+    .wind-speed-card { display: flex; align-items: baseline; justify-content: center; font-family: var(--font-family-clock); color: var(--text-head); line-height: 1; }
+    .wind-speed-digits { font-size: 2.45rem; font-weight: 900; letter-spacing: -0.02em; }
+    .wind-speed-unit { font-size: 1.15rem; font-weight: 800; color: var(--text-muted); margin-left: 3px; }
 
-    .humidity-val-card {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      font-family: var(--font-family-clock);
-      color: var(--text-head);
-      line-height: 1;
-    }
-    .humidity-digits {
-      font-size: 2.8rem;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-    }
-    .humidity-unit {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--text-muted);
-      margin-left: 2px;
-    }
+    /* 右側パネルヘッダースタイル */
+    .right-header-left-group { display: flex; align-items: center; gap: 8px; overflow: hidden; }
+    .news-extra-badges { display: none; align-items: center; gap: 6px; }
+    .news-badge-unimpl { font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; background: rgba(239, 68, 68, 0.14); border: 1px solid var(--accent-danger); color: var(--accent-danger); white-space: nowrap; }
+    .news-badge-cycle20 { font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; background: rgba(37, 99, 235, 0.14); border: 1px solid var(--accent-main); color: var(--accent-main); white-space: nowrap; }
 
-    .wind-speed-card {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      font-family: var(--font-family-clock);
-      color: var(--text-head);
-      line-height: 1;
-    }
-    .wind-speed-digits {
-      font-size: 2.45rem;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-    }
-    .wind-speed-unit {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--text-muted);
-      margin-left: 3px;
-    }
-
-    /* ==========================================================================
-       右側パネルスタイル
-       ========================================================================== */
-    .right-header-meta { display: flex; align-items: center; gap: 12px; }
+    .right-header-meta { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .sync-timestamp-badge { font-family: var(--font-family-clock); font-size: 0.76rem; font-weight: 800; color: var(--accent-ok); background: rgba(16, 185, 129, 0.12); border: 1px solid var(--accent-ok); padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
     .timer-controls-group { display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,0.12); border: 1px solid var(--panel-border); border-radius: 5px; padding: 2px; }
     .timer-set-btn { background: transparent; border: none; color: var(--text-muted); font-size: 0.74rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
@@ -237,15 +167,137 @@
     .radar-slot-fullscreen { width: 100%; height: 100%; border: 1px solid var(--panel-border); border-radius: 8px; position: relative; overflow: hidden; background: #121212; }
     #map-japan { width: 100%; height: 100%; z-index: 1; }
 
-    .news-fixed-8-container { display: grid; grid-template-rows: repeat(8, 1fr); gap: 5px; height: 100%; padding: 6px 8px; }
-    .news-fixed-row { background: var(--card-item-bg); border: 1px solid var(--panel-border); border-left: 5px solid var(--accent-sub); border-radius: 5px; display: flex; align-items: center; padding: 0 8px; overflow: hidden; position: relative; }
-    .news-row-badge-wrap { display: flex; align-items: center; gap: 6px; margin-right: 12px; flex-shrink: 0; z-index: 2; }
-    .news-tag-badge-ticker { font-size: 0.82rem; font-weight: 800; padding: 2px 8px; border-radius: 3px; background: var(--header-bg); border: 1px solid var(--accent-sub); color: var(--accent-sub); white-space: nowrap; }
+    /* ==========================================================================
+       統合：Yahoo! ニュース パタパタ電光掲示板（右側ステータス削除・横幅100%）
+       ========================================================================== */
+    .news-board-wrapper {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 8px 10px;
+      gap: 8px;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    #news-container-flip {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 5px;
+      perspective: 1200px;
+      width: 100%;
+      min-height: 0;
+    }
+
+    .news-row-flip {
+      background: var(--news-flip-bg);
+      border: 1px solid var(--news-flip-border);
+      border-left: 6px solid #005eb8;
+      border-radius: 5px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      min-height: 0;
+      transform-origin: 50% 0%;
+      transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.38s;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+      overflow: hidden;
+    }
+
+    .news-row-flip.flipping {
+      transform: rotateX(90deg);
+      opacity: 0;
+    }
+
+    .news-flip-index {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: var(--text-muted);
+      font-family: var(--font-family-clock);
+      min-width: 28px;
+    }
+
+    .news-flip-tag {
+      background: #005eb8;
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .news-flip-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-head);
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      letter-spacing: 0.02em;
+    }
+
+    .news-flip-time {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: var(--font-family-clock);
+      white-space: nowrap;
+    }
+
+    /* 下部：8カテゴリ選択ボタン（トグル式） */
+    .news-bottom-bar {
+      height: 46px;
+      background: var(--card-item-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 4px 6px;
+      flex-shrink: 0;
+    }
+
+    .cat-btn {
+      flex: 1;
+      height: 100%;
+      background-color: var(--panel-bg);
+      color: var(--text-muted);
+      border: 1px solid var(--panel-border);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .cat-btn:hover {
+      color: var(--text-head);
+      border-color: var(--accent-main);
+    }
+
+    .cat-btn.active {
+      background-color: #005eb8;
+      color: #fff;
+      border-color: #00d2ff;
+      box-shadow: 0 0 10px rgba(0, 140, 255, 0.45);
+    }
+
+    /* ==========================================================================
+       警報・3日間予報 / 鉄道
+       ========================================================================== */
     .mock-tag-pill-ticker { font-size: 0.72rem; font-weight: 800; padding: 2px 6px; border-radius: 3px; background: rgba(239, 68, 68, 0.15); border: 1px solid var(--accent-danger); color: var(--accent-danger); white-space: nowrap; }
-    .news-ticker-viewport { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 100%; display: flex; align-items: center; }
-    .news-ticker-text { display: inline-block; white-space: nowrap; padding-left: 100%; animation: tickerHorizontal 32s linear infinite; font-size: 3.2rem; font-weight: 900; color: var(--text-head); line-height: 1; letter-spacing: 0.02em; }
-    .news-ticker-viewport:hover .news-ticker-text { animation-play-state: paused; }
-    @keyframes tickerHorizontal { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
 
     .alerts-combo-container { display: flex; flex-direction: column; height: 100%; padding: 8px 10px; gap: 8px; overflow: hidden; }
     .combo-top-warning { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; border-bottom: 2px solid var(--panel-border); padding-bottom: 6px; }
@@ -402,7 +454,15 @@
     <!-- 右側全面パネル -->
     <section class="hud-panel">
       <div class="panel-header">
-        <span id="right-panel-header-title">02 // JAPAN PRECIPITATION RADAR [LIVE]</span>
+        <div class="right-header-left-group">
+          <span id="right-panel-header-title" style="white-space: nowrap;">02 // JAPAN PRECIPITATION RADAR [LIVE]</span>
+          <!-- ニュースタブ選択時のみ表示される2つのバッジ -->
+          <div id="news-extra-badges" class="news-extra-badges">
+            <span class="news-badge-unimpl">※速報ロジック：未実装 (待機中)</span>
+            <span class="news-badge-cycle20">※20秒固定巡回中</span>
+          </div>
+        </div>
+
         <div class="right-header-meta">
           <span id="sync-timestamp" class="sync-timestamp-badge">SYNC: --:-- [5m]</span>
 
@@ -418,14 +478,29 @@
       </div>
       <div class="panel-body" style="padding: 0;">
 
+        <!-- 0: 雨量レーダー -->
         <div id="right-slot-map" class="right-view-slot active" style="padding: 10px;">
           <div class="radar-slot-fullscreen"><div id="map-japan"></div></div>
         </div>
 
+        <!-- 1: ニュース（Cloudflare Workers パタパタ電光掲示板・横幅100%・下部トグル） -->
         <div id="right-slot-news" class="right-view-slot">
-          <div id="news-fixed-8-track" class="news-fixed-8-container"></div>
+          <div class="news-board-wrapper">
+            <div id="news-container-flip"></div>
+            <div class="news-bottom-bar">
+              <button class="cat-btn active" data-key="top">主要</button>
+              <button class="cat-btn active" data-key="domestic">国内</button>
+              <button class="cat-btn" data-key="world">国際</button>
+              <button class="cat-btn" data-key="business">経済</button>
+              <button class="cat-btn" data-key="entertainment">エンタメ</button>
+              <button class="cat-btn" data-key="sports">スポーツ</button>
+              <button class="cat-btn" data-key="it">IT・科学</button>
+              <button class="cat-btn" data-key="local">地域</button>
+            </div>
+          </div>
         </div>
 
+        <!-- 2: 警報・3日間天気 -->
         <div id="right-slot-alerts" class="right-view-slot">
           <div class="alerts-combo-container">
             <div class="combo-top-warning">
@@ -441,6 +516,7 @@
           </div>
         </div>
 
+        <!-- 3: 鉄道 -->
         <div id="right-slot-transit" class="right-view-slot" style="padding: 12px;">
           <div id="transit-scroll-track" class="infinite-scroll-track-down"></div>
         </div>
@@ -779,10 +855,7 @@
           }
         }
 
-        // 左上：単独気温
         document.getElementById('current-temp-val').textContent = `${tempVal}°C`;
-        
-        // 右上：湿度 & 右下：風速
         document.getElementById('current-humidity-digits').textContent = humidVal;
         document.getElementById('current-wind-speed-digits').textContent = windSpeedVal;
 
@@ -828,7 +901,7 @@
           });
         }
 
-        // 3. 気温（今日の最高気温は短期予報から、今日の最低気温はアメダス3時間ブロックから直接取得）
+        // 3. 気温
         const stTempSeries = shortTerm.timeSeries[2];
         const stTempArea = stTempSeries.areas.find(a => a.area.code === city.stationCode) || stTempSeries.areas[0];
         
@@ -850,7 +923,7 @@
             dailyForecast[day0].max = Math.round(parseFloat(tempVal));
           }
 
-          // 【今日の最低気温：短期予報の重複配列(["27","27"])は無視し、気象庁アメダス地点別データから取得】
+          // 【今日の最低気温：短期予報の重複配列は無視し、気象庁アメダス地点別データから取得】
           const amedasMorningMin = await fetchJmaAmedasTodayMinTemp(city.stationCode, yyyymmdd);
           if (amedasMorningMin != null && !isNaN(amedasMorningMin)) {
             dailyForecast[day0].min = amedasMorningMin;
@@ -900,12 +973,10 @@
           }
         }
 
-        // 左下：特大アイコン ＆ 降水確率数値
         const currentIconData = getJmaWeatherIcon(dailyForecast[day0].iconCode);
         document.getElementById('current-weather-icon-box').innerHTML = `<i data-lucide="${currentIconData.icon}" style="width: 58px; height: 58px; color: ${currentIconData.color};"></i>`;
         document.getElementById('current-rain-val').textContent = (dailyForecast[day0].pop !== '--') ? dailyForecast[day0].pop : '--';
 
-        // 右下：3日間予報
         let forecastHtml = '';
         const targetDays = [day0, day1, day2];
         
@@ -958,24 +1029,102 @@
     }
 
     // ==========================================
-    // 右側：ニュース・鉄道・タイマー
+    // 4. 右側：Yahoo! ニュース パタパタ電光掲示板（Cloudflare Workers連動・20秒固定）
     // ==========================================
-    const newsList8 = [
-      { tag: '速報', text: '秋雨前線の活発化に伴う大雨警戒情報を気象庁が更新、急な強い雨や落雷に警戒を呼びかけ (ダミー)' },
-      { tag: 'IT・科学', text: '次世代高精度気象レーダー網のデータリアルタイム公開が試験運用開始、豪雨予測を大幅に強化 (ダミー)' },
-      { tag: '地域交通', text: '中川・新金線周辺における次世代交通システムの実証実験拡大、自動運行バス検証テスト推進 (ダミー)' },
-      { tag: '経済', text: '日経平均株価は続伸、高配当銘柄およびインフラ関連株に買い先行の力強い展開が継続 (ダミー)' },
-      { tag: '行政', text: '東京都、防災アプリの緊急通知システム強化と避難所リアルタイム混雑情報の連携開始を発表 (ダミー)' },
-      { tag: 'テクノロジー', text: 'オープンソースAIモデルの端末側軽量高速化技術が進展、端末単体での即時推論が一般化へ (ダミー)' },
-      { tag: '社会', text: '秋の全国交通安全運動がスタート、通学路における自動速度違反取締装置の設置拡充を推進 (ダミー)' },
-      { tag: '環境', text: '都心部における緑地ネットワーク再生計画が本格始動、ヒートアイランド現象の緩和効果を検証 (ダミー)' }
-    ];
+    const WORKER_URL = "https://lively-snow-947d.utugi1978.workers.dev";
+    let activeCategories = ["top", "domestic"]; // 初期選択：主要・国内
+    let currentNewsCatIndex = 0;
+    const newsIntervalSec = 20; // 20秒固定巡回
+    let newsCycleTimerId = null;
 
-    function buildFixed8News() {
-      const container = document.getElementById('news-fixed-8-track');
-      container.innerHTML = newsList8.map(item => `<div class="news-fixed-row"><div class="news-row-badge-wrap"><span class="news-tag-badge-ticker">${item.tag}</span><span class="mock-tag-pill-ticker">ダミー</span></div><div class="news-ticker-viewport"><div class="news-ticker-text">${item.text}</div></div></div>`).join('');
+    function initNewsFlipBoard() {
+      const container = document.getElementById('news-container-flip');
+      container.innerHTML = "";
+      for (let i = 0; i < 8; i++) {
+        const row = document.createElement('div');
+        row.className = 'news-row-flip';
+        row.id = `news-row-${i}`;
+        row.innerHTML = `
+          <span class="news-flip-index">${(i + 1).toString().padStart(2, '0')}</span>
+          <span class="news-flip-tag" id="tag-${i}">---</span>
+          <p class="news-flip-title" id="title-${i}">読み込み中...</p>
+          <span class="news-flip-time" id="time-${i}">--:--</span>
+        `;
+        container.appendChild(row);
+      }
+
+      // 下部カテゴリトグルボタンのクリック設定
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.key;
+
+          if (btn.classList.contains('active')) {
+            if (activeCategories.length <= 1) return; // 最低1つは残す
+            btn.classList.remove('active');
+            activeCategories = activeCategories.filter(k => k !== key);
+          } else {
+            btn.classList.add('active');
+            activeCategories.push(key);
+          }
+
+          currentNewsCatIndex = activeCategories.indexOf(key);
+          if (currentNewsCatIndex === -1) currentNewsCatIndex = 0;
+          loadCategoryNews(activeCategories[currentNewsCatIndex]);
+          resetNewsCycleTimer();
+        });
+      });
+
+      // 初回読み込み＆20秒タイマー開始
+      loadCategoryNews(activeCategories[currentNewsCatIndex]);
+      resetNewsCycleTimer();
     }
 
+    async function loadCategoryNews(catKey) {
+      if (!catKey) return;
+      try {
+        const res = await fetch(`${WORKER_URL}?category=${catKey}`);
+        const data = await res.json();
+
+        if (data.success && data.items) {
+          data.items.forEach((item, index) => {
+            const row = document.getElementById(`news-row-${index}`);
+            if (!row) return;
+
+            setTimeout(() => {
+              row.classList.add('flipping');
+
+              setTimeout(() => {
+                const dateObj = new Date(item.pubDate);
+                const timeStr = isNaN(dateObj) ? "" : `${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
+
+                document.getElementById(`tag-${index}`).textContent = item.category;
+                document.getElementById(`title-${index}`).textContent = item.title;
+                document.getElementById(`time-${index}`).textContent = timeStr;
+
+                row.classList.remove('flipping');
+              }, 200);
+            }, index * 60);
+          });
+        }
+      } catch (err) {
+        console.error("News fetch failed:", err);
+      }
+    }
+
+    function nextNewsCategory() {
+      if (activeCategories.length === 0) return;
+      currentNewsCatIndex = (currentNewsCatIndex + 1) % activeCategories.length;
+      loadCategoryNews(activeCategories[currentNewsCatIndex]);
+    }
+
+    function resetNewsCycleTimer() {
+      if (newsCycleTimerId) clearInterval(newsCycleTimerId);
+      newsCycleTimerId = setInterval(nextNewsCategory, newsIntervalSec * 1000);
+    }
+
+    // ==========================================
+    // 5. 鉄道・全体タブ巡回タイマー
+    // ==========================================
     const transitList = [
       { name: 'JR 常磐線 (ダミー)', line: '綾瀬 〜 金町 〜 我孫子・取手', status: '平常運転 (ダミー)', ok: true },
       { name: '京成本線 / 金町線 (ダミー)', line: '京成高砂・柴又・金町', status: '平常運転 (ダミー)', ok: true },
@@ -994,7 +1143,7 @@
 
     const rightPages = [
       { id: 'right-slot-map', title: '02 // JAPAN PRECIPITATION RADAR [LIVE]' },
-      { id: 'right-slot-news', title: '02 // TOP 8 HEADLINES [HORIZONTAL TICKER]' },
+      { id: 'right-slot-news', title: '02 // HEADLINE MONITOR' },
       { id: 'right-slot-alerts', title: '02 // WEATHER ALERTS & 3-DAY OUTLOOK' },
       { id: 'right-slot-transit', title: '02 // METROPOLITAN TRANSIT [DUMMY DATA]' }
     ];
@@ -1012,6 +1161,13 @@
         if (el) el.classList.toggle('active', idx === index);
       });
       document.getElementById('right-panel-header-title').textContent = rightPages[index].title;
+
+      // ニュースタブ選択時のみ「※速報ロジック：未実装」「※20秒固定巡回中」を表示
+      const extraBadges = document.getElementById('news-extra-badges');
+      if (extraBadges) {
+        extraBadges.style.display = (index === 1) ? 'flex' : 'none';
+      }
+
       if (index === 0 && mapJapan) setTimeout(() => { mapJapan.invalidateSize(); }, 100);
     }
 
@@ -1048,7 +1204,6 @@
       document.getElementById('time-main').textContent = `${hours}:${minutes}`;
       document.getElementById('time-sec').textContent = `:${seconds}`;
 
-      // 毎分0秒に日の出・日の入りの自動切り替えをチェック
       if (seconds === '00') {
         checkDayNightTheme();
       }
@@ -1061,7 +1216,7 @@
       selectCity('katsushika');
       initMap();
       fetchWarnings();
-      buildFixed8News();
+      initNewsFlipBoard();
       buildTransitTrack();
       setInterval(fetchWarnings, 5 * 60 * 1000);
       setInterval(() => { fetchJmaOfficialData(currentSelectedCityKey); }, 10 * 60 * 1000);
