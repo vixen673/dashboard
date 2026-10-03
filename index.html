@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>WALL MONITOR // 50:50 SPLIT & JMA WEATHER SYSTEM</title>
+  <title>WALL MONITOR // 50:50 SPLIT & JMA WEATHER & ODPT TRANSIT</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,6 +35,13 @@
       --sub-card-border: rgba(203, 213, 225, 0.9);
       --news-flip-bg: #ffffff;
       --news-flip-border: #cbd5e1;
+      --category-head-bg: #e2e8f0;
+      --accordion-border: #cbd5e1;
+      --tag-bg: #e0f2fe;
+      --tag-border: #bae6fd;
+      --tag-text: #0369a1;
+      --clear-pill-bg: #f8fafc;
+      --clear-pill-border: #cbd5e1;
       --font-family-base: 'Outfit', 'Zen Kaku Gothic New', sans-serif;
       --font-family-clock: 'Outfit', sans-serif;
     }
@@ -60,6 +67,13 @@
       --sub-card-border: rgba(255, 255, 255, 0.1);
       --news-flip-bg: #16181f;
       --news-flip-border: #232733;
+      --category-head-bg: rgba(255, 255, 255, 0.08);
+      --accordion-border: rgba(255, 255, 255, 0.1);
+      --tag-bg: rgba(56, 189, 248, 0.15);
+      --tag-border: rgba(56, 189, 248, 0.35);
+      --tag-text: #7dd3fc;
+      --clear-pill-bg: rgba(255, 255, 255, 0.05);
+      --clear-pill-border: rgba(255, 255, 255, 0.12);
       --font-family-base: 'Outfit', 'Zen Kaku Gothic New', sans-serif;
       --font-family-clock: 'Outfit', monospace;
     }
@@ -129,6 +143,12 @@
     .news-extra-badges { display: none; align-items: center; gap: 6px; }
     .news-badge-unimpl { font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; background: rgba(239, 68, 68, 0.14); border: 1px solid var(--accent-danger); color: var(--accent-danger); white-space: nowrap; }
     .news-badge-cycle20 { font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; background: rgba(37, 99, 235, 0.14); border: 1px solid var(--accent-main); color: var(--accent-main); white-space: nowrap; }
+    
+    .transit-extra-ctrls { display: none; align-items: center; gap: 6px; }
+    .transit-header-btn { background: var(--card-item-bg); border: 1px solid var(--panel-border); color: var(--text-body); font-family: inherit; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+    .transit-header-btn:hover { border-color: var(--accent-main); color: var(--accent-main); }
+    .transit-header-btn.active { background: var(--accent-main); color: #fff; border-color: var(--accent-main); }
+
     .right-header-meta { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .sync-timestamp-badge { font-family: var(--font-family-clock); font-size: 0.76rem; font-weight: 800; color: var(--accent-ok); background: rgba(16, 185, 129, 0.12); border: 1px solid var(--accent-ok); padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
     .timer-controls-group { display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,0.12); border: 1px solid var(--panel-border); border-radius: 5px; padding: 2px; }
@@ -143,162 +163,23 @@
     .radar-slot-fullscreen { width: 100%; height: 100%; border: 1px solid var(--panel-border); border-radius: 8px; position: relative; overflow: hidden; background: #121212; }
     #map-japan { width: 100%; height: 100%; z-index: 1; }
 
-    /* ==========================================================================
-       ニュース：最上段トグルバー ＆ 1画面4本特大文字＋スムーズ無限ティッカー
-       ========================================================================== */
-    .news-board-wrapper {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      padding: 8px 10px;
-      gap: 8px;
-      justify-content: flex-start;
-      overflow: hidden;
-    }
-
-    .news-top-bar {
-      height: 44px;
-      background: var(--card-item-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      padding: 4px 6px;
-      flex-shrink: 0;
-    }
-
-    .cat-btn {
-      flex: 1;
-      height: 100%;
-      background-color: var(--panel-bg);
-      color: var(--text-muted);
-      border: 1px solid var(--panel-border);
-      border-radius: 4px;
-      font-size: 0.88rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.18s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      white-space: nowrap;
-    }
+    /* ニュース */
+    .news-board-wrapper { display: flex; flex-direction: column; height: 100%; padding: 8px 10px; gap: 8px; justify-content: flex-start; overflow: hidden; }
+    .news-top-bar { height: 44px; background: var(--card-item-bg); border: 1px solid var(--panel-border); border-radius: 6px; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 4px 6px; flex-shrink: 0; }
+    .cat-btn { flex: 1; height: 100%; background-color: var(--panel-bg); color: var(--text-muted); border: 1px solid var(--panel-border); border-radius: 4px; font-size: 0.88rem; font-weight: 800; cursor: pointer; transition: all 0.18s ease; display: flex; align-items: center; justify-content: center; white-space: nowrap; }
     .cat-btn:hover { color: var(--text-head); border-color: var(--accent-main); }
-    .cat-btn.active {
-      background-color: #005eb8;
-      color: #fff;
-      border-color: #00d2ff;
-      box-shadow: 0 0 10px rgba(0, 140, 255, 0.45);
-    }
-
-    #news-container-flip {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 8px;
-      perspective: 1200px;
-      width: 100%;
-      min-height: 0;
-    }
-
-    .news-row-flip {
-      background: var(--news-flip-bg);
-      border: 1px solid var(--news-flip-border);
-      border-left: 7px solid #005eb8;
-      border-radius: 6px;
-      padding: 0 16px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex: 1;
-      min-height: 0;
-      transform-origin: 50% 0%;
-      transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.38s;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .news-row-flip.flipping {
-      transform: rotateX(90deg);
-      opacity: 0;
-    }
-
-    .news-left-fixed-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-      z-index: 5;
-    }
-
-    .news-flip-index {
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: var(--text-muted);
-      font-family: var(--font-family-clock);
-      min-width: 44px;
-      line-height: 1;
-    }
-
-    .news-flip-tag {
-      background: #005eb8;
-      color: #fff;
-      font-size: 1.05rem;
-      font-weight: 800;
-      padding: 6px 12px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-
-    /* 中央電光掲示板ビューポート */
-    .news-marquee-viewport {
-      flex: 1;
-      overflow: hidden;
-      white-space: nowrap;
-      position: relative;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      mask-image: linear-gradient(to right, transparent, black 15px, black calc(100% - 15px), transparent);
-      -webkit-mask-image: linear-gradient(to right, transparent, black 15px, black calc(100% - 15px), transparent);
-    }
-
-    /* 2倍特大文字 */
-    .news-marquee-track {
-      display: inline-flex;
-      white-space: nowrap;
-      font-size: 3.1rem;
-      font-weight: 900;
-      color: var(--text-head);
-      line-height: 1;
-      letter-spacing: 0.02em;
-      will-change: transform;
-    }
-
-    /* 8秒〜10秒の心地よいスピードで無限ティッカーループ */
-    .news-marquee-track.animating {
-      animation: continuousTicker linear infinite;
-    }
-
-    @keyframes continuousTicker {
-      0% { transform: translate3d(0, 0, 0); }
-      12% { transform: translate3d(0, 0, 0); } /* 先頭で約1.2秒静止してからスタート */
-      100% { transform: translate3d(-50%, 0, 0); }
-    }
-
-    .news-flip-time {
-      color: var(--text-muted);
-      font-size: 1.35rem;
-      font-weight: 800;
-      font-family: var(--font-family-clock);
-      white-space: nowrap;
-      flex-shrink: 0;
-      z-index: 5;
-    }
+    .cat-btn.active { background-color: #005eb8; color: #fff; border-color: #00d2ff; box-shadow: 0 0 10px rgba(0, 140, 255, 0.45); }
+    #news-container-flip { flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; perspective: 1200px; width: 100%; min-height: 0; }
+    .news-row-flip { background: var(--news-flip-bg); border: 1px solid var(--news-flip-border); border-left: 7px solid #005eb8; border-radius: 6px; padding: 0 16px; display: flex; align-items: center; gap: 16px; flex: 1; min-height: 0; transform-origin: 50% 0%; transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.38s; box-shadow: 0 4px 12px rgba(0,0,0,0.12); overflow: hidden; position: relative; }
+    .news-row-flip.flipping { transform: rotateX(90deg); opacity: 0; }
+    .news-left-fixed-group { display: flex; align-items: center; gap: 12px; flex-shrink: 0; z-index: 5; }
+    .news-flip-index { font-size: 2.2rem; font-weight: 900; color: var(--text-muted); font-family: var(--font-family-clock); min-width: 44px; line-height: 1; }
+    .news-flip-tag { background: #005eb8; color: #fff; font-size: 1.05rem; font-weight: 800; padding: 6px 12px; border-radius: 4px; white-space: nowrap; }
+    .news-marquee-viewport { flex: 1; overflow: hidden; white-space: nowrap; position: relative; height: 100%; display: flex; align-items: center; mask-image: linear-gradient(to right, transparent, black 15px, black calc(100% - 15px), transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 15px, black calc(100% - 15px), transparent); }
+    .news-marquee-track { display: inline-flex; white-space: nowrap; font-size: 3.1rem; font-weight: 900; color: var(--text-head); line-height: 1; letter-spacing: 0.02em; will-change: transform; }
+    .news-marquee-track.animating { animation: continuousTicker linear infinite; }
+    @keyframes continuousTicker { 0% { transform: translate3d(0, 0, 0); } 12% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
+    .news-flip-time { color: var(--text-muted); font-size: 1.35rem; font-weight: 800; font-family: var(--font-family-clock); white-space: nowrap; flex-shrink: 0; z-index: 5; }
 
     /* 警報・3日間天気 */
     .alerts-combo-container { display: flex; flex-direction: column; height: 100%; padding: 8px 10px; gap: 8px; overflow: hidden; }
@@ -340,21 +221,70 @@
     .square-temp-low-combo { font-size: 2.2rem; font-weight: 800; color: #60a5fa; }
     .square-rain-badge-combo { font-family: var(--font-family-clock); font-size: 1.35rem; font-weight: 800; color: var(--accent-main); background: rgba(0, 243, 255, 0.08); border: 1px solid var(--panel-border); border-radius: 5px; padding: 3px 12px; }
 
-    /* 鉄道 */
-    .transit-card-roll { background: var(--card-item-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 22px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); }
-    .transit-huge-name { font-size: 1.85rem; font-weight: 900; color: var(--text-head); margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
-    .transit-section-large { font-size: 1.15rem; color: var(--text-muted); font-weight: 600; }
-    .status-badge-large { font-size: 1.35rem; font-weight: 900; padding: 8px 18px; border-radius: 6px; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
-    .badge-ok { background: rgba(16, 185, 129, 0.18); border: 1px solid var(--accent-ok); color: var(--accent-ok); }
-    .badge-danger { background: rgba(239, 68, 68, 0.22); border: 1px solid var(--accent-danger); color: var(--accent-danger); }
+    /* ==========================================================================
+       スロット3: 鉄道運行情報（リアルタイムODPT & ALL CLEAR & アコーディオン）
+       ========================================================================== */
+    .transit-main-view-wrap { flex: 1; width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; overflow: hidden; padding: 12px; }
+    .transit-panel-body-fill { flex: 1; height: 100%; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+    
+    .delay-alert-banner { font-size: 0.88rem; font-weight: 800; color: var(--accent-danger); background: rgba(239, 68, 68, 0.12); border: 1px solid var(--accent-danger); border-radius: 6px; padding: 8px 14px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .transit-viewport { flex: 1; position: relative; overflow: hidden; width: 100%; height: 100%; }
+    .static-transit-list { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+    .infinite-scroll-track-seamless { display: flex; flex-direction: column; gap: 12px; width: 100%; animation: seamlessScrollUp 22s linear infinite; }
+    .infinite-scroll-track-seamless:hover { animation-play-state: paused; }
+    @keyframes seamlessScrollUp { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
 
-    /* 第5スロット：日照・気温推移画面 */
+    .transit-card-roll { background: var(--card-item-bg); border: 1px solid var(--panel-border); border-left: 6px solid var(--accent-danger); border-radius: 8px; padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; box-shadow: 0 4px 14px rgba(0,0,0,0.15); flex-shrink: 0; }
+    .transit-card-roll.warn { border-left-color: var(--accent-warn); }
+    .transit-huge-name { font-size: 1.55rem; font-weight: 900; color: var(--text-head); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .transit-section-large { font-size: 0.98rem; color: var(--text-head); font-weight: 700; line-height: 1.5; max-width: 520px; }
+    .status-badge-large { font-size: 1.15rem; font-weight: 900; padding: 8px 16px; border-radius: 6px; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0; }
+    .status-badge-large.badge-danger { background: rgba(239, 68, 68, 0.22); border: 1px solid var(--accent-danger); color: var(--accent-danger); }
+    .status-badge-large.badge-warn { background: rgba(217, 119, 6, 0.22); border: 1px solid var(--accent-warn); color: var(--accent-warn); }
+
+    .status-badges-hud-clean { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; max-width: 680px; padding: 4px; }
+    .clear-route-pill { background: var(--clear-pill-bg); border: 1px solid var(--clear-pill-border); border-radius: 20px; padding: 6px 14px; font-size: 0.88rem; font-weight: 800; color: var(--text-head); display: inline-flex; align-items: center; gap: 6px; }
+    .clear-dot { width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent-ok); box-shadow: 0 0 6px rgba(22, 163, 74, 0.6); }
+
+    /* 路線選択インライン画面 */
+    .transit-settings-inline-wrap { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--panel-bg); z-index: 50; display: none; flex-direction: column; overflow: hidden; }
+    .transit-settings-inline-wrap.active { display: flex; }
+    .settings-view-body-transit { flex: 1; height: 100%; min-height: 0; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; -webkit-overflow-scrolling: touch; }
+    
+    .selected-summary-panel { background: var(--card-item-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+    .summary-title-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 800; color: var(--text-head); }
+    .selected-tags-wrap { display: flex; flex-wrap: wrap; gap: 6px; max-height: 110px; overflow-y: auto; padding: 2px 0; }
+    .route-pill-tag { background: var(--tag-bg); border: 1px solid var(--tag-border); color: var(--tag-text); font-size: 0.76rem; font-weight: 800; padding: 4px 10px; border-radius: 16px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .tag-remove-btn { background: transparent; border: none; color: var(--tag-text); cursor: pointer; display: flex; align-items: center; opacity: 0.7; }
+    .tag-remove-btn:hover { opacity: 1; }
+
+    .accordion-list-wrap { display: flex; flex-direction: column; gap: 8px; padding-bottom: 20px; }
+    .accordion-item { background: var(--card-item-bg); border: 1px solid var(--accordion-border); border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+    .accordion-header { padding: 10px 14px; background: var(--category-head-bg); display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+    .accordion-header-left { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; font-weight: 900; color: var(--text-head); }
+    .accordion-header-right { display: flex; align-items: center; gap: 8px; }
+    .cat-badge-count { font-size: 0.72rem; font-weight: 800; background: var(--panel-bg); border: 1px solid var(--panel-border); padding: 2px 7px; border-radius: 10px; color: var(--accent-main); }
+    .cat-btn-toggle { background: transparent; border: 1px solid var(--panel-border); border-radius: 4px; padding: 2px 7px; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); cursor: pointer; }
+    .accordion-icon { transition: transform 0.25s ease; color: var(--text-muted); }
+    .accordion-item.open .accordion-icon { transform: rotate(180deg); }
+    .accordion-content { display: none; padding: 8px 12px; flex-direction: column; gap: 6px; background: var(--panel-bg); border-top: 1px solid var(--accordion-border); }
+    .accordion-item.open .accordion-content { display: flex; }
+    .line-item-label { background: var(--card-item-bg); border: 1px solid var(--panel-border); border-radius: 6px; padding: 7px 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+    .line-info-left { display: flex; flex-direction: column; gap: 1px; }
+    .line-info-name { font-size: 0.92rem; font-weight: 800; color: var(--text-head); }
+    .line-info-section { font-size: 0.74rem; color: var(--text-muted); font-weight: 600; }
+    .line-checkbox { width: 18px; height: 18px; accent-color: var(--accent-main); cursor: pointer; }
+
+    .transit-settings-footer { padding: 10px 14px; background: var(--header-bg); border-top: 1px solid var(--panel-border); display: flex; gap: 10px; justify-content: space-between; align-items: center; flex-shrink: 0; }
+    .btn-save-transit { background: var(--accent-main); color: #fff; border: none; padding: 8px 20px; border-radius: 5px; font-size: 0.86rem; font-weight: 800; cursor: pointer; }
+    .btn-select-all-transit { background: transparent; border: 1px solid var(--panel-border); color: var(--text-head); padding: 6px 12px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+
+    /* 第5スロット：日照・気温推移 */
     .solar-temp-container { display: flex; flex-direction: column; height: 100%; padding: 8px 10px; gap: 8px; overflow: hidden; }
     .solar-temp-subbox { flex: 1; background: var(--card-item-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 8px 12px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
     .subbox-header { font-size: 0.82rem; font-weight: 800; color: var(--accent-main); display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; flex-shrink: 0; }
     .canvas-wrap-fill { flex: 1; width: 100%; height: 100%; position: relative; min-height: 0; }
     #temp-24h-canvas, #solar-arc-canvas { width: 100%; height: 100%; display: block; }
-
     .solar-meta-footer-huge { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; flex-shrink: 0; }
     .sun-time-block { background: var(--sub-card-bg); border: 1px solid var(--sub-card-border); border-radius: 6px; padding: 6px 14px; display: flex; align-items: baseline; justify-content: space-between; }
     .sun-label-huge { font-size: 1.15rem; font-weight: 900; color: var(--text-head); display: flex; align-items: center; gap: 6px; }
@@ -478,6 +408,15 @@
             <span class="news-badge-unimpl">※速報ロジック：未実装 (待機中)</span>
             <span class="news-badge-cycle20">※15秒固定巡回中</span>
           </div>
+          <!-- 鉄道用クイック操作コントロール -->
+          <div id="transit-extra-ctrls" class="transit-extra-ctrls">
+            <button id="btn-transit-settings" class="transit-header-btn" onclick="toggleTransitSettingsView()">
+              <i data-lucide="sliders-horizontal" style="width: 12px; height: 12px;"></i> 路線選択
+            </button>
+            <button class="transit-header-btn" onclick="setTokenManually()">
+              <i data-lucide="key" style="width: 12px; height: 12px;"></i> キー
+            </button>
+          </div>
         </div>
 
         <div class="right-header-meta">
@@ -534,15 +473,45 @@
           </div>
         </div>
 
-        <!-- スロット3: 鉄道 -->
-        <div id="right-slot-transit" class="right-view-slot" style="padding: 12px;">
-          <div id="transit-scroll-track" class="infinite-scroll-track-down"></div>
+        <!-- スロット3: 鉄道運行情報（リアルタイムODPT & ALL CLEAR & アコーディオン設定） -->
+        <div id="right-slot-transit" class="right-view-slot">
+          <div class="transit-main-view-wrap">
+            <div class="transit-panel-body-fill" id="transit-body-container">
+              <div style="text-align: center; color: var(--text-muted); padding: 50px; font-weight: 800;">
+                運行情報を取得中...
+              </div>
+            </div>
+
+            <!-- アコーディオン路線選択インライン画面 -->
+            <div id="transit-settings-inline" class="transit-settings-inline-wrap">
+              <div class="settings-view-body-transit">
+                <div class="selected-summary-panel">
+                  <div class="summary-title-row">
+                    <span style="display:flex; align-items:center; gap:6px;">
+                      <i data-lucide="check-circle" style="width:14px;height:14px;color:var(--accent-ok);"></i>
+                      現在選択中の路線 (<span id="transit-total-selected-count">0</span>件)
+                    </span>
+                    <span style="font-size:0.74rem; color:var(--text-muted);">タグの×で解除可能</span>
+                  </div>
+                  <div class="selected-tags-wrap" id="transit-selected-tags-container"></div>
+                </div>
+                <div class="accordion-list-wrap" id="transit-accordion-container"></div>
+              </div>
+              <div class="transit-settings-footer">
+                <div style="display:flex; gap:6px;">
+                  <button class="btn-select-all-transit" onclick="setAllTransitGlobal(true)">全選択</button>
+                  <button class="btn-select-all-transit" onclick="setAllTransitGlobal(false)">全解除</button>
+                </div>
+                <button class="btn-save-transit" onclick="saveTransitSettingsAndBack()">完了して戻る</button>
+              </div>
+            </div>
+
+          </div>
         </div>
 
         <!-- スロット4: 日照・気温推移 -->
         <div id="right-slot-solar" class="right-view-slot">
           <div class="solar-temp-container">
-            
             <div class="solar-temp-subbox">
               <div class="subbox-header">
                 <span style="display:flex; align-items:center; gap:6px;">
@@ -577,7 +546,6 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -610,7 +578,7 @@
           <input type="checkbox" class="cycle-check" data-slot="2">
         </label>
         <label class="cycle-option-row">
-          <span class="cycle-option-label"><i data-lucide="train" style="width:18px;height:18px;color:var(--accent-ok);"></i> 鉄道運行情報</span>
+          <span class="cycle-option-label"><i data-lucide="train" style="width:18px;height:18px;color:var(--accent-ok);"></i> 鉄道運行情報 (リアルタイムODPT)</span>
           <input type="checkbox" class="cycle-check" data-slot="3">
         </label>
         <label class="cycle-option-row">
@@ -671,7 +639,7 @@
         let UT = (T - lngHour) % 24;
         if (UT < 0) UT += 24;
 
-        let localT = UT + 9; // JST
+        let localT = UT + 9;
         if (localT >= 24) localT -= 24;
 
         const hours = Math.floor(localT);
@@ -833,33 +801,13 @@
     }
 
     // ==========================================
-    // 3. JMA 公式データ（当日の最低実測気温 ＆ 24時間気温推移）
+    // 3. JMA 公式データ
     // ==========================================
     const JMA_CITIES = {
-      katsushika: { 
-        name: '東京都 葛飾区', en: 'TOKYO KATSUSHIKA', office: '130000', area10: '130010', stationCode: '44132',
-        lat: 35.744, lng: 139.847,
-        amedasTempWind: ['44132', '44172', '44166'], 
-        amedasHumid: ['44132', '44166']
-      },
-      omiya: { 
-        name: '埼玉県 大宮', en: 'SAITAMA OMIYA', office: '110000', area10: '110010', stationCode: '43241',
-        lat: 35.906, lng: 139.629,
-        amedasTempWind: ['43241', '43256', '43211'], 
-        amedasHumid: ['43056', '44132']
-      },
-      niigata: { 
-        name: '新潟県 新潟市中央区', en: 'NIIGATA CHUO-KU', office: '150000', area10: '150010', stationCode: '54232',
-        lat: 37.916, lng: 139.036,
-        amedasTempWind: ['54232', '54261', '54206'], 
-        amedasHumid: ['54232', '54261', '54206']
-      },
-      kanazawa: { 
-        name: '石川県 金沢市', en: 'ISHIKAWA KANAZAWA', office: '170000', area10: '170010', stationCode: '56227',
-        lat: 36.561, lng: 136.656,
-        amedasTempWind: ['56227', '56122', '56263'], 
-        amedasHumid: ['56227', '56263']
-      }
+      katsushika: { name: '東京都 葛飾区', en: 'TOKYO KATSUSHIKA', office: '130000', area10: '130010', stationCode: '44132', lat: 35.744, lng: 139.847, amedasTempWind: ['44132', '44172', '44166'], amedasHumid: ['44132', '44166'] },
+      omiya: { name: '埼玉県 大宮', en: 'SAITAMA OMIYA', office: '110000', area10: '110010', stationCode: '43241', lat: 35.906, lng: 139.629, amedasTempWind: ['43241', '43256', '43211'], amedasHumid: ['43056', '44132'] },
+      niigata: { name: '新潟県 新潟市中央区', en: 'NIIGATA CHUO-KU', office: '150000', area10: '150010', stationCode: '54232', lat: 37.916, lng: 139.036, amedasTempWind: ['54232', '54261', '54206'], amedasHumid: ['54232', '54261', '54206'] },
+      kanazawa: { name: '石川県 金沢市', en: 'ISHIKAWA KANAZAWA', office: '170000', area10: '170010', stationCode: '56227', lat: 36.561, lng: 136.656, amedasTempWind: ['56227', '56122', '56263'], amedasHumid: ['56227', '56263'] }
     };
 
     let currentSelectedCityKey = 'katsushika';
@@ -962,8 +910,6 @@
         };
 
         const shortTerm = forecastData[0];
-        
-        // 1. 天気・アイコン
         const stWeaArea = shortTerm.timeSeries[0].areas.find(a => a.area.code === city.area10);
         if (stWeaArea) {
           shortTerm.timeSeries[0].timeDefines.forEach((t, idx) => {
@@ -975,7 +921,6 @@
           });
         }
 
-        // 2. 降水確率
         const stPopArea = shortTerm.timeSeries[1].areas.find(a => a.area.code === city.area10);
         if (stPopArea) {
           let dayPopsMap = {};
@@ -992,7 +937,6 @@
           });
         }
 
-        // 3. 気温 ＆ 24時間データ構築（夕方急上昇バグ解消ロジック）
         const stTempSeries = shortTerm.timeSeries[2];
         const stTempArea = stTempSeries.areas.find(a => a.area.code === city.stationCode) || stTempSeries.areas[0];
         
@@ -1055,7 +999,6 @@
           }
         }
 
-        // 4. 週間予報
         if (forecastData.length > 1) {
           const weekly = forecastData[1];
           const wkPopArea = weekly.timeSeries[0].areas.find(a => a.area.code === city.area10) || weekly.timeSeries[0].areas[0];
@@ -1144,14 +1087,14 @@
     }
 
     // ==========================================
-    // 4. ニュース：1画面4本特大無限ティッカー（速度8〜10秒・3文字余白スペーサー・滞在15秒）
+    // 4. ニュース：1画面4本特大無限ティッカー
     // ==========================================
     const WORKER_URL = "https://lively-snow-947d.utugi1978.workers.dev";
     let activeCategories = ["top", "domestic"];
     let currentNewsCatIndex = 0;
     let currentNewsPage = 0;
     let cachedCategoryItems = [];
-    const newsPageDurationSec = 15; // 滞在時間15秒
+    const newsPageDurationSec = 15;
     let newsCycleTimerId = null;
 
     function initNewsFlipBoard() {
@@ -1231,7 +1174,6 @@
               document.getElementById(`flip-tag-${i}`).textContent = item.category;
               document.getElementById(`flip-time-${i}`).textContent = timeStr;
 
-              // 文末と先頭の間に「全角3文字分」の明確な余白を配置
               const track = document.getElementById(`marquee-track-${i}`);
               const spacer = "   ";
               track.textContent = `${item.title}${spacer}${item.title}${spacer}`;
@@ -1239,7 +1181,6 @@
               track.classList.remove('animating');
               void track.offsetWidth;
               
-              // スピードを8秒〜10秒に加速
               const animDuration = Math.max(8, Math.min(10.5, item.title.length * 0.42));
               track.style.animationDuration = `${animDuration}s`;
               track.classList.add('animating');
@@ -1272,21 +1213,435 @@
     }
 
     // ==========================================
-    // 5. 鉄道データ
+    // 5. 鉄道データ（ODPT API実連携 & ALL CLEAR & アコーディオン）
     // ==========================================
-    const transitList = [
-      { name: 'JR 常磐線 (ダミー)', line: '綾瀬 〜 金町 〜 我孫子・取手', status: '平常運転 (ダミー)', ok: true },
-      { name: '京成本線 / 金町線 (ダミー)', line: '京成高砂・柴又・金町', status: '平常運転 (ダミー)', ok: true },
-      { name: 'JR 総武線 (ダミー)', line: '新小岩・市川・千葉 方面', status: '平常運転 (ダミー)', ok: true },
-      { name: 'つくばエクスプレス (ダミー)', line: '秋葉原 〜 北千住 〜 つくば', status: '平常運転 (ダミー)', ok: true },
-      { name: 'JR 山手線 (ダミー)', line: '内回り・外回り 全線', status: '平常運転 (ダミー)', ok: true },
-      { name: '都営 浅草線 (ダミー)', line: '押上 〜 浅草 〜 西馬込', status: '平常運転 (ダミー)', ok: true }
+    const LINE_GROUPS = [
+      {
+        company: "JR新幹線", icon: "zap",
+        lines: [
+          { id: 'odpt.Railway:JR-East.TohokuShinkansen', name: 'JR 東北新幹線', line: '東京 〜 大宮 〜 仙台 〜 新青森' },
+          { id: 'odpt.Railway:JR-East.JoetsuShinkansen', name: 'JR 上越新幹線', line: '東京 〜 大宮 〜 高崎 〜 新潟' },
+          { id: 'odpt.Railway:JR-East.HokurikuShinkansen', name: 'JR 北陸新幹線', line: '東京 〜 大宮 〜 長野 〜 金沢' },
+          { id: 'odpt.Railway:JR-East.YamagataShinkansen', name: 'JR 山形新幹線', line: '福島 〜 山形 〜 新庄' },
+          { id: 'odpt.Railway:JR-East.AkitaShinkansen', name: 'JR 秋田新幹線', line: '盛岡 〜 秋田' },
+          { id: 'odpt.Railway:JR-Central.TokaidoShinkansen', name: 'JR 東海道新幹線', line: '東京 〜 新横浜 〜 名古屋 〜 新大阪' }
+        ]
+      },
+      {
+        company: "JR東日本 在来線", icon: "train",
+        lines: [
+          { id: 'odpt.Railway:JR-East.Yamanote', name: 'JR 山手線', line: '内回り・外回り 全線' },
+          { id: 'odpt.Railway:JR-East.KeihinTohokuNegishi', name: 'JR 京浜東北線', line: '大宮 〜 上野 〜 東京 〜 横浜' },
+          { id: 'odpt.Railway:JR-East.Joban', name: 'JR 常磐線', line: '品川・上野 〜 取手 〜 水戸' },
+          { id: 'odpt.Railway:JR-East.JobanRapid', name: 'JR 常磐快速線', line: '品川・上野 〜 取手' },
+          { id: 'odpt.Railway:JR-East.JobanLocal', name: 'JR 常磐緩行線', line: '綾瀬 〜 亀有・金町 〜 我孫子' },
+          { id: 'odpt.Railway:JR-East.SobuRapid', name: 'JR 総武快速線', line: '東京 〜 新小岩・市川 〜 千葉' },
+          { id: 'odpt.Railway:JR-East.ChuoSobuLocal', name: 'JR 中央・総武各駅停車', line: '三鷹 〜 新宿 〜 秋葉原 〜 千葉' },
+          { id: 'odpt.Railway:JR-East.ChuoRapid', name: 'JR 中央快速線', line: '東京 〜 新宿 〜 立川 〜 高尾' },
+          { id: 'odpt.Railway:JR-East.UenoTokyo', name: 'JR 上野東京ライン', line: '高崎・宇都宮・常磐 〜 東京 〜 東海道線' },
+          { id: 'odpt.Railway:JR-East.ShonanShinjuku', name: 'JR 湘南新宿ライン', line: '高崎・宇都宮 〜 新宿 〜 横浜・逗子' },
+          { id: 'odpt.Railway:JR-East.Takasaki', name: 'JR 高崎線', line: '上野・東京 〜 大宮 〜 高崎' },
+          { id: 'odpt.Railway:JR-East.Utsunomiya', name: 'JR 宇都宮線', line: '上野・東京 〜 大宮 〜 宇都宮' },
+          { id: 'odpt.Railway:JR-East.SaikyoKawagoe', name: 'JR 埼京線・川越線', line: '大崎 〜 新宿 〜 大宮 〜 川越' },
+          { id: 'odpt.Railway:JR-East.Musashino', name: 'JR 武蔵野線', line: '府中本町 〜 西国分寺 〜 南浦和 〜 西船橋' },
+          { id: 'odpt.Railway:JR-East.Keiyo', name: 'JR 京葉線', line: '東京 〜 新木場 〜 蘇我' },
+          { id: 'odpt.Railway:JR-East.Yokohama', name: 'JR 横浜線', line: '東神奈川 〜 町田 〜 八王子' },
+          { id: 'odpt.Railway:JR-East.Nambu', name: 'JR 南武線', line: '川崎 〜 武蔵小杉 〜 立川' },
+          { id: 'odpt.Railway:JR-East.Tokaido', name: 'JR 東海道線', line: '東京 〜 横浜 〜 小田原 〜 熱海' },
+          { id: 'odpt.Railway:JR-East.Yokosuka', name: 'JR 横須賀線', line: '東京 〜 横浜 〜 大船 〜 久里浜' }
+        ]
+      },
+      {
+        company: "東京メトロ", icon: "subway",
+        lines: [
+          { id: 'odpt.Railway:TokyoMetro.Ginza', name: '東京メトロ 銀座線', line: '渋谷 〜 表参道 〜 銀座 〜 上野 〜 浅草' },
+          { id: 'odpt.Railway:TokyoMetro.Marunouchi', name: '東京メトロ 丸ノ内線', line: '荻窪 〜 新宿 〜 東京 〜 池袋' },
+          { id: 'odpt.Railway:TokyoMetro.Hibiya', name: '東京メトロ 日比谷線', line: '中目黒 〜 六本木 〜 銀座 〜 北千住' },
+          { id: 'odpt.Railway:TokyoMetro.Tozai', name: '東京メトロ 東西線', line: '中野 〜 高田馬場 〜 大手町 〜 西船橋' },
+          { id: 'odpt.Railway:TokyoMetro.Chiyoda', name: '東京メトロ 千代田線', line: '代々木上原 〜 大手町 〜 北千住 〜 綾瀬' },
+          { id: 'odpt.Railway:TokyoMetro.Yurakucho', name: '東京メトロ 有楽町線', line: '和光市 〜 池袋 〜 有楽町 〜 新木場' },
+          { id: 'odpt.Railway:TokyoMetro.Hanzomon', name: '東京メトロ 半蔵門線', line: '渋谷 〜 表参道 〜 大手町 〜 押上' },
+          { id: 'odpt.Railway:TokyoMetro.Namboku', name: '東京メトロ 南北線', line: '目黒 〜 溜池山王 〜 四ツ谷 〜 赤羽岩淵' },
+          { id: 'odpt.Railway:TokyoMetro.Fukutoshin', name: '東京メトロ 副都心線', line: '和光市 〜 池袋 〜 新宿三丁目 〜 渋谷' }
+        ]
+      },
+      {
+        company: "都営地下鉄", icon: "shield",
+        lines: [
+          { id: 'odpt.Railway:Toei.Asakusa', name: '都営浅草線', line: '西馬込 〜 五反田 〜 新橋 〜 日本橋 〜 押上' },
+          { id: 'odpt.Railway:Toei.Mita', name: '都営三田線', line: '目黒 〜 日比谷 〜 神保町 〜 西高島平' },
+          { id: 'odpt.Railway:Toei.Shinjuku', name: '都営新宿線', line: '新宿 〜 市ヶ谷 〜 神保町 〜 本八幡' },
+          { id: 'odpt.Railway:Toei.Oedo', name: '都営大江戸線', line: '光が丘 〜 都庁前 〜 六本木 〜 門前仲町' }
+        ]
+      },
+      {
+        company: "京成電鉄・北総・TX", icon: "send",
+        lines: [
+          { id: 'odpt.Railway:Keisei.Main', name: '京成本線', line: '京成上野 〜 青砥・京成高砂 〜 成田空港' },
+          { id: 'odpt.Railway:Keisei.Oshiage', name: '京成押上線', line: '押上 〜 八広 〜 青砥' },
+          { id: 'odpt.Railway:Keisei.Kanamachi', name: '京成金町線', line: '京成高砂 〜 柴又 〜 京成金町' },
+          { id: 'odpt.Railway:Keisei.NaritaSkyAccess', name: '成田スカイアクセス線', line: '京成高砂 〜 印旛日本医大 〜 成田空港' },
+          { id: 'odpt.Railway:Keisei.Chiba', name: '京成千葉線', line: '京成津田沼 〜 千葉中央' },
+          { id: 'odpt.Railway:Hokuso.Hokuso', name: '北総線', line: '京成高砂 〜 新鎌ヶ谷 〜 印旛日本医大' },
+          { id: 'odpt.Railway:MIR.TsukubaExpress', name: 'つくばエクスプレス', line: '秋葉原 〜 北千住 〜 つくば' }
+        ]
+      },
+      {
+        company: "東武鉄道", icon: "compass",
+        lines: [
+          { id: 'odpt.Railway:Tobu.Skytree', name: '東武スカイツリーライン', line: '浅草・押上 〜 北千住 〜 東武動物公園' },
+          { id: 'odpt.Railway:Tobu.Isesaki', name: '東武伊勢崎線', line: '東武動物公園 〜 久喜 〜 館林 〜 伊勢崎' },
+          { id: 'odpt.Railway:Tobu.Kameido', name: '東武亀戸線', line: '曳舟 〜 亀戸' },
+          { id: 'odpt.Railway:Tobu.Daishi', name: '東武大師線', line: '西新井 〜 大師前' },
+          { id: 'odpt.Railway:Tobu.Nikko', name: '東武日光線', line: '東武動物公園 〜 南栗橋 〜 東武日光' },
+          { id: 'odpt.Railway:Tobu.UrbanPark', name: '東武アーバンパークライン', line: '大宮 〜 春日部 〜 柏 〜 船橋' },
+          { id: 'odpt.Railway:Tobu.Tojo', name: '東武東上線', line: '池袋 〜 和光市 〜 川越市 〜 寄居' }
+        ]
+      },
+      {
+        company: "西武鉄道", icon: "layout",
+        lines: [
+          { id: 'odpt.Railway:Seibu.Ikebukuro', name: '西武池袋線', line: '池袋 〜 所沢 〜 飯能 〜 西武秩父' },
+          { id: 'odpt.Railway:Seibu.Shinjuku', name: '西武新宿線', line: '西武新宿 〜 高田馬場 〜 所沢 〜 本川越' },
+          { id: 'odpt.Railway:Seibu.Haijima', name: '西武拝島線', line: '小平 〜 拝島' },
+          { id: 'odpt.Railway:Seibu.Yurakucho', name: '西武有楽町線', line: '練馬 〜 小竹向原' },
+          { id: 'odpt.Railway:Seibu.Toshima', name: '西武豊島線', line: '練馬 〜 豊島園' },
+          { id: 'odpt.Railway:Seibu.Kokubunji', name: '西武国分寺線', line: '国分寺 〜 東村山' }
+        ]
+      },
+      {
+        company: "東急電鉄", icon: "layers",
+        lines: [
+          { id: 'odpt.Railway:Tokyu.Toyoko', name: '東急東横線', line: '渋谷 〜 自由が丘 〜 横浜' },
+          { id: 'odpt.Railway:Tokyu.Meguro', name: '東急目黒線', line: '目黒 〜 田園調布 〜 日吉' },
+          { id: 'odpt.Railway:Tokyu.DenEnToshi', name: '東急田園都市線', line: '渋谷 〜 二子玉川 〜 中央林間' },
+          { id: 'odpt.Railway:Tokyu.Oimachi', name: '東急大井町線', line: '大井町 〜 自由が丘 〜 溝の口' },
+          { id: 'odpt.Railway:Tokyu.Ikegami', name: '東急池上線', line: '五反田 〜 旗の台 〜 蒲田' },
+          { id: 'odpt.Railway:Tokyu.Tamagawa', name: '東急多摩川線', line: '多摩川 〜 蒲田' },
+          { id: 'odpt.Railway:Tokyu.ShinYokohama', name: '東急新横浜線', line: '日吉 〜 新横浜' }
+        ]
+      },
+      {
+        company: "小田急・京王・京急・相鉄", icon: "navigation",
+        lines: [
+          { id: 'odpt.Railway:Odakyu.Odawara', name: '小田急小田原線', line: '新宿 〜 町田 〜 海老名 〜 小田原' },
+          { id: 'odpt.Railway:Odakyu.Enoshima', name: '小田急江ノ島線', line: '相模大野 〜 大和 〜 片瀬江ノ島' },
+          { id: 'odpt.Railway:Keio.Keio', name: '京王線', line: '新宿 〜 明大前 〜 調布 〜 京王八王子' },
+          { id: 'odpt.Railway:Keio.Inokashira', name: '京王井の頭線', line: '渋谷 〜 下北沢 〜 吉祥寺' },
+          { id: 'odpt.Railway:Keikyu.Main', name: '京急本線', line: '泉岳寺・品川 〜 京急川崎 〜 横浜 〜 浦賀' },
+          { id: 'odpt.Railway:Keikyu.Airport', name: '京急空港線', line: '京急蒲田 〜 羽田空港' },
+          { id: 'odpt.Railway:Sotetsu.Main', name: '相鉄本線', line: '横浜 〜 二俣川 〜 海老名' },
+          { id: 'odpt.Railway:Sotetsu.ShinYokohama', name: '相鉄新横浜線', line: '西谷 〜 羽沢横浜国大 〜 新横浜' }
+        ]
+      }
     ];
 
-    function buildTransitTrack() {
-      const transitTrack = document.getElementById('transit-scroll-track');
-      const doubleTransit = [...transitList, ...transitList];
-      transitTrack.innerHTML = doubleTransit.map(item => `<div class="transit-card-roll"><div><div class="transit-huge-name"><span>${item.name}</span><span class="mock-tag-pill-ticker" style="font-size:0.85rem;">ダミー</span></div><div class="transit-section-large">${item.line}</div></div><span class="status-badge-large ${item.ok ? 'badge-ok' : 'badge-danger'}"><i data-lucide="${item.ok ? 'check' : 'alert-circle'}" style="width:20px;height:20px;"></i>${item.status}</span></div>`).join('');
+    const ALL_AVAILABLE_LINES = LINE_GROUPS.flatMap(g => g.lines);
+
+    const DEFAULT_TRANSIT_LINES = [
+      'odpt.Railway:JR-East.Joban',
+      'odpt.Railway:JR-East.JobanRapid',
+      'odpt.Railway:JR-East.KeihinTohokuNegishi',
+      'odpt.Railway:TokyoMetro.Chiyoda',
+      'odpt.Railway:Keisei.Main',
+      'odpt.Railway:MIR.TsukubaExpress'
+    ];
+
+    let selectedTransitLineIds = JSON.parse(localStorage.getItem('selected_transit_lines')) || DEFAULT_TRANSIT_LINES;
+    let latestTransitApiData = [];
+
+    function getOdptToken() {
+      return "ug169ida89pi6s9praw56vancf98mul5g0rz0grae65e2hgqvc3ds5u3echu18a2";
+      if (!token) {
+        token = prompt("ODPT開発者サイトのアクセストークンを入力してください：");
+        if (token && token.trim() !== "") {
+          localStorage.setItem('odpt_user_token', token.trim());
+          return token.trim();
+        }
+      }
+      return token;
+    }
+
+    function setTokenManually() {
+      const cur = localStorage.getItem('odpt_user_token') || "";
+      const input = prompt("ODPTアクセストークンを再入力・更新してください：", cur);
+      if (input && input.trim() !== "") {
+        localStorage.setItem('odpt_user_token', input.trim());
+        fetchTransitData();
+      }
+    }
+
+    function toggleTransitSettingsView() {
+      const inlineWrap = document.getElementById('transit-settings-inline');
+      const btn = document.getElementById('btn-transit-settings');
+      const isOpening = !inlineWrap.classList.contains('active');
+
+      if (isOpening) {
+        buildTransitAccordionUI();
+        renderTransitSelectedTags();
+        inlineWrap.classList.add('active');
+        btn.classList.add('active');
+      } else {
+        inlineWrap.classList.remove('active');
+        btn.classList.remove('active');
+        processAndRenderTransit();
+      }
+      lucide.createIcons();
+    }
+
+    function renderTransitSelectedTags() {
+      const container = document.getElementById('transit-selected-tags-container');
+      const countEl = document.getElementById('transit-total-selected-count');
+      const currentSelected = ALL_AVAILABLE_LINES.filter(l => selectedTransitLineIds.includes(l.id));
+      countEl.textContent = currentSelected.length;
+
+      if (currentSelected.length === 0) {
+        container.innerHTML = `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">路線が選択されていません。</span>`;
+        return;
+      }
+
+      container.innerHTML = currentSelected.map(line => `
+        <span class="route-pill-tag">
+          ${line.name}
+          <button type="button" class="tag-remove-btn" onclick="removeTransitTag('${line.id}')">
+            <i data-lucide="x" style="width:12px;height:12px;"></i>
+          </button>
+        </span>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function removeTransitTag(lineId) {
+      selectedTransitLineIds = selectedTransitLineIds.filter(id => id !== lineId);
+      const chk = document.querySelector(`.transit-line-chk[data-id="${lineId}"]`);
+      if (chk) chk.checked = false;
+      LINE_GROUPS.forEach((_, gIdx) => updateTransitGroupBadge(gIdx));
+      renderTransitSelectedTags();
+    }
+
+    function buildTransitAccordionUI() {
+      const container = document.getElementById('transit-accordion-container');
+      container.innerHTML = LINE_GROUPS.map((group, gIdx) => {
+        const checkedCount = group.lines.filter(l => selectedTransitLineIds.includes(l.id)).length;
+        return `
+          <div class="accordion-item" id="trans-acc-item-${gIdx}">
+            <div class="accordion-header" onclick="toggleTransitAccordion(${gIdx})">
+              <div class="accordion-header-left">
+                <i data-lucide="${group.icon}" style="width:16px;height:16px;color:var(--accent-main);"></i>
+                <span>${group.company}</span>
+                <span class="cat-badge-count" id="trans-cat-count-${gIdx}">${checkedCount}/${group.lines.length}</span>
+              </div>
+              <div class="accordion-header-right">
+                <button type="button" class="cat-btn-toggle" onclick="toggleTransitGroupAll(event, ${gIdx})">一括選択</button>
+                <i data-lucide="chevron-down" class="accordion-icon" style="width:16px;height:16px;"></i>
+              </div>
+            </div>
+            <div class="accordion-content">
+              ${group.lines.map(line => {
+                const isChecked = selectedTransitLineIds.includes(line.id) ? 'checked' : '';
+                return `
+                  <label class="line-item-label">
+                    <div class="line-info-left">
+                      <span class="line-info-name">${line.name}</span>
+                      <span class="line-info-section">${line.line}</span>
+                    </div>
+                    <input type="checkbox" class="line-checkbox transit-line-chk group-trans-chk-${gIdx}" data-id="${line.id}" ${isChecked} onchange="onTransitCheckboxChanged('${line.id}', ${gIdx})">
+                  </label>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function toggleTransitAccordion(gIdx) {
+      const item = document.getElementById(`trans-acc-item-${gIdx}`);
+      if (item) item.classList.toggle('open');
+    }
+
+    function onTransitCheckboxChanged(lineId, gIdx) {
+      const chk = document.querySelector(`.transit-line-chk[data-id="${lineId}"]`);
+      if (chk.checked) {
+        if (!selectedTransitLineIds.includes(lineId)) selectedTransitLineIds.push(lineId);
+      } else {
+        selectedTransitLineIds = selectedTransitLineIds.filter(id => id !== lineId);
+      }
+      updateTransitGroupBadge(gIdx);
+      renderTransitSelectedTags();
+    }
+
+    function updateTransitGroupBadge(gIdx) {
+      const chks = document.querySelectorAll(`.group-trans-chk-${gIdx}`);
+      const checked = Array.from(chks).filter(c => c.checked).length;
+      const countBadge = document.getElementById(`trans-cat-count-${gIdx}`);
+      if (countBadge) countBadge.textContent = `${checked}/${chks.length}`;
+    }
+
+    function toggleTransitGroupAll(e, gIdx) {
+      e.stopPropagation();
+      const chks = document.querySelectorAll(`.group-trans-chk-${gIdx}`);
+      const anyUnchecked = Array.from(chks).some(c => !c.checked);
+      chks.forEach(c => {
+        c.checked = anyUnchecked;
+        const id = c.dataset.id;
+        if (anyUnchecked) {
+          if (!selectedTransitLineIds.includes(id)) selectedTransitLineIds.push(id);
+        } else {
+          selectedTransitLineIds = selectedTransitLineIds.filter(x => x !== id);
+        }
+      });
+      updateTransitGroupBadge(gIdx);
+      renderTransitSelectedTags();
+    }
+
+    function setAllTransitGlobal(status) {
+      document.querySelectorAll('.transit-line-chk').forEach(c => c.checked = status);
+      selectedTransitLineIds = status ? ALL_AVAILABLE_LINES.map(l => l.id) : [];
+      LINE_GROUPS.forEach((_, gIdx) => updateTransitGroupBadge(gIdx));
+      renderTransitSelectedTags();
+    }
+
+    function saveTransitSettingsAndBack() {
+      if (selectedTransitLineIds.length === 0) {
+        alert("最低1つ以上の路線を選択してください。");
+        return;
+      }
+      localStorage.setItem('selected_transit_lines', JSON.stringify(selectedTransitLineIds));
+      toggleTransitSettingsView();
+    }
+
+    async function fetchTransitData() {
+      const token = getOdptToken();
+      if (!token) {
+        document.getElementById('transit-body-container').innerHTML = `
+          <div style="text-align: center; color: var(--accent-danger); padding: 40px; font-weight: 800;">
+            ODPTアクセストークンを設定してください。「キー」ボタンから入力できます。
+          </div>`;
+        return;
+      }
+
+      const url = `https://api-public.odpt.org/api/v4/odpt:TrainInformation?acl:consumerKey=${token}`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+        
+        latestTransitApiData = await response.json();
+        processAndRenderTransit();
+
+      } catch (err) {
+        console.error("ODPT Fetch error:", err);
+      }
+    }
+
+    function processAndRenderTransit() {
+      const container = document.getElementById('transit-body-container');
+      if (!container) return;
+
+      const targetLines = ALL_AVAILABLE_LINES.filter(line => selectedTransitLineIds.includes(line.id));
+      if (targetLines.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 50px; font-weight: 800;">路線が選択されていません。「路線選択」より設定してください。</div>`;
+        return;
+      }
+
+      const infoMap = {};
+      latestTransitApiData.forEach(item => {
+        const rId = item['odpt:railway'];
+        if (rId) infoMap[rId] = item;
+      });
+
+      const issueList = [];
+      targetLines.forEach(def => {
+        const liveInfo = infoMap[def.id];
+        if (liveInfo && liveInfo['odpt:trainInformationText']) {
+          const rawText = liveInfo['odpt:trainInformationText']['ja'] || '';
+          if (rawText && !rawText.includes('平常') && !rawText.includes('概ね平常')) {
+            let statusText = '運転情報あり';
+            let isWarn = true;
+            if (rawText.includes('見合わせ') || rawText.includes('運休')) {
+              statusText = '運転見合わせ';
+              isWarn = false;
+            } else if (rawText.includes('遅れ') || rawText.includes('遅延')) {
+              statusText = '遅延あり';
+              isWarn = true;
+            }
+            issueList.push({
+              name: def.name,
+              desc: rawText,
+              status: statusText,
+              warn: isWarn
+            });
+          }
+        }
+      });
+
+      if (issueList.length === 0) {
+        renderTransitAllClearView(container, targetLines);
+      } else {
+        renderTransitIssueCards(container, issueList);
+      }
+    }
+
+    function renderTransitAllClearView(container, targetLines) {
+      let pillsHtml = targetLines.map(line => `
+        <div class="clear-route-pill">
+          <span class="clear-dot"></span>
+          <span>${line.name}</span>
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="all-clear-hud-box">
+          <div class="shield-emblem-hud">
+            <i data-lucide="shield-check" style="width: 44px; height: 44px;"></i>
+          </div>
+          <div class="shield-text-hud">ALL CLEAR</div>
+          <div class="shield-desc-hud">現在、選択中の全路線で遅延・運休情報はありません</div>
+          <div class="status-badges-hud-clean">
+            ${pillsHtml}
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    function renderTransitIssueCards(container, issueList) {
+      const bannerHtml = `
+        <div class="delay-alert-banner">
+          <i data-lucide="alert-triangle" style="width: 17px; height: 17px;"></i>
+          <span>運行支障・遅延情報 発表中 [${issueList.length}路線]</span>
+        </div>
+      `;
+
+      const createCardHtml = (item) => `
+        <div class="transit-card-roll ${item.warn ? 'warn' : ''}">
+          <div>
+            <div class="transit-huge-name"><span>${item.name}</span></div>
+            <div class="transit-section-large">${item.desc}</div>
+          </div>
+          <span class="status-badge-large ${item.warn ? 'badge-warn' : 'badge-danger'}">
+            <i data-lucide="${item.warn ? 'alert-triangle' : 'alert-circle'}" style="width:18px;height:18px;"></i>
+            ${item.status}
+          </span>
+        </div>
+      `;
+
+      let bodyHtml = '';
+      if (issueList.length <= 2) {
+        bodyHtml = `<div class="static-transit-list">${issueList.map(createCardHtml).join('')}</div>`;
+      } else {
+        const doubleList = [...issueList, ...issueList];
+        bodyHtml = `<div class="infinite-scroll-track-seamless">${doubleList.map(createCardHtml).join('')}</div>`;
+      }
+
+      container.innerHTML = `
+        ${bannerHtml}
+        <div class="transit-viewport">
+          ${bodyHtml}
+        </div>
+      `;
       lucide.createIcons();
     }
 
@@ -1430,7 +1785,6 @@
       const curM = now.getHours() * 60 + now.getMinutes();
       const isDayTime = (curM >= riseM && curM < setM);
       const isSunsetNear = Math.abs(curM - setM) <= 45;
-
       const isWhite = document.body.getAttribute('data-theme') === 'clean-white';
 
       const skyGrad = ctx.createLinearGradient(0, 0, 0, horizonY);
@@ -1552,11 +1906,11 @@
       { id: 'right-slot-map', name: '雨量', title: '02 // JAPAN PRECIPITATION RADAR [LIVE]' },
       { id: 'right-slot-news', name: 'ニュース', title: '02 // HEADLINE MONITOR' },
       { id: 'right-slot-alerts', name: '警報・天気', title: '02 // WEATHER ALERTS & 3-DAY OUTLOOK' },
-      { id: 'right-slot-transit', name: '鉄道', title: '02 // METROPOLITAN TRANSIT [DUMMY DATA]' },
+      { id: 'right-slot-transit', name: '鉄道', title: '02 // REALTIME METROPOLITAN TRANSIT' },
       { id: 'right-slot-solar', name: '日照・気温', title: '02 // 24H TEMP & SOLAR CYCLE' }
     ];
 
-    let enabledSlots = JSON.parse(localStorage.getItem('wall_monitor_slots')) || [0, 1, 2];
+    let enabledSlots = JSON.parse(localStorage.getItem('wall_monitor_slots')) || [0, 1, 2, 3];
     let currentSlotLoopIndex = 0;
     let rightTimer = 0;
     let cycleDuration = 3 * 60000;
@@ -1587,14 +1941,18 @@
 
       document.getElementById('right-panel-header-title').textContent = allSlotMaster[targetSlotIdx].title;
 
-      const extraBadges = document.getElementById('news-extra-badges');
-      if (extraBadges) {
-        extraBadges.style.display = (targetSlotIdx === 1) ? 'flex' : 'none';
-      }
+      // ニュース用バッジ
+      const newsBadges = document.getElementById('news-extra-badges');
+      if (newsBadges) newsBadges.style.display = (targetSlotIdx === 1) ? 'flex' : 'none';
+
+      // 鉄道用操作ボタン
+      const transitCtrls = document.getElementById('transit-extra-ctrls');
+      if (transitCtrls) transitCtrls.style.display = (targetSlotIdx === 3) ? 'flex' : 'none';
 
       renderDynamicTopTabs();
 
       if (targetSlotIdx === 0 && mapJapan) setTimeout(() => { mapJapan.invalidateSize(); }, 100);
+      if (targetSlotIdx === 3) fetchTransitData();
       if (targetSlotIdx === 4) {
         setTimeout(() => {
           renderTemp24hCanvas();
@@ -1687,12 +2045,15 @@
       initMap();
       fetchWarnings();
       initNewsFlipBoard();
-      buildTransitTrack();
+
+      // 鉄道データ初期化
+      fetchTransitData();
 
       renderDynamicTopTabs();
       switchRightPage(enabledSlots[0]);
 
       setInterval(fetchWarnings, 5 * 60 * 1000);
+      setInterval(fetchTransitData, 5 * 60 * 1000);
       setInterval(() => { fetchJmaOfficialData(currentSelectedCityKey); }, 10 * 60 * 1000);
     });
   </script>
