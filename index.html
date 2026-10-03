@@ -143,11 +143,6 @@
     .news-extra-badges { display: none; align-items: center; gap: 6px; }
     .news-badge-unimpl { font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; background: rgba(239, 68, 68, 0.14); border: 1px solid var(--accent-danger); color: var(--accent-danger); white-space: nowrap; }
     .news-badge-cycle20 { font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; background: rgba(37, 99, 235, 0.14); border: 1px solid var(--accent-main); color: var(--accent-main); white-space: nowrap; }
-    
-    .transit-extra-ctrls { display: none; align-items: center; gap: 6px; }
-    .transit-header-btn { background: var(--card-item-bg); border: 1px solid var(--panel-border); color: var(--text-body); font-family: inherit; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
-    .transit-header-btn:hover { border-color: var(--accent-main); color: var(--accent-main); }
-    .transit-header-btn.active { background: var(--accent-main); color: #fff; border-color: var(--accent-main); }
 
     .right-header-meta { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .sync-timestamp-badge { font-family: var(--font-family-clock); font-size: 0.76rem; font-weight: 800; color: var(--accent-ok); background: rgba(16, 185, 129, 0.12); border: 1px solid var(--accent-ok); padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
@@ -222,12 +217,16 @@
     .square-rain-badge-combo { font-family: var(--font-family-clock); font-size: 1.35rem; font-weight: 800; color: var(--accent-main); background: rgba(0, 243, 255, 0.08); border: 1px solid var(--panel-border); border-radius: 5px; padding: 3px 12px; }
 
     /* ==========================================================================
-       スロット3: 鉄道運行情報（リアルタイムODPT & ALL CLEAR & アコーディオン）
+       スロット3: 鉄道運行情報（02 // TRANSIT STATUS & 直感ボタン配置）
        ========================================================================== */
     .transit-main-view-wrap { flex: 1; width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; overflow: hidden; padding: 12px; }
     .transit-panel-body-fill { flex: 1; height: 100%; position: relative; overflow: hidden; display: flex; flex-direction: column; }
     
-    .delay-alert-banner { font-size: 0.88rem; font-weight: 800; color: var(--accent-danger); background: rgba(239, 68, 68, 0.12); border: 1px solid var(--accent-danger); border-radius: 6px; padding: 8px 14px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .delay-alert-banner { font-size: 0.88rem; font-weight: 800; color: var(--accent-danger); background: rgba(239, 68, 68, 0.12); border: 1px solid var(--accent-danger); border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .delay-banner-left { display: flex; align-items: center; gap: 8px; }
+    .delay-banner-btn { background: var(--card-item-bg); border: 1px solid var(--panel-border); color: var(--text-head); font-size: 0.76rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+    .delay-banner-btn:hover { border-color: var(--accent-main); color: var(--accent-main); }
+
     .transit-viewport { flex: 1; position: relative; overflow: hidden; width: 100%; height: 100%; }
     .static-transit-list { display: flex; flex-direction: column; gap: 12px; width: 100%; }
     .infinite-scroll-track-seamless { display: flex; flex-direction: column; gap: 12px; width: 100%; animation: seamlessScrollUp 22s linear infinite; }
@@ -242,9 +241,12 @@
     .status-badge-large.badge-danger { background: rgba(239, 68, 68, 0.22); border: 1px solid var(--accent-danger); color: var(--accent-danger); }
     .status-badge-large.badge-warn { background: rgba(217, 119, 6, 0.22); border: 1px solid var(--accent-warn); color: var(--accent-warn); }
 
-    .status-badges-hud-clean { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; max-width: 680px; padding: 4px; }
+    .status-badges-hud-clean { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; max-width: 680px; padding: 4px; margin-bottom: 20px; }
     .clear-route-pill { background: var(--clear-pill-bg); border: 1px solid var(--clear-pill-border); border-radius: 20px; padding: 6px 14px; font-size: 0.88rem; font-weight: 800; color: var(--text-head); display: inline-flex; align-items: center; gap: 6px; }
     .clear-dot { width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent-ok); box-shadow: 0 0 6px rgba(22, 163, 74, 0.6); }
+
+    .allclear-action-btn { background: var(--card-item-bg); border: 1px solid var(--panel-border); color: var(--text-head); font-size: 0.84rem; font-weight: 800; padding: 8px 18px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s ease; }
+    .allclear-action-btn:hover { border-color: var(--accent-main); color: var(--accent-main); }
 
     /* 路線選択インライン画面 */
     .transit-settings-inline-wrap { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--panel-bg); z-index: 50; display: none; flex-direction: column; overflow: hidden; }
@@ -408,15 +410,6 @@
             <span class="news-badge-unimpl">※速報ロジック：未実装 (待機中)</span>
             <span class="news-badge-cycle20">※15秒固定巡回中</span>
           </div>
-          <!-- 鉄道用クイック操作コントロール -->
-          <div id="transit-extra-ctrls" class="transit-extra-ctrls">
-            <button id="btn-transit-settings" class="transit-header-btn" onclick="toggleTransitSettingsView()">
-              <i data-lucide="sliders-horizontal" style="width: 12px; height: 12px;"></i> 路線選択
-            </button>
-            <button class="transit-header-btn" onclick="setTokenManually()">
-              <i data-lucide="key" style="width: 12px; height: 12px;"></i> キー
-            </button>
-          </div>
         </div>
 
         <div class="right-header-meta">
@@ -473,7 +466,7 @@
           </div>
         </div>
 
-        <!-- スロット3: 鉄道運行情報（リアルタイムODPT & ALL CLEAR & アコーディオン設定） -->
+        <!-- スロット3: 鉄道運行情報（02 // TRANSIT STATUS & 直感ボタン配置） -->
         <div id="right-slot-transit" class="right-view-slot">
           <div class="transit-main-view-wrap">
             <div class="transit-panel-body-fill" id="transit-body-container">
@@ -578,7 +571,7 @@
           <input type="checkbox" class="cycle-check" data-slot="2">
         </label>
         <label class="cycle-option-row">
-          <span class="cycle-option-label"><i data-lucide="train" style="width:18px;height:18px;color:var(--accent-ok);"></i> 鉄道運行情報 (リアルタイムODPT)</span>
+          <span class="cycle-option-label"><i data-lucide="train" style="width:18px;height:18px;color:var(--accent-ok);"></i> 鉄道運行情報 (TRANSIT STATUS)</span>
           <input type="checkbox" class="cycle-check" data-slot="3">
         </label>
         <label class="cycle-option-row">
@@ -1373,17 +1366,14 @@
 
     function toggleTransitSettingsView() {
       const inlineWrap = document.getElementById('transit-settings-inline');
-      const btn = document.getElementById('btn-transit-settings');
       const isOpening = !inlineWrap.classList.contains('active');
 
       if (isOpening) {
         buildTransitAccordionUI();
         renderTransitSelectedTags();
         inlineWrap.classList.add('active');
-        btn.classList.add('active');
       } else {
         inlineWrap.classList.remove('active');
-        btn.classList.remove('active');
         processAndRenderTransit();
       }
       lucide.createIcons();
@@ -1517,7 +1507,8 @@
       if (!token) {
         document.getElementById('transit-body-container').innerHTML = `
           <div style="text-align: center; color: var(--accent-danger); padding: 40px; font-weight: 800;">
-            ODPTアクセストークンを設定してください。「キー」ボタンから入力できます。
+            ODPTアクセストークンが設定されていません。<br>
+            <button class="allclear-action-btn" style="margin-top:14px;" onclick="setTokenManually()">🔑 トークンを設定する</button>
           </div>`;
         return;
       }
@@ -1542,7 +1533,11 @@
 
       const targetLines = ALL_AVAILABLE_LINES.filter(line => selectedTransitLineIds.includes(line.id));
       if (targetLines.length === 0) {
-        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 50px; font-weight: 800;">路線が選択されていません。「路線選択」より設定してください。</div>`;
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 50px; font-weight: 800;">
+            路線が選択されていません。<br>
+            <button class="allclear-action-btn" style="margin-top:14px;" onclick="toggleTransitSettingsView()">⚙️ 路線を選択する</button>
+          </div>`;
         return;
       }
 
@@ -1602,6 +1597,10 @@
           <div class="status-badges-hud-clean">
             ${pillsHtml}
           </div>
+          <button class="allclear-action-btn" onclick="toggleTransitSettingsView()">
+            <i data-lucide="sliders-horizontal" style="width:14px;height:14px;"></i>
+            <span>路線を選択・変更する</span>
+          </button>
         </div>
       `;
       lucide.createIcons();
@@ -1610,8 +1609,14 @@
     function renderTransitIssueCards(container, issueList) {
       const bannerHtml = `
         <div class="delay-alert-banner">
-          <i data-lucide="alert-triangle" style="width: 17px; height: 17px;"></i>
-          <span>運行支障・遅延情報 発表中 [${issueList.length}路線]</span>
+          <div class="delay-banner-left">
+            <i data-lucide="alert-triangle" style="width: 17px; height: 17px;"></i>
+            <span>運行支障・遅延情報 発表中 [${issueList.length}路線]</span>
+          </div>
+          <button class="delay-banner-btn" onclick="toggleTransitSettingsView()">
+            <i data-lucide="sliders-horizontal" style="width: 12px; height: 12px;"></i>
+            <span>路線変更</span>
+          </button>
         </div>
       `;
 
@@ -1906,7 +1911,7 @@
       { id: 'right-slot-map', name: '雨量', title: '02 // JAPAN PRECIPITATION RADAR [LIVE]' },
       { id: 'right-slot-news', name: 'ニュース', title: '02 // HEADLINE MONITOR' },
       { id: 'right-slot-alerts', name: '警報・天気', title: '02 // WEATHER ALERTS & 3-DAY OUTLOOK' },
-      { id: 'right-slot-transit', name: '鉄道', title: '02 // REALTIME METROPOLITAN TRANSIT' },
+      { id: 'right-slot-transit', name: '鉄道', title: '02 // TRANSIT STATUS' },
       { id: 'right-slot-solar', name: '日照・気温', title: '02 // 24H TEMP & SOLAR CYCLE' }
     ];
 
@@ -1941,13 +1946,8 @@
 
       document.getElementById('right-panel-header-title').textContent = allSlotMaster[targetSlotIdx].title;
 
-      // ニュース用バッジ
       const newsBadges = document.getElementById('news-extra-badges');
       if (newsBadges) newsBadges.style.display = (targetSlotIdx === 1) ? 'flex' : 'none';
-
-      // 鉄道用操作ボタン
-      const transitCtrls = document.getElementById('transit-extra-ctrls');
-      if (transitCtrls) transitCtrls.style.display = (targetSlotIdx === 3) ? 'flex' : 'none';
 
       renderDynamicTopTabs();
 
@@ -2046,7 +2046,6 @@
       fetchWarnings();
       initNewsFlipBoard();
 
-      // 鉄道データ初期化
       fetchTransitData();
 
       renderDynamicTopTabs();
