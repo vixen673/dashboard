@@ -7,7 +7,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700;800&family=Outfit:wght@400;600;700;800&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700;800&family=Outfit:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -155,8 +155,15 @@
     .right-view-slot { flex: 1; height: 100%; display: none; flex-direction: column; position: relative; overflow: hidden; opacity: 0; transition: opacity 0.3s ease; }
     .right-view-slot.active { display: flex; opacity: 1; }
 
-    .radar-slot-fullscreen { width: 100%; height: 100%; border: 1px solid var(--panel-border); border-radius: 8px; position: relative; overflow: hidden; background: #121212; }
-    #map-japan { width: 100%; height: 100%; z-index: 1; }
+    .radar-slot-fullscreen { width: 100%; height: 100%; border: 1px solid var(--panel-border); border-radius: 8px; position: relative; overflow: hidden; background: #030508; }
+    #map-japan { width: 100%; height: 100%; z-index: 1; background: #030508; }
+
+    /* ==========================================================================
+       地図ダークモード反転フィルター (パターンD: 高視認性サイバー)
+       ========================================================================== */
+    body[data-theme="ultra-cool"] .gsi-base-tile {
+      filter: invert(100%) hue-rotate(180deg) brightness(130%) contrast(160%);
+    }
 
     /* ニュース */
     .news-board-wrapper { display: flex; flex-direction: column; height: 100%; padding: 8px 10px; gap: 8px; justify-content: flex-start; overflow: hidden; }
@@ -681,7 +688,7 @@
     }
 
     // ==========================================
-    // 1. レーダーマップ
+    // 1. レーダーマップ (パターンD高視認性フィルター適用)
     // ==========================================
     let mapJapan;
     let radarLayerJapan = null;
@@ -689,7 +696,11 @@
     
     function initMap() {
       mapJapan = L.map('map-japan', { zoomControl: true, attributionControl: false, zoomSnap: 0.1 }).setView([36.6, 138.6], 7.3);
-      L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', { maxZoom: 18, opacity: 0.85 }).addTo(mapJapan);
+      L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', { 
+        maxZoom: 18, 
+        opacity: 0.85,
+        className: 'gsi-base-tile'
+      }).addTo(mapJapan);
       updateRadarMap();
       setInterval(updateRadarMap, 5 * 60 * 1000);
     }
@@ -703,7 +714,14 @@
           const targetTime = obsList.length > 1 ? obsList[1].basetime : obsList[0].basetime;
           const tileUrl = `https://www.jma.go.jp/bosai/jmatile/data/nowc/${targetTime}/none/${targetTime}/surf/hrpns/{z}/{x}/{y}.png`;
           if (radarLayerJapan) mapJapan.removeLayer(radarLayerJapan);
-          radarLayerJapan = L.tileLayer(tileUrl, { opacity: 0.75, zIndex: 500, minNativeZoom: 8, maxNativeZoom: 8, maxZoom: 18, errorTileUrl: emptyTile }).addTo(mapJapan);
+          radarLayerJapan = L.tileLayer(tileUrl, { 
+            opacity: 0.75, 
+            zIndex: 500, 
+            minNativeZoom: 8, 
+            maxNativeZoom: 8, 
+            maxZoom: 18, 
+            errorTileUrl: emptyTile 
+          }).addTo(mapJapan);
         }
         updateSyncTimestamp();
       } catch (e) {}
@@ -805,6 +823,7 @@
 
     let currentSelectedCityKey = 'katsushika';
     let todayObservedHourlyTemps = [];
+    let currentLiveTempGlobal = 20.0;
 
     function getJmaWeatherIcon(codeStr) {
       const code = parseInt(codeStr, 10);
@@ -874,6 +893,7 @@
           const obs = amedasData[code];
           if (obs && obs.temp && obs.temp[0] != null) {
             tempVal = obs.temp[0].toFixed(1);
+            currentLiveTempGlobal = obs.temp[0];
             if (obs.wind && obs.wind[0] != null) windSpeedVal = obs.wind[0].toFixed(1);
             break;
           }
@@ -933,6 +953,9 @@
         const stTempSeries = shortTerm.timeSeries[2];
         const stTempArea = stTempSeries.areas.find(a => a.area.code === city.stationCode) || stTempSeries.areas[0];
         
+        let jmaPredictedMax = 24.0;
+        let jmaPredictedMin = 16.0;
+
         if (stTempArea && stTempArea.temps) {
           let dayTempsMap = {};
           stTempSeries.timeDefines.forEach((t, idx) => {
@@ -946,8 +969,10 @@
 
           if (dayTempsMap[day0] && dayTempsMap[day0].length > 0) {
             dailyForecast[day0].max = Math.round(Math.max(...dayTempsMap[day0]));
+            jmaPredictedMax = Math.max(...dayTempsMap[day0]);
           } else if (tempVal !== "--.-") {
             dailyForecast[day0].max = Math.round(parseFloat(tempVal));
+            jmaPredictedMax = parseFloat(tempVal);
           }
 
           const amedasFullMap = await fetchJmaAmedasTodayFullTemps(city.stationCode, yyyymmdd);
@@ -955,30 +980,50 @@
           
           if (allObsTemps.length > 0) {
             dailyForecast[day0].min = Math.round(Math.min(...allObsTemps));
+            jmaPredictedMin = Math.min(...allObsTemps);
           } else {
             dailyForecast[day0].min = '--';
           }
 
+          // ========================================================
+          // ★ 14時ピーク山なり補間アルゴリズム（新ロジック）
+          // ========================================================
           todayObservedHourlyTemps = [];
           const curH = now.getHours();
-          const curT = (tempVal !== "--.-") ? parseFloat(tempVal) : 22;
-          const nightTargetT = (dailyForecast[day0].min !== '--') ? dailyForecast[day0].min : (curT - 4);
+          const curT = (tempVal !== "--.-") ? parseFloat(tempVal) : 22.0;
+          const peakHour = 14;
+
+          const targetPeakT = Math.max(jmaPredictedMax, curT + 0.5);
+          const targetNightT = (dailyForecast[day0].min !== '--') ? parseFloat(dailyForecast[day0].min) : (curT - 4.0);
 
           for (let h = 0; h <= 24; h++) {
-            const match = amedasFullMap[`${h}:00`] || amedasFullMap[`${h}:10`] || amedasFullMap[`${h}:30`];
             if (h < curH) {
-              if (match) todayObservedHourlyTemps.push({ hour: h, temp: match.temp });
-              else {
+              const match = amedasFullMap[`${h}:00`] || amedasFullMap[`${h}:10`] || amedasFullMap[`${h}:30`];
+              if (match) {
+                todayObservedHourlyTemps.push({ hour: h, temp: match.temp });
+              } else {
                 const prev = todayObservedHourlyTemps[todayObservedHourlyTemps.length - 1];
                 todayObservedHourlyTemps.push({ hour: h, temp: prev ? prev.temp : curT });
               }
             } else if (h === curH) {
               todayObservedHourlyTemps.push({ hour: h, temp: curT });
             } else {
-              const remainingHours = 24 - curH;
-              const passedFromNow = h - curH;
-              const decayRatio = Math.sin((passedFromNow / remainingHours) * (Math.PI / 2));
-              const estTemp = curT - (curT - nightTargetT) * decayRatio;
+              let estTemp;
+              if (curH < peakHour) {
+                if (h <= peakHour) {
+                  const riseRatio = (h - curH) / (peakHour - curH);
+                  const curve = Math.sin(riseRatio * (Math.PI / 2));
+                  estTemp = curT + (targetPeakT - curT) * curve;
+                } else {
+                  const dropRatio = (h - peakHour) / (24 - peakHour);
+                  const curve = (1 - Math.cos(dropRatio * Math.PI)) / 2;
+                  estTemp = targetPeakT - (targetPeakT - targetNightT) * curve;
+                }
+              } else {
+                const dropRatio = (h - curH) / (24 - curH);
+                const curve = (1 - Math.cos(dropRatio * Math.PI)) / 2;
+                estTemp = curT - (curT - targetNightT) * curve;
+              }
               todayObservedHourlyTemps.push({ hour: h, temp: estTemp });
             }
           }
@@ -1206,8 +1251,10 @@
     }
 
     // ==========================================
-    // 5. 鉄道データ（ODPT API実連携 & ALL CLEAR & アコーディオン）
+    // 5. 鉄道データ（Cloudflare Workers連携 & 完全安全化）
     // ==========================================
+    const TRANSIT_WORKER_URL = "https://rough-bar-30b7.utugi1978.workers.dev";
+
     const LINE_GROUPS = [
       {
         company: "JR新幹線", icon: "zap",
@@ -1274,7 +1321,7 @@
           { id: 'odpt.Railway:Keisei.Oshiage', name: '京成押上線', line: '押上 〜 八広 〜 青砥' },
           { id: 'odpt.Railway:Keisei.Kanamachi', name: '京成金町線', line: '京成高砂 〜 柴又 〜 京成金町' },
           { id: 'odpt.Railway:Keisei.NaritaSkyAccess', name: '成田スカイアクセス線', line: '京成高砂 〜 印旛日本医大 〜 成田空港' },
-          { id: 'odpt.Railway:Keisei.Chiba', name: '京成千葉線', line: '京成津田沼 〜 千葉中央' },
+          { id: 'odpt.Railway:Keisei.Chiba', name: '京成津田沼 〜 千葉中央' },
           { id: 'odpt.Railway:Hokuso.Hokuso', name: '北総線', line: '京成高砂 〜 新鎌ヶ谷 〜 印旛日本医大' },
           { id: 'odpt.Railway:MIR.TsukubaExpress', name: 'つくばエクスプレス', line: '秋葉原 〜 北千住 〜 つくば' }
         ]
@@ -1332,37 +1379,20 @@
     const ALL_AVAILABLE_LINES = LINE_GROUPS.flatMap(g => g.lines);
 
     const DEFAULT_TRANSIT_LINES = [
-      'odpt.Railway:JR-East.Joban',
-      'odpt.Railway:JR-East.JobanRapid',
+      'odpt.Railway:JR-East.JoetsuShinkansen',
+      'odpt.Railway:JR-East.HokurikuShinkansen',
+      'odpt.Railway:JR-East.Yamanote',
       'odpt.Railway:JR-East.KeihinTohokuNegishi',
-      'odpt.Railway:TokyoMetro.Chiyoda',
+      'odpt.Railway:JR-East.UenoTokyo',
+      'odpt.Railway:JR-East.Takasaki',
+      'odpt.Railway:JR-East.Utsunomiya',
+      'odpt.Railway:TokyoMetro.Hanzomon',
       'odpt.Railway:Keisei.Main',
-      'odpt.Railway:MIR.TsukubaExpress'
+      'odpt.Railway:Keisei.Oshiage'
     ];
 
     let selectedTransitLineIds = JSON.parse(localStorage.getItem('selected_transit_lines')) || DEFAULT_TRANSIT_LINES;
     let latestTransitApiData = [];
-
-    function getOdptToken() {
-      return "ug169ida89pi6s9praw56vancf98mul5g0rz0grae65e2hgqvc3ds5u3echu18a2";
-      if (!token) {
-        token = prompt("ODPT開発者サイトのアクセストークンを入力してください：");
-        if (token && token.trim() !== "") {
-          localStorage.setItem('odpt_user_token', token.trim());
-          return token.trim();
-        }
-      }
-      return token;
-    }
-
-    function setTokenManually() {
-      const cur = localStorage.getItem('odpt_user_token') || "";
-      const input = prompt("ODPTアクセストークンを再入力・更新してください：", cur);
-      if (input && input.trim() !== "") {
-        localStorage.setItem('odpt_user_token', input.trim());
-        fetchTransitData();
-      }
-    }
 
     function toggleTransitSettingsView() {
       const inlineWrap = document.getElementById('transit-settings-inline');
@@ -1503,20 +1533,8 @@
     }
 
     async function fetchTransitData() {
-      const token = getOdptToken();
-      if (!token) {
-        document.getElementById('transit-body-container').innerHTML = `
-          <div style="text-align: center; color: var(--accent-danger); padding: 40px; font-weight: 800;">
-            ODPTアクセストークンが設定されていません。<br>
-            <button class="allclear-action-btn" style="margin-top:14px;" onclick="setTokenManually()">🔑 トークンを設定する</button>
-          </div>`;
-        return;
-      }
-
-      const url = `https://api-public.odpt.org/api/v4/odpt:TrainInformation?acl:consumerKey=${token}`;
-
       try {
-        const response = await fetch(url);
+        const response = await fetch(TRANSIT_WORKER_URL);
         if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
         
         latestTransitApiData = await response.json();
@@ -1542,10 +1560,12 @@
       }
 
       const infoMap = {};
-      latestTransitApiData.forEach(item => {
-        const rId = item['odpt:railway'];
-        if (rId) infoMap[rId] = item;
-      });
+      if (Array.isArray(latestTransitApiData)) {
+        latestTransitApiData.forEach(item => {
+          const rId = item['odpt:railway'];
+          if (rId) infoMap[rId] = item;
+        });
+      }
 
       const issueList = [];
       targetLines.forEach(def => {
@@ -1651,7 +1671,7 @@
     }
 
     // ==========================================
-    // 6. 第5スロット：Canvas 描画
+    // 6. 第5スロット：Canvas 描画 (14時ピーク山なり補間連動)
     // ==========================================
     const SHARED_PAD_L = 58;
     const SHARED_PAD_R = 24;
