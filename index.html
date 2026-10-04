@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>WALL MONITOR // 50:50 SPLIT & JMA WEATHER & ODPT TRANSIT</title>
+  <title>WALL MONITOR // 50:50 SPLIT & JMA WEATHER & ODPT TRANSIT & EEW</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700;800&family=Outfit:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700;800&family=Noto+Serif+JP:wght@900&family=Outfit:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -85,6 +85,26 @@
 
     .top-statusbar { position: relative; z-index: 1000; height: 44px; padding: 0 1.2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--panel-border); background: var(--panel-bg); backdrop-filter: blur(12px); gap: 12px; }
     .brand-title { font-weight: 800; font-size: 0.92rem; color: var(--accent-main); display: flex; align-items: center; gap: 8px; letter-spacing: 0.05em; white-space: nowrap; }
+
+    /* 地震監視用 LED インジケーター */
+    .eew-led-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background-color: var(--accent-ok);
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+      display: inline-block;
+      transition: background-color 0.2s, box-shadow 0.2s;
+    }
+    .eew-led-dot.offline {
+      background-color: var(--accent-danger);
+      box-shadow: 0 0 8px rgba(244, 63, 94, 0.8);
+      animation: ledBlink 1s infinite alternate;
+    }
+    @keyframes ledBlink {
+      0% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
 
     .theme-selector-group { display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.1); padding: 3px; border-radius: 6px; border: 1px solid var(--panel-border); }
     .theme-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); font-family: inherit; font-size: 0.74rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
@@ -224,7 +244,7 @@
     .square-rain-badge-combo { font-family: var(--font-family-clock); font-size: 1.35rem; font-weight: 800; color: var(--accent-main); background: rgba(0, 243, 255, 0.08); border: 1px solid var(--panel-border); border-radius: 5px; padding: 3px 12px; }
 
     /* ==========================================================================
-       スロット3: 鉄道運行情報（02 // TRANSIT STATUS & 直感ボタン配置）
+       スロット3: 鉄道運行情報
        ========================================================================== */
     .transit-main-view-wrap { flex: 1; width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; overflow: hidden; padding: 12px; }
     .transit-panel-body-fill { flex: 1; height: 100%; position: relative; overflow: hidden; display: flex; flex-direction: column; }
@@ -302,17 +322,263 @@
     /* 巡回設定モーダル */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.25s ease; }
     .modal-overlay.open { display: flex; opacity: 1; }
-    .modal-window { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; width: 480px; max-width: 90vw; padding: 24px; box-shadow: var(--panel-shadow); display: flex; flex-direction: column; gap: 18px; }
-    .modal-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--panel-border); padding-bottom: 10px; }
-    .modal-title { font-size: 1.15rem; font-weight: 900; color: var(--accent-main); display: flex; align-items: center; gap: 8px; }
+    .modal-window { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; width: 480px; max-width: 90vw; padding: 22px; box-shadow: var(--panel-shadow); display: flex; flex-direction: column; gap: 14px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--panel-border); padding-bottom: 8px; }
+    .modal-title { font-size: 1.1rem; font-weight: 900; color: var(--accent-main); display: flex; align-items: center; gap: 8px; }
     .modal-close-x { background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; }
     .modal-close-x:hover { color: var(--text-head); }
-    .cycle-options-list { display: flex; flex-direction: column; gap: 10px; }
-    .cycle-option-row { display: flex; align-items: center; justify-content: space-between; background: var(--card-item-bg); border: 1px solid var(--panel-border); padding: 12px 16px; border-radius: 6px; cursor: pointer; transition: all 0.15s ease; }
+    .cycle-options-list { display: flex; flex-direction: column; gap: 8px; }
+    .cycle-option-row { display: flex; align-items: center; justify-content: space-between; background: var(--card-item-bg); border: 1px solid var(--panel-border); padding: 10px 14px; border-radius: 6px; cursor: pointer; transition: all 0.15s ease; }
     .cycle-option-row:hover { border-color: var(--accent-main); }
-    .cycle-option-label { font-size: 0.95rem; font-weight: 800; color: var(--text-head); display: flex; align-items: center; gap: 10px; }
-    .cycle-check { width: 20px; height: 20px; accent-color: var(--accent-main); cursor: pointer; }
-    .modal-save-btn { background: var(--accent-main); color: #fff; border: none; border-radius: 6px; padding: 12px; font-size: 0.95rem; font-weight: 800; cursor: pointer; text-align: center; }
+    .cycle-option-label { font-size: 0.9rem; font-weight: 800; color: var(--text-head); display: flex; align-items: center; gap: 10px; }
+    .cycle-check { width: 18px; height: 18px; accent-color: var(--accent-main); cursor: pointer; }
+
+    /* モーダル内 EEW テスト・説明エリア */
+    .eew-modal-section {
+      background: var(--card-item-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .eew-modal-header {
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: var(--accent-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .eew-led-desc-box {
+      font-size: 0.76rem;
+      color: var(--text-body);
+      background: var(--sub-card-bg);
+      border: 1px solid var(--sub-card-border);
+      border-radius: 5px;
+      padding: 8px 10px;
+      line-height: 1.5;
+    }
+    .eew-test-btn-group {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-eew-test {
+      flex: 1;
+      padding: 7px 10px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 800;
+      font-size: 0.78rem;
+      cursor: pointer;
+      text-align: center;
+      transition: opacity 0.2s;
+    }
+    .btn-eew-test:hover { opacity: 0.85; }
+    .btn-eew-y { background: #ff9d00; color: #000; }
+    .btn-eew-r { background: #dc2626; color: #fff; }
+
+    .modal-save-btn { background: var(--accent-main); color: #fff; border: none; border-radius: 6px; padding: 11px; font-size: 0.92rem; font-weight: 800; cursor: pointer; text-align: center; }
+
+    /* ==========================================================================
+       エヴァ風 緊急地震速報 (EEW) フルスクリーンオーバーレイ
+       ========================================================================== */
+    #emergency-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease-out;
+      font-family: 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+      font-weight: 900;
+    }
+
+    #emergency-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .stripe-tape {
+      width: 100%;
+      height: 8.5vh;
+      min-height: 52px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      font-family: 'Arial Black', Impact, sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 0.35rem;
+      overflow: hidden;
+      white-space: nowrap;
+      border-top: 4px solid;
+      border-bottom: 4px solid;
+    }
+    .stripe-tape span {
+      padding: 0 30px;
+      background: #000;
+      line-height: 1;
+    }
+
+    .btn-dismiss {
+      position: absolute;
+      top: 10vh;
+      right: 2vw;
+      background: rgba(0, 0, 0, 0.85);
+      border: 2px solid currentColor;
+      color: inherit;
+      padding: 8px 18px;
+      font-size: 1.1vw;
+      font-weight: 900;
+      cursor: pointer;
+      border-radius: 6px;
+      letter-spacing: 0.1rem;
+      z-index: 100001;
+      transition: background 0.2s;
+    }
+    .btn-dismiss:active { background: #fff; color: #000; }
+
+    .eva-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1vh 3vw;
+      gap: 1.8vh;
+      position: relative;
+    }
+
+    .eva-huge-title {
+      font-size: 6vw;
+      font-weight: 900;
+      letter-spacing: 0.8vw;
+      line-height: 1.05;
+      text-align: center;
+      -webkit-text-stroke: 1.5px currentColor;
+      text-shadow: 0 0 12px currentColor;
+    }
+
+    .eva-frame-outer {
+      width: 100%;
+      max-width: 95vw;
+      border: 5px solid;
+      border-radius: 30px;
+      padding: 7px;
+      background: rgba(0, 0, 0, 0.95);
+      position: relative;
+    }
+
+    .eva-frame-inner {
+      border: 3px solid;
+      border-radius: 22px;
+      padding: 2.5vh 3vw;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.2vh;
+    }
+
+    .eva-badge {
+      position: absolute;
+      top: -18px;
+      right: 40px;
+      padding: 2px 24px;
+      font-size: 1.3vw;
+      font-family: 'Arial Black', Impact, sans-serif;
+      letter-spacing: 0.15rem;
+      border: 3px solid;
+      background: #000;
+      border-radius: 8px;
+    }
+
+    .eva-lead {
+      font-size: 4.5vw;
+      font-weight: 900;
+      letter-spacing: 0.5vw;
+      line-height: 1.15;
+      -webkit-text-stroke: 1.2px currentColor;
+    }
+
+    .eva-sub {
+      font-size: 2.6vw;
+      font-weight: 900;
+      letter-spacing: 0.25vw;
+      line-height: 1.35;
+      -webkit-text-stroke: 0.6px currentColor;
+    }
+    .eva-sub strong {
+      font-size: 3.3vw;
+      font-family: 'Arial Black', Impact, sans-serif;
+      margin: 0 8px;
+      -webkit-text-stroke: 1px currentColor;
+    }
+
+    .eva-instruction {
+      font-size: 3.2vw;
+      font-weight: 900;
+      letter-spacing: 0.6vw;
+      text-align: center;
+      margin-top: 0.5vh;
+      -webkit-text-stroke: 1px currentColor;
+    }
+
+    /* 震度4 〜 5弱：アンバーイエロー */
+    #emergency-overlay.theme-yellow {
+      color: #ff9d00;
+      border-color: #ff9d00;
+    }
+    #emergency-overlay.theme-yellow .stripe-tape {
+      background: repeating-linear-gradient(-45deg, #ff9d00, #ff9d00 35px, #000 35px, #000 70px);
+      border-color: #ff9d00;
+      color: #ff9d00;
+    }
+    #emergency-overlay.theme-yellow .eva-frame-outer,
+    #emergency-overlay.theme-yellow .eva-frame-inner,
+    #emergency-overlay.theme-yellow .eva-badge {
+      border-color: #ff9d00;
+    }
+    #emergency-overlay.theme-yellow .eva-frame-outer {
+      box-shadow: 0 0 45px rgba(255, 157, 0, 0.4);
+    }
+
+    /* 震度5強 〜 7：クリムゾンレッド */
+    #emergency-overlay.theme-red {
+      color: #ff1500;
+      border-color: #ff1500;
+    }
+    #emergency-overlay.theme-red .stripe-tape {
+      background: repeating-linear-gradient(-45deg, #ff1500, #ff1500 35px, #000 35px, #000 70px);
+      border-color: #ff1500;
+      color: #ff1500;
+      animation: flash-tape 0.8s infinite alternate;
+    }
+    #emergency-overlay.theme-red .eva-frame-outer,
+    #emergency-overlay.theme-red .eva-frame-inner,
+    #emergency-overlay.theme-red .eva-badge {
+      border-color: #ff1500;
+    }
+    #emergency-overlay.theme-red .eva-frame-outer {
+      box-shadow: 0 0 65px rgba(255, 21, 0, 0.65);
+      animation: flash-box 1.2s infinite alternate;
+    }
+
+    @keyframes flash-tape {
+      0% { opacity: 0.75; }
+      100% { opacity: 1; filter: drop-shadow(0 0 15px #ff1500); }
+    }
+    @keyframes flash-box {
+      0% { box-shadow: 0 0 30px rgba(255, 21, 0, 0.4); }
+      100% { box-shadow: 0 0 85px rgba(255, 21, 0, 0.85); }
+    }
   </style>
 </head>
 <body data-theme="clean-white">
@@ -322,6 +588,7 @@
     <div class="brand-title">
       <i data-lucide="layout-dashboard" style="width: 17px; height: 17px;"></i>
       <span>WALL MONITOR</span>
+      <span id="eew-status-dot" class="eew-led-dot" title="EEW監視中"></span>
     </div>
 
     <div class="theme-selector-group">
@@ -473,7 +740,7 @@
           </div>
         </div>
 
-        <!-- スロット3: 鉄道運行情報（02 // TRANSIT STATUS & 直感ボタン配置） -->
+        <!-- スロット3: 鉄道運行情報 -->
         <div id="right-slot-transit" class="right-view-slot">
           <div class="transit-main-view-wrap">
             <div class="transit-panel-body-fill" id="transit-body-container">
@@ -564,6 +831,7 @@
         </div>
         <button class="modal-close-x" onclick="closeConfigModal()"><i data-lucide="x" style="width: 20px; height: 20px;"></i></button>
       </div>
+
       <div class="cycle-options-list">
         <label class="cycle-option-row">
           <span class="cycle-option-label"><i data-lucide="cloud-rain" style="width:18px;height:18px;color:var(--accent-main);"></i> 雨量レーダー</span>
@@ -586,7 +854,52 @@
           <input type="checkbox" class="cycle-check" data-slot="4">
         </label>
       </div>
+
+      <!-- EEW 死活監視説明 ＆ テスト発報エリア -->
+      <div class="eew-modal-section">
+        <div class="eew-modal-header">
+          <i data-lucide="radio" style="width: 16px; height: 16px;"></i>
+          <span>緊急地震速報 (EEW) システム</span>
+        </div>
+        <div class="eew-led-desc-box">
+          <strong>画面左上のランプ表示について：</strong><br>
+          🟢 <strong>常時点灯</strong>：正常に監視中（P2P WebSocket接続完了）<br>
+          🔴 <strong>点滅</strong>：通信切断（自動再接続を試行中）
+        </div>
+        <div class="eew-test-btn-group">
+          <button class="btn-eew-test btn-eew-y" onclick="simulateEEW(45)">テスト（震度5弱:黄）</button>
+          <button class="btn-eew-test btn-eew-r" onclick="simulateEEW(50)">テスト（震度5強:赤）</button>
+        </div>
+      </div>
+
       <button class="modal-save-btn" onclick="saveConfigAndApply()">設定を完了して巡回開始</button>
+    </div>
+  </div>
+
+  <!-- EMERGENCY フルスクリーンオーバーレイ -->
+  <div id="emergency-overlay">
+    <button class="btn-dismiss" onclick="hideEmergency()">DISMISS / 解除</button>
+
+    <div class="stripe-tape">
+      <span>EMERGENCY</span><span>EMERGENCY</span><span>EMERGENCY</span><span>EMERGENCY</span><span>EMERGENCY</span>
+    </div>
+
+    <div class="eva-main">
+      <div class="eva-huge-title" id="eva-title">緊急地震速報 発令中</div>
+
+      <div class="eva-frame-outer">
+        <div class="eva-badge" id="eva-phase">第1報 / 警報</div>
+        <div class="eva-frame-inner">
+          <div class="eva-lead" id="eva-lead">強い揺れに警戒</div>
+          <div class="eva-sub" id="eva-detail">警戒地域：取得中...</div>
+        </div>
+      </div>
+
+      <div class="eva-instruction" id="eva-instruction">身の安全を確保してください</div>
+    </div>
+
+    <div class="stripe-tape">
+      <span>EMERGENCY</span><span>EMERGENCY</span><span>EMERGENCY</span><span>EMERGENCY</span><span>EMERGENCY</span>
     </div>
   </div>
 
@@ -688,7 +1001,7 @@
     }
 
     // ==========================================
-    // 1. レーダーマップ (パターンD高視認性フィルター適用)
+    // 1. レーダーマップ (パターンD 高視認性フィルター)
     // ==========================================
     let mapJapan;
     let radarLayerJapan = null;
@@ -812,7 +1125,7 @@
     }
 
     // ==========================================
-    // 3. JMA 公式データ
+    // 3. JMA 公式データ (14時ピーク山なり補間)
     // ==========================================
     const JMA_CITIES = {
       katsushika: { name: '東京都 葛飾区', en: 'TOKYO KATSUSHIKA', office: '130000', area10: '130010', stationCode: '44132', lat: 35.744, lng: 139.847, amedasTempWind: ['44132', '44172', '44166'], amedasHumid: ['44132', '44166'] },
@@ -823,7 +1136,6 @@
 
     let currentSelectedCityKey = 'katsushika';
     let todayObservedHourlyTemps = [];
-    let currentLiveTempGlobal = 20.0;
 
     function getJmaWeatherIcon(codeStr) {
       const code = parseInt(codeStr, 10);
@@ -893,7 +1205,6 @@
           const obs = amedasData[code];
           if (obs && obs.temp && obs.temp[0] != null) {
             tempVal = obs.temp[0].toFixed(1);
-            currentLiveTempGlobal = obs.temp[0];
             if (obs.wind && obs.wind[0] != null) windSpeedVal = obs.wind[0].toFixed(1);
             break;
           }
@@ -985,9 +1296,7 @@
             dailyForecast[day0].min = '--';
           }
 
-          // ========================================================
-          // ★ 14時ピーク山なり補間アルゴリズム（新ロジック）
-          // ========================================================
+          // 14時ピーク山なり補間アルゴリズム
           todayObservedHourlyTemps = [];
           const curH = now.getHours();
           const curT = (tempVal !== "--.-") ? parseFloat(tempVal) : 22.0;
@@ -1251,7 +1560,7 @@
     }
 
     // ==========================================
-    // 5. 鉄道データ（Cloudflare Workers連携 & 完全安全化）
+    // 5. 鉄道データ（Cloudflare Workers連携）
     // ==========================================
     const TRANSIT_WORKER_URL = "https://rough-bar-30b7.utugi1978.workers.dev";
 
@@ -1320,8 +1629,8 @@
           { id: 'odpt.Railway:Keisei.Main', name: '京成本線', line: '京成上野 〜 青砥・京成高砂 〜 成田空港' },
           { id: 'odpt.Railway:Keisei.Oshiage', name: '京成押上線', line: '押上 〜 八広 〜 青砥' },
           { id: 'odpt.Railway:Keisei.Kanamachi', name: '京成金町線', line: '京成高砂 〜 柴又 〜 京成金町' },
-          { id: 'odpt.Railway:Keisei.NaritaSkyAccess', name: '成田スカイアクセス線', line: '京成高砂 〜 印旛日本医大 〜 成田空港' },
-          { id: 'odpt.Railway:Keisei.Chiba', name: '京成津田沼 〜 千葉中央' },
+          { id: 'odpt.Railway:NaritaSkyAccess', name: '成田スカイアクセス線', line: '京成高砂 〜 印旛日本医大 〜 成田空港' },
+          { id: 'odpt.Railway:Keisei.Chiba', name: '京成千葉線', line: '京成津田沼 〜 千葉中央' },
           { id: 'odpt.Railway:Hokuso.Hokuso', name: '北総線', line: '京成高砂 〜 新鎌ヶ谷 〜 印旛日本医大' },
           { id: 'odpt.Railway:MIR.TsukubaExpress', name: 'つくばエクスプレス', line: '秋葉原 〜 北千住 〜 つくば' }
         ]
@@ -1671,7 +1980,7 @@
     }
 
     // ==========================================
-    // 6. 第5スロット：Canvas 描画 (14時ピーク山なり補間連動)
+    // 6. 第5スロット：Canvas 描画
     // ==========================================
     const SHARED_PAD_L = 58;
     const SHARED_PAD_R = 24;
@@ -2058,6 +2367,132 @@
       renderSolarArcCanvas();
     });
 
+    // ==========================================
+    // 8. P2P地震情報 WebSocket 監視 ＆ エヴァ風オーバーレイ制御
+    // ==========================================
+    const overlay = document.getElementById('emergency-overlay');
+    const evaTitle = document.getElementById('eva-title');
+    const evaPhase = document.getElementById('eva-phase');
+    const evaLead = document.getElementById('eva-lead');
+    const evaDetail = document.getElementById('eva-detail');
+    const evaInstruction = document.getElementById('eva-instruction');
+    const eewStatusDot = document.getElementById('eew-status-dot');
+
+    let autoHideTimer = null;
+    const EEW_DURATION_MS = 5 * 60 * 1000; // 5分間
+
+    function showEmergencyAlert({ isRed, title, phase, lead, detail, instruction }) {
+      overlay.classList.remove('theme-yellow', 'theme-red');
+      overlay.classList.add(isRed ? 'theme-red' : 'theme-yellow');
+
+      evaTitle.textContent = title;
+      evaPhase.textContent = phase;
+      evaLead.textContent = lead;
+      evaDetail.innerHTML = detail;
+      evaInstruction.textContent = instruction;
+
+      overlay.classList.add('active');
+
+      if (autoHideTimer) clearTimeout(autoHideTimer);
+      autoHideTimer = setTimeout(() => {
+        hideEmergency();
+      }, EEW_DURATION_MS);
+    }
+
+    function hideEmergency() {
+      overlay.classList.remove('active');
+      if (autoHideTimer) {
+        clearTimeout(autoHideTimer);
+        autoHideTimer = null;
+      }
+    }
+
+    function formatScale(scale) {
+      const map = {
+        10: '1', 20: '2', 30: '3', 40: '4',
+        45: '5弱', 50: '5強', 55: '6弱', 60: '6強', 70: '7'
+      };
+      return map[scale] || '不明';
+    }
+
+    function connectP2PQuake() {
+      const ws = new WebSocket('wss://api.p2pquake.net/v2/ws');
+
+      ws.onopen = () => {
+        if (eewStatusDot) {
+          eewStatusDot.classList.remove('offline');
+          eewStatusDot.title = 'EEW正常監視中';
+        }
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+
+          // 1. 緊急地震速報（警報）: code 556
+          if (data.code === 556) {
+            if (data.test) return;
+            const areas = data.areas ? data.areas.map(a => a.name).join(' ') : '全国各地';
+            showEmergencyAlert({
+              isRed: false,
+              title: '緊急地震速報 発令中',
+              phase: '第1報 / 警報',
+              lead: '強い揺れに警戒',
+              detail: `警戒地域：${areas}`,
+              instruction: '身の安全を確保してください'
+            });
+          }
+
+          // 2. 確定地震情報: code 551 (震度4以上で起動)
+          if (data.code === 551) {
+            const maxScale = data.earthquake?.maxScale;
+            if (maxScale && maxScale >= 40) {
+              const isRedTheme = maxScale >= 50;
+              const shindoStr = formatScale(maxScale);
+              const hypo = data.earthquake.hypocenter;
+              const placeName = hypo ? hypo.name : '詳細調査中';
+              const magnitude = (hypo && hypo.magnitude !== -1) ? `M ${hypo.magnitude.toFixed(1)}` : '調査中';
+
+              showEmergencyAlert({
+                isRed: isRedTheme,
+                title: isRedTheme ? '震度情報 最大警戒' : '地震情報 警戒',
+                phase: '確定情報',
+                lead: `震源地：${placeName}`,
+                detail: `推定規模：<strong>${magnitude}</strong> ／ 最大観測震度：<strong>${shindoStr}</strong>`,
+                instruction: isRedTheme ? '身の安全を確保し 倒壊・落下物に最大警戒してください' : '今後の情報に注意し 姿勢を低くしてください'
+              });
+            }
+          }
+        } catch (e) {}
+      };
+
+      ws.onclose = () => {
+        if (eewStatusDot) {
+          eewStatusDot.classList.add('offline');
+          eewStatusDot.title = 'EEW切断中 (再接続試行中)';
+        }
+        setTimeout(connectP2PQuake, 3000);
+      };
+
+      ws.onerror = () => {
+        ws.close();
+      };
+    }
+
+    // モーダル用 テストシミュレーション関数
+    function simulateEEW(scale) {
+      closeConfigModal();
+      const isRed = scale >= 50;
+      showEmergencyAlert({
+        isRed: isRed,
+        title: '緊急地震速報 発令中',
+        phase: '第1報 / 警報',
+        lead: isRed ? '強い揺れに最大警戒' : '揺れに警戒（震度5弱予想）',
+        detail: '警戒地域：宮城県南部 福島県中通り 茨城県北部',
+        instruction: '直ちに身の安全を確保してください'
+      });
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       requestWakeLock();
       checkDayNightTheme();
@@ -2067,6 +2502,7 @@
       initNewsFlipBoard();
 
       fetchTransitData();
+      connectP2PQuake();
 
       renderDynamicTopTabs();
       switchRightPage(enabledSlots[0]);
